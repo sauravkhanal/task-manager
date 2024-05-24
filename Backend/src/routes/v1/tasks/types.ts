@@ -12,18 +12,18 @@ export enum WorkflowStage {
     COMPLETED = "COMPLETED",
 }
 
-export default interface ITasks {
+export default interface ITask {
     _id: mongoose.Types.ObjectId;
     title: string;
     description?: string;
-    tags: string[];
+    tagIDs: string[];
     dueDate: Date;
     priority: TaskPriority;
     workflowStage: WorkflowStage;
-    assigner: string;
-    assignee: string[];
-    comments?: string[];
-    attachments?: string[];
-    activity?: string[];
+    creatorID: string;
+    assigneeIDs: string[];
+    commentIDs?: string[];
+    attachmentIDs?: string[];
+    activityIDs?: string[];
     deleted: boolean;
 }

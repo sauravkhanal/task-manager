@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import ITasks, { TaskPriority, WorkflowStage } from "./types";
+import ITask, { TaskPriority, WorkflowStage } from "./types";
 
-const taskSchema = new mongoose.Schema<ITasks>({
+const taskSchema = new mongoose.Schema<ITask>({
     _id: mongoose.Types.ObjectId,
     title: { type: String, required: true },
     description: { type: String },
-    tags: { type: [String], required: true },
+    tagIDs: { type: [String], required: true },
     dueDate: { type: Date, required: true },
     priority: {
         type: String,
@@ -17,13 +17,13 @@ const taskSchema = new mongoose.Schema<ITasks>({
         enum: Object.values(WorkflowStage),
         required: true,
     },
-    assigner: { type: String, required: true },
-    assignee: { type: [String], required: true },
-    attachments: { type: [String] },
-    comments: { type: [String] },
-    activity: { type: [String] },
+    creatorID: { type: String, required: true },
+    assigneeIDs: { type: [String], required: true },
+    commentIDs: { type: [String] },
+    attachmentIDs: { type: [String] },
+    activityIDs: { type: [String] },
     deleted: { type: Boolean, default: false },
 });
 
-const TaskModel = mongoose.model<ITasks>("Tasks", taskSchema);
+const TaskModel = mongoose.model<ITask>("Task", taskSchema);
 export default TaskModel;
