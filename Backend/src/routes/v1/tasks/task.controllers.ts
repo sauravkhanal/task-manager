@@ -45,9 +45,11 @@ const taskControllers = {
         next: NextFunction,
     ) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
             const taskDetails = req.body;
-            const result = await taskServices.updateTaskDetails(id, taskDetails);
+            const result = await taskServices.updateTaskDetails(id, client_id, taskDetails);
             if (result) return successResponse(res, 200, messages.task.success("updated"), result);
             throw new CustomError(404, messages.task.failure("updating"));
         } catch (error) {
@@ -57,10 +59,12 @@ const taskControllers = {
 
     async deleteTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
-            const result = await taskServices.deleteTask(id);
+            const result = await taskServices.deleteTask(id, client_id);
             if (result) return successResponse(res, 200, messages.task.success("deleted"), result);
-            throw new CustomError(404, messages.task.success("deleting"));
+            throw new CustomError(500, messages.task.failure("deleting"));
         } catch (error) {
             next(error);
         }
@@ -68,8 +72,10 @@ const taskControllers = {
 
     async recoverTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
-            const result = await taskServices.recoverTask(id);
+            const result = await taskServices.deleteTask(id, client_id);
             if (result) return successResponse(res, 200, messages.task.success("recovered"), result);
             throw new CustomError(404, messages.task.failure("recovering"));
         } catch (error) {
@@ -79,9 +85,11 @@ const taskControllers = {
 
     async addAssigneesToTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
             const assigneeIDs = req.body;
-            const result = await taskServices.addAssigneesToTask(id, assigneeIDs);
+            const result = await taskServices.addAssigneesToTask(id, client_id, assigneeIDs);
             if (result) return successResponse(res, 200, messages.task.success("added", "assignee/s"), result);
             throw new CustomError(404, messages.task.failure("adding", "assignee/s"));
         } catch (error) {
@@ -91,9 +99,11 @@ const taskControllers = {
 
     async removeAssigneesFromTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
             const assigneeIDs = req.body;
-            const result = await taskServices.removeAssigneesFromTask(id, assigneeIDs);
+            const result = await taskServices.removeAssigneesFromTask(id, client_id, assigneeIDs);
             if (result) return successResponse(res, 200, messages.task.success("removed", "assignee/s"), result);
             throw new CustomError(404, messages.task.failure("removing", "assignee/s"));
         } catch (error) {
@@ -128,9 +138,11 @@ const taskControllers = {
 
     async addTagsToTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
             const tagIDs: string[] = req.body;
-            const result = await taskServices.addTagsToTask(id, tagIDs);
+            const result = await taskServices.addTagsToTask(id, client_id, tagIDs);
             if (result) return successResponse(res, 200, messages.task.success("added", "tag/s"), result);
             throw new CustomError(404, messages.task.failure("adding", "tag/s"));
         } catch (error) {
@@ -140,9 +152,11 @@ const taskControllers = {
 
     async removeTagsFromTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
             const { id } = req.params;
             const tagIDs: string[] = req.body;
-            const result = await taskServices.removeTagsFromTask(id, tagIDs);
+            const result = await taskServices.removeTagsFromTask(id, client_id, tagIDs);
             if (result) return successResponse(res, 200, messages.task.success("removed", "tag/s"), result);
             throw new CustomError(404, messages.task.failure("removing", "tag/s"));
         } catch (error) {

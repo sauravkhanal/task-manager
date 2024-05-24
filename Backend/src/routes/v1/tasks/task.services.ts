@@ -14,32 +14,32 @@ const taskServices = {
         return taskRepository.getTaskById(_id);
     },
 
-    updateTaskDetails(_id: string, newDetails: Partial<ITask>): Promise<ITask | null> {
-        return taskRepository.updateTaskDetails(_id, newDetails);
+    updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
+        return taskRepository.updateTaskDetails(_id, creatorID, newDetails);
     },
 
-    deleteTask(_id: string): Promise<ITask | null> {
-        return taskRepository.deleteTask(_id);
+    deleteTask(_id: string, creatorID: string): Promise<ITask | null> {
+        return taskRepository.deleteTask(_id, creatorID);
     },
 
-    recoverTask(_id: string): Promise<ITask | null> {
-        return taskRepository.recoverTask(_id);
+    recoverTask(_id: string, creatorID: string): Promise<ITask | null> {
+        return taskRepository.recoverTask(_id, creatorID);
     },
 
-    addAssigneesToTask(_id: string, ids: string[]): Promise<ITask | null> {
-        return taskRepository.addAssigneesToTask(_id, ids);
+    addAssigneesToTask(_id: string, creatorID: string, ids: string[]): Promise<ITask | null> {
+        return taskRepository.addAssigneesToTask(_id, creatorID, ids);
     },
 
-    removeAssigneesFromTask(_id: string, ids: string[]): Promise<ITask | null> {
-        return taskRepository.removeAssigneesFromTask(_id, ids);
+    removeAssigneesFromTask(_id: string, creatorID: string, ids: string[]): Promise<ITask | null> {
+        return taskRepository.removeAssigneesFromTask(_id, creatorID, ids);
     },
 
-    addTagsToTask(_id: string, ids: string[]): Promise<ITask | null> {
-        return taskRepository.addTagsToTask(_id, ids);
+    addTagsToTask(_id: string, creatorID: string, ids: string[]): Promise<ITask | null> {
+        return taskRepository.addTagsToTask(_id, creatorID, ids);
     },
 
-    removeTagsFromTask(_id: string, ids: string[]): Promise<ITask | null> {
-        return taskRepository.removeTagsFromTask(_id, ids);
+    removeTagsFromTask(_id: string, creatorID: string, ids: string[]): Promise<ITask | null> {
+        return taskRepository.removeTagsFromTask(_id, creatorID, ids);
     },
 
     addCommentToTask(_id: string, commentID: string): Promise<ITask | null> {
