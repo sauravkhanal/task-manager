@@ -1,15 +1,10 @@
 import mongoose from "mongoose";
+import { WorkflowStage } from "../workflowStage/types";
 
 export enum TaskPriority {
     LOW = "LOW",
     MED = "MED",
     HIGH = "HIGH",
-}
-
-export enum WorkflowStage {
-    TODO = "TODO",
-    INPROGRESS = "INPROGRESS",
-    COMPLETED = "COMPLETED",
 }
 
 export default interface ITask {

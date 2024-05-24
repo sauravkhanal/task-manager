@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import ITask, { TaskPriority, WorkflowStage } from "./types";
+import ITask, { TaskPriority } from "./types";
+import { WorkflowStage } from "../workflowStage/types";
 
 const taskSchema = new mongoose.Schema<ITask>({
     _id: mongoose.Types.ObjectId,
