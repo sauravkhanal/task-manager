@@ -1,12 +1,9 @@
-//TODO: add models for all the stuff, then start creating routes
-//in order: task, workflow stage, tag, activity comment
-
 import mongoose from "mongoose";
 
 export interface IComment {
     _id: mongoose.Types.ObjectId;
-    authorId: string;
-    taskId: string;
+    creatorID: string;
+    taskID: string;
     title: string;
     description: string;
     attachmentIDs: string[];

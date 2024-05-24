@@ -1,7 +1,7 @@
 import { Model, Schema, model } from "mongoose";
 import { IComment } from "./types";
 
-const CommentsSchema: Schema<IComment> = new Schema(
+const CommentSchema: Schema<IComment> = new Schema(
     {
         creatorID: { type: String, required: true },
         taskID: { type: String, required: true },
@@ -13,6 +13,6 @@ const CommentsSchema: Schema<IComment> = new Schema(
     { timestamps: true },
 );
 
-const CommentsModel: Model<IComment> = model<IComment>("Comment", CommentsSchema);
+const CommentModel: Model<IComment> = model<IComment>("Comment", CommentSchema);
 
-export default CommentsModel;
+export default CommentModel;
