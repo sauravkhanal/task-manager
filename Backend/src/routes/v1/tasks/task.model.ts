@@ -17,6 +17,7 @@ const taskSchema = new mongoose.Schema<ITask>({
         type: String,
         enum: Object.values(WorkflowStage),
         required: true,
+        default: WorkflowStage.TODO,
     },
     creatorID: { type: String, required: true },
     assigneeIDs: { type: [String], required: true },
