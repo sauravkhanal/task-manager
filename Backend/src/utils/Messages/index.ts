@@ -45,18 +45,6 @@ export const messages = {
     },
     task: {
         task_not_found: "The task with given Id doesn't exist.",
-        /**
-         * @returns `The ${name}(default = task) has been ${action} successfully.`;
-         */
-        success(action: string, name: string = "task") {
-            return `The ${name} has been ${action} successfully.`;
-        },
-        /**
-         * @returns `An error occurred while ${action} the ${name} (default = task).`;
-         */
-        failure(action: string, name: string = "task") {
-            return `An error occurred while ${action} the ${name}.`;
-        },
     },
     workflowStage: {
         /**
@@ -71,5 +59,17 @@ export const messages = {
         transitionSuccess(prev: WorkflowStage, next: WorkflowStage) {
             return `The task has been moved from ${prev} to ${next} stage.`;
         },
+    },
+    /**
+     * @returns `The ${name}(default = task) has been ${action} successfully.`;
+     */
+    success(action: string, name: string = "task") {
+        return `The ${name} has been ${action} successfully.`;
+    },
+    /**
+     * @returns `An error occurred while ${action} the ${name} (default = task).`;
+     */
+    failure(action: string, name: string = "task") {
+        return `An error occurred while ${action} the ${name}.`;
     },
 };

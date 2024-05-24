@@ -6,6 +6,7 @@ import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
 import { successResponse } from "../../../utils/ApiResponse";
 import { WorkflowStage } from "../workflowStage/types";
+import { IComment } from "../comments/types";
 
 const taskControllers = {
     async createTask(req: Request<unknown, unknown, ITask, unknown>, res: Response, next: NextFunction) {
@@ -21,8 +22,8 @@ const taskControllers = {
                 assigneeIDs,
                 priority,
             });
-            if (result) return successResponse(res, 200, messages.task.success("created"), result);
-            throw new CustomError(500, messages.task.failure("creating"));
+            if (result) return successResponse(res, 200, messages.success("created"), result);
+            throw new CustomError(500, messages.failure("creating"));
         } catch (error) {
             next(error);
         }
@@ -32,8 +33,8 @@ const taskControllers = {
         try {
             const { id } = req.params;
             const result = await taskServices.getTaskById(id);
-            if (result) return successResponse(res, 200, messages.task.success("retrieved"), result);
-            throw new CustomError(404, messages.task.failure("retrieving"));
+            if (result) return successResponse(res, 200, messages.success("retrieved"), result);
+            throw new CustomError(404, messages.failure("retrieving"));
         } catch (error) {
             next(error);
         }
@@ -50,8 +51,8 @@ const taskControllers = {
             const { id } = req.params;
             const taskDetails = req.body;
             const result = await taskServices.updateTaskDetails(id, client_id, taskDetails);
-            if (result) return successResponse(res, 200, messages.task.success("updated"), result);
-            throw new CustomError(404, messages.task.failure("updating"));
+            if (result) return successResponse(res, 200, messages.success("updated"), result);
+            throw new CustomError(404, messages.failure("updating"));
         } catch (error) {
             next(error);
         }
@@ -63,8 +64,8 @@ const taskControllers = {
             const client_id = token._id;
             const { id } = req.params;
             const result = await taskServices.deleteTask(id, client_id);
-            if (result) return successResponse(res, 200, messages.task.success("deleted"), result);
-            throw new CustomError(500, messages.task.failure("deleting"));
+            if (result) return successResponse(res, 200, messages.success("deleted"), result);
+            throw new CustomError(500, messages.failure("deleting"));
         } catch (error) {
             next(error);
         }
@@ -76,8 +77,8 @@ const taskControllers = {
             const client_id = token._id;
             const { id } = req.params;
             const result = await taskServices.deleteTask(id, client_id);
-            if (result) return successResponse(res, 200, messages.task.success("recovered"), result);
-            throw new CustomError(404, messages.task.failure("recovering"));
+            if (result) return successResponse(res, 200, messages.success("recovered"), result);
+            throw new CustomError(404, messages.failure("recovering"));
         } catch (error) {
             next(error);
         }
@@ -90,8 +91,8 @@ const taskControllers = {
             const { id } = req.params;
             const assigneeIDs = req.body;
             const result = await taskServices.addAssigneesToTask(id, client_id, assigneeIDs);
-            if (result) return successResponse(res, 200, messages.task.success("added", "assignee/s"), result);
-            throw new CustomError(404, messages.task.failure("adding", "assignee/s"));
+            if (result) return successResponse(res, 200, messages.success("added", "assignee/s"), result);
+            throw new CustomError(404, messages.failure("adding", "assignee/s"));
         } catch (error) {
             next(error);
         }
@@ -104,8 +105,8 @@ const taskControllers = {
             const { id } = req.params;
             const assigneeIDs = req.body;
             const result = await taskServices.removeAssigneesFromTask(id, client_id, assigneeIDs);
-            if (result) return successResponse(res, 200, messages.task.success("removed", "assignee/s"), result);
-            throw new CustomError(404, messages.task.failure("removing", "assignee/s"));
+            if (result) return successResponse(res, 200, messages.success("removed", "assignee/s"), result);
+            throw new CustomError(404, messages.failure("removing", "assignee/s"));
         } catch (error) {
             next(error);
         }
@@ -143,8 +144,8 @@ const taskControllers = {
             const { id } = req.params;
             const tagIDs: string[] = req.body;
             const result = await taskServices.addTagsToTask(id, client_id, tagIDs);
-            if (result) return successResponse(res, 200, messages.task.success("added", "tag/s"), result);
-            throw new CustomError(404, messages.task.failure("adding", "tag/s"));
+            if (result) return successResponse(res, 200, messages.success("added", "tag/s"), result);
+            throw new CustomError(404, messages.failure("adding", "tag/s"));
         } catch (error) {
             next(error);
         }
@@ -157,8 +158,8 @@ const taskControllers = {
             const { id } = req.params;
             const tagIDs: string[] = req.body;
             const result = await taskServices.removeTagsFromTask(id, client_id, tagIDs);
-            if (result) return successResponse(res, 200, messages.task.success("removed", "tag/s"), result);
-            throw new CustomError(404, messages.task.failure("removing", "tag/s"));
+            if (result) return successResponse(res, 200, messages.success("removed", "tag/s"), result);
+            throw new CustomError(404, messages.failure("removing", "tag/s"));
         } catch (error) {
             next(error);
         }
@@ -167,10 +168,10 @@ const taskControllers = {
     async addCommentToTask(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
-            const commentID: string = req.body;
-            const result = await taskServices.addCommentToTask(id, commentID);
-            if (result) return successResponse(res, 200, messages.task.success("added", "comment"), result);
-            throw new CustomError(404, messages.task.failure("adding", "comment"));
+            const commentDetails = req.body as Partial<IComment>;
+            const result = await taskServices.addCommentToTask(id, commentDetails);
+            if (result) return successResponse(res, 200, messages.success("added", "comment"), result);
+            throw new CustomError(404, messages.failure("adding", "comment"));
         } catch (error) {
             next(error);
         }
@@ -181,8 +182,8 @@ const taskControllers = {
             const { id } = req.params;
             const commentID: string = req.body;
             const result = await taskServices.removeCommentFromTask(id, commentID);
-            if (result) return successResponse(res, 200, messages.task.success("removed", "comment"), result);
-            throw new CustomError(404, messages.task.failure("removing", "comment"));
+            if (result) return successResponse(res, 200, messages.success("removed", "comment"), result);
+            throw new CustomError(404, messages.failure("removing", "comment"));
         } catch (error) {
             next(error);
         }

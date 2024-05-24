@@ -25,7 +25,7 @@ router.patch("/:id/tags", taskControllers.addTagsToTask);
 router.patch("/:id/tags/remove", taskControllers.removeTagsFromTask);
 
 // Route for adding and removing comments
-router.patch("/:id/comments", taskControllers.addCommentToTask);
+router.post("/:id/comments", taskControllers.addCommentToTask);
 router.patch("/:id/comments/remove", taskControllers.removeCommentFromTask);
 
 // Route to create task

@@ -1,5 +1,7 @@
 import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
+import commentServices from "../comments/comment.services";
+import { IComment } from "../comments/types";
 import { WorkflowStage } from "../workflowStage/types";
 import validateTransition from "../workflowStage/workflowRule";
 import taskRepository from "./task.repository";
@@ -42,8 +44,10 @@ const taskServices = {
         return taskRepository.removeTagsFromTask(_id, creatorID, ids);
     },
 
-    addCommentToTask(_id: string, commentID: string): Promise<ITask | null> {
-        return taskRepository.addCommentToTask(_id, commentID);
+    async addCommentToTask(_id: string, commentData: Partial<IComment>): Promise<ITask | null> {
+        const commentDetails = await commentServices.createComment(commentData);
+        if (!commentDetails) throw new CustomError(500, messages.failure("creating", "comment"));
+        return taskRepository.addCommentToTask(_id, commentDetails._id.toString());
     },
 
     removeCommentFromTask(_id: string, commentID: string): Promise<ITask | null> {
