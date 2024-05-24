@@ -1,17 +1,23 @@
-import { ThemeProvider } from "./components/context/theme-provider";
-import { ModeToggle } from "./components/ModeToggle";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./components/ThemeProvider";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import VerifyOTP from "./pages/VerifyOTP";
+import NavBar from "./components/NavBar";
 
 function App() {
     return (
-        <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-            <div className='h-screen w-screen flex flex-col gap-5 justify-center items-center text-4xl '>
-                <h1>Vite + React + Ts + Tailwind</h1>
-                <p>
-                    Color Mode: <span className='hidden dark:inline'>Dark</span>
-                    <span className='dark:hidden'>Light</span>
-                </p>
-                <ModeToggle />
-            </div>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <BrowserRouter>
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/verify" element={<VerifyOTP />} />
+                </Routes>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }
