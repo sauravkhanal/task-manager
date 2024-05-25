@@ -2,18 +2,18 @@ export interface IClassName {
     className?: string;
 }
 
-export interface ILoginForm {
+export interface IUserLoginData {
     username?: string;
     email?: string;
     password: string;
 }
 
-export interface IRegisterForm {
+export interface IUserRegisterData {
     firstName: string;
     middleName?: string;
     lastName: string;
     username: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
 }

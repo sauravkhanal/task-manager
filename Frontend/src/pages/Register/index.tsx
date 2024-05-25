@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { IRegisterForm } from "@/types";
+import { IUserRegisterData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export default function Register() {
-    const [data, setData] = useState<IRegisterForm>();
+    const [data, setData] = useState<IUserRegisterData>();
     const inputClass =
         "outline-none rounded-md text-black px-2 py-1 w-56 md:w-96 border-2  focus:border-2 focus:border-secondary-foreground  relative";
     const errorMessage = "text-red-500 text-sm font-light";
@@ -14,9 +14,9 @@ export default function Register() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<IRegisterForm>();
+    } = useForm<IUserRegisterData>();
 
-    const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
+    const onSubmit: SubmitHandler<IUserRegisterData> = (data) => {
         setData(data);
     };
 

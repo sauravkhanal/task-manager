@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ILoginForm } from "@/types";
+import { IUserLoginData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export default function Login() {
-    const [data, setData] = useState<ILoginForm>();
+    console.log(import.meta.env.VITE_BACKEND_ENDPOINT);
+    const [data, setData] = useState<IUserLoginData>();
     const inputClass =
         "outline-none rounded-md text-black px-2 py-1 w-56 md:w-96 border-2  focus:border-2 focus:border-secondary-foreground  relative ";
     const errorMessage = "text-red-500 text-sm font-light";
@@ -14,9 +15,9 @@ export default function Login() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ILoginForm>();
+    } = useForm<IUserLoginData>();
 
-    const onSubmit: SubmitHandler<ILoginForm> = (data) => {
+    const onSubmit: SubmitHandler<IUserLoginData> = (data) => {
         setData(data);
     };
 
