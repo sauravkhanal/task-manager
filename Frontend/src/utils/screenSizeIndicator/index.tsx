@@ -1,6 +1,6 @@
 export default function ScreenSizeIndicator() {
     return (
-        <div className="sticky top-2 left-48 bg-secondary-foreground px-1 rounded-sm text-primary-foreground opacity-50 font-bold text-2xl">
+        <div className="absolute top-1 left-1 bg-secondary-foreground px-1 rounded-sm text-primary-foreground opacity-50 font-bold text-2xl">
             <p className="block sm:hidden">sm-</p>
             <p className="hidden sm:block md:hidden">sm+</p>
             <p className="hidden md:block lg:hidden">md+</p>
