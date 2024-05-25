@@ -10,13 +10,15 @@ function App() {
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <BrowserRouter>
-                <NavBar />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/verify" element={<VerifyOTP />} />
-                </Routes>
+                <NavBar className="lg:px-20" />
+                <div className="lg:px-20">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/verify" element={<VerifyOTP />} />
+                    </Routes>
+                </div>
             </BrowserRouter>
         </ThemeProvider>
     );
