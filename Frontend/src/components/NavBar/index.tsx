@@ -14,16 +14,12 @@ export default function NavBar({ className }: IClassName) {
             <span className="grow">
                 <Icon />
             </span>
-            <Button variant={"outline"}>
-                <Link to={"Login"} title="Login">
-                    Login
-                </Link>
-            </Button>
-            <Button variant={"outline"}>
-                <Link to={"Register"} title="Create an account">
-                    Register
-                </Link>
-            </Button>
+            <Link to={"Login"} title="Login">
+                <Button variant={"outline"}>Login</Button>
+            </Link>
+            <Link to={"Register"} title="Create an account">
+                <Button variant={"outline"}>Register</Button>
+            </Link>
             <ModeToggle />
         </div>
     );
