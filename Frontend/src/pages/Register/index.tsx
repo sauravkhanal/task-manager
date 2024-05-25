@@ -1,30 +1,50 @@
-import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { IUserRegisterData } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import userAPI from "@/api/userAPI";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export default function Register() {
-    const [data, setData] = useState<IUserRegisterData>();
+    const navigate = useNavigate();
     const inputClass =
-        "outline-none rounded-md text-black px-2 py-1 w-56 md:w-96 border-2  focus:border-2 focus:border-secondary-foreground  relative";
-    const errorMessage = "text-red-500 text-sm font-light";
+        "outline-none rounded-md bg-input px-2 py-1 w-56 sm:w-96 border-2 border-input focus:border-ring relative";
+    const errorMessage = "text-red-500 text-sm font-light w-56 sm:w-96";
     const label = "";
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
     } = useForm<IUserRegisterData>();
 
-    const onSubmit: SubmitHandler<IUserRegisterData> = (data) => {
-        setData(data);
+    const onSubmit: SubmitHandler<IUserRegisterData> = async (data) => {
+        const response = await userAPI.createUser(data);
+
+        if (response.success) {
+            toast(response.message.replace(/\n/g, "<br>"));
+            setTimeout(() => navigate("/verify"), 1500);
+        } else {
+            toast(`${Object.keys(response.data).toString()} is already used`);
+            for (let key in response.data) {
+                setError(
+                    key as keyof IUserRegisterData,
+                    {
+                        type: "custom",
+                        message: response.data[key as keyof IUserRegisterData],
+                    },
+                    { shouldFocus: true },
+                );
+            }
+        }
     };
 
     return (
         <div className="flex justify-center items-center min-h-[90svh] py-5">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className=" flex flex-col gap-5 justify-center items-center bg-secondary px-10 py-8 rounded-md  max-w-xl shadow-2xl"
+                className=" flex flex-col gap-5 justify-center items-center bg-card text-card-foreground px-10 py-8 rounded-md  max-w-xl shadow-2xl"
             >
                 <span className="flex flex-col gap-1">
                     <label htmlFor="firstName" className={label}>
@@ -132,6 +152,7 @@ export default function Register() {
                     <input
                         id="password"
                         type="password"
+                        autoComplete="false"
                         className={` ${inputClass} ${
                             errors?.password &&
                             "border-red-500 focus:border-red-500"
@@ -185,8 +206,14 @@ export default function Register() {
                         <span className="underline">Login</span>
                     </p>
                 </Link>
-                <Button className="w-full">Register</Button>
+                <Button
+                    className="w-full"
+                    disabled={Object.keys(errors).length > 0}
+                >
+                    Register
+                </Button>
             </form>
+            <Toaster />
         </div>
     );
 }
