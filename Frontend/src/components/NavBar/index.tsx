@@ -11,7 +11,7 @@ export default function NavBar({ className }: IClassName) {
     const { logout } = useContext(AuthContext);
     return (
         <div
-            className={`h-14 shadow-md flex justify-end gap-5 items-center ${className}`}
+            className={`h-14 w-full shadow-md flex justify-end gap-5 items-center ${className}  top-0 z-10 sticky bg-background`}
         >
             <ScreenSizeIndicator />
             <span className="grow">

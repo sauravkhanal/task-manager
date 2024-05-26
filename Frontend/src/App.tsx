@@ -9,9 +9,11 @@ function App() {
         <AuthProvider>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <BrowserRouter>
-                    <NavBar className="lg:px-20" />
-                    <div className="lg:px-20 font-poppins">
-                        <MyRoutes />
+                    <div className=" flex flex-col min-h-screen">
+                        <NavBar className="lg:px-20" />
+                        <section className="lg:px-20 font-poppins grow">
+                            <MyRoutes />
+                        </section>
                     </div>
                 </BrowserRouter>
             </ThemeProvider>
