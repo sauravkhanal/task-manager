@@ -1,3 +1,7 @@
 export default function VerifyOTP() {
-    return <div>VerifyOTP</div>;
+    return (
+        <div>
+            VerifyOTP <br />
+        </div>
+    );
 }
