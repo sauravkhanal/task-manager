@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
 
 export default function NavBar({ className }: IClassName) {
-    const { logout } = useContext(AuthContext);
+    const { logout, isLoggedIn } = useContext(AuthContext);
     return (
         <div
             className={`h-14 w-full shadow-md flex justify-end gap-5 items-center ${className}  top-0 z-10 sticky bg-background`}
@@ -17,15 +17,20 @@ export default function NavBar({ className }: IClassName) {
             <span className="grow">
                 <Icon />
             </span>
-            <Link to={"Login"} title="Login">
-                <Button variant={"outline"}>Login</Button>
-            </Link>
-            <Link to={"Register"} title="Create an account">
-                <Button variant={"outline"}>Register</Button>
-            </Link>
-            <Button variant={"outline"} onClick={logout}>
-                Log out
-            </Button>
+            {!isLoggedIn ? (
+                <>
+                    <Link to={"Login"} title="Login">
+                        <Button variant={"outline"}>Login</Button>
+                    </Link>
+                    <Link to={"Register"} title="Create an account">
+                        <Button variant={"outline"}>Register</Button>
+                    </Link>
+                </>
+            ) : (
+                <Button variant={"outline"} onClick={logout}>
+                    Log out
+                </Button>
+            )}
             <ModeToggle />
         </div>
     );
