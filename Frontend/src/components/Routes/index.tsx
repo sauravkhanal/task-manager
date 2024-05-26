@@ -5,6 +5,7 @@ import VerifyOTP from "@/pages/VerifyOTP";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/dashboard";
+import NotFound from "@/pages/404";
 
 type TRouteProps = {
     isLoggedIn: boolean;
@@ -41,6 +42,7 @@ export default function MyRoutes() {
             <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/dashboard" element={<Dashboard />} />
             </Route>
+            <Route path="/*" element={<NotFound />} />
         </Routes>
     );
 }
