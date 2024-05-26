@@ -3,8 +3,7 @@ export interface IClassName {
 }
 
 export interface IUserLoginData {
-    username?: string;
-    email?: string;
+    emailOrUsername: string;
     password: string;
 }
 

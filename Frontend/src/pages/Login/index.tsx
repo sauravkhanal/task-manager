@@ -22,6 +22,24 @@ export default function Login() {
         setError,
     } = useForm<IUserLoginData>();
 
+    const validateEmailOrUsername = (value: string) => {
+        if (value.includes("@")) {
+            const isEmailFormat =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+            if (!isEmailFormat) {
+                return "Please enter a valid email.";
+            }
+        } else {
+            const isUsernameFormat = /^[a-zA-Z0-9_-]{5,15}$/.test(value);
+            if (!isUsernameFormat) {
+                if (value.length < 4)
+                    return "Username must have at least 5 characters.";
+                return "Username cannot have greater than 15 characters.";
+            }
+        }
+        return true;
+    };
+
     const onSubmit: SubmitHandler<IUserLoginData> = async (data) => {
         const response = await userAPI.login(data);
 
@@ -56,58 +74,25 @@ export default function Login() {
                 className=" flex flex-col gap-5 justify-center items-center bg-secondary px-10 py-8 rounded-md  max-w-xl shadow-2xl"
             >
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="username" className={label}>
-                        Username
+                    <label htmlFor="emailOrUsername" className={label}>
+                        Email or Username
                     </label>
                     <input
-                        id="username"
+                        id="emailOrUsername"
                         type="text"
                         className={` ${inputClass} ${
-                            errors?.username &&
+                            errors?.emailOrUsername &&
                             "border-red-500 focus:border-red-500"
                         }`}
-                        {...register("username", {
+                        {...register("emailOrUsername", {
                             // required: "Username is required",
-                            maxLength: {
-                                value: 15,
-                                message:
-                                    "Username can have a maximum of 15 characters.",
-                            },
-                            minLength: {
-                                value: 5,
-                                message:
-                                    "Username must have at least 5 characters.",
-                            },
+                            validate: validateEmailOrUsername,
                         })}
                     />
-                    {errors?.username && (
+                    {errors?.emailOrUsername && (
                         <p className={errorMessage}>
-                            {errors?.username.message}
+                            {errors?.emailOrUsername.message}
                         </p>
-                    )}
-                </span>
-                <span className="flex flex-col gap-1">
-                    <label htmlFor="email" className={label}>
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        className={` ${inputClass} ${
-                            errors?.email &&
-                            "border-red-500 focus:border-red-500"
-                        }`}
-                        {...register("email", {
-                            // required: "Email is required.",
-                            pattern: {
-                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "This email format is not supported.",
-                            },
-                        })}
-                    />
-                    {errors?.email && (
-                        <p className={errorMessage}>{errors?.email.message}</p>
                     )}
                 </span>
 

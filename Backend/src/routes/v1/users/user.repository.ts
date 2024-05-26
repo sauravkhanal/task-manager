@@ -18,8 +18,8 @@ const userRepository = {
         return UserModel.findOne({ username }).select({ password: false });
     },
 
-    findUserByUsernameOrEmail(username: string, email: string): Promise<IUserDocument | null> {
-        return UserModel.findOne({ $or: [{ username }, { email }] });
+    findUserByUsernameOrEmail(emailOrUsername: string): Promise<IUserDocument | null> {
+        return UserModel.findOne({ $or: [{ username: emailOrUsername }, { email: emailOrUsername }] });
     },
 
     findUserByData(userData?: Partial<IUserDocument>): Promise<IUserDocument | null> {

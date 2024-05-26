@@ -9,8 +9,8 @@ import OTPModel from "../../../models/OTPModel";
 const authController = {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const userDetails: IUser = { ...req.body };
-            const result = await authRepository.login(userDetails.username, userDetails.email, userDetails.password);
+            const userDetails: { emailOrUsername: string; password: string } = { ...req.body };
+            const result = await authRepository.login(userDetails.emailOrUsername, userDetails.password);
             return successResponse(res, 200, messages.auth.login_success, result);
         } catch (error) {
             next(error);

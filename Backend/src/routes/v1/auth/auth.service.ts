@@ -6,8 +6,8 @@ import { checkToken, signJWT } from "../../../utils/jwt";
 import userRepository from "../users/user.repository";
 
 const authService = {
-    async login(username: string, email: string, password: string) {
-        const user = await userRepository.findUserByUsernameOrEmail(username, email);
+    async login(emailOrUsername: string, password: string) {
+        const user = await userRepository.findUserByUsernameOrEmail(emailOrUsername);
         if (user) {
             const match = await comparePassword(password, user.password);
             if (match) {
