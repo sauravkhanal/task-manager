@@ -34,6 +34,7 @@ export default function MyRoutes() {
     return (
         <Routes>
             <Route path="/" element={isLoggedIn ? <Dashboard /> : <Login />} />
+            <Route path="/verify/:OTP" element={<VerifyOTP />} />
             <Route path="/verify" element={<VerifyOTP />} />
             <Route element={<PreventedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/login" element={<Login />} />

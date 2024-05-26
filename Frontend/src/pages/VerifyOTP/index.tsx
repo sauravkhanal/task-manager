@@ -6,14 +6,21 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function VerifyOTP() {
     const navigate = useNavigate();
     const [value, setValue] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
+    const { OTP } = useParams();
+
+    useEffect(() => {
+        if (OTP && /^\d{6}$/.test(OTP)) {
+            setValue(OTP);
+        }
+    }, [OTP]);
 
     async function submitHandler(): Promise<void> {
         setLoading(true);
@@ -45,7 +52,7 @@ export default function VerifyOTP() {
                 </InputOTPGroup>
             </InputOTP>
             <Button onClick={submitHandler} disabled={loading}>
-                {!loading ? "submit" : "Loading"}
+                {!loading ? "submit" : "Submitting..."}
             </Button>
         </div>
     );

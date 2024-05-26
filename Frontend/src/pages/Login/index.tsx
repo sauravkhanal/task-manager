@@ -93,6 +93,7 @@ export default function Login() {
                     <input
                         id="email"
                         type="email"
+                        autoComplete="email"
                         className={` ${inputClass} ${
                             errors?.email &&
                             "border-red-500 focus:border-red-500"
@@ -117,7 +118,7 @@ export default function Login() {
                     <input
                         id="password"
                         type="password"
-                        autoComplete="true"
+                        autoComplete="current-password"
                         className={` ${inputClass} ${
                             errors?.password &&
                             "border-red-500 focus:border-red-500"
