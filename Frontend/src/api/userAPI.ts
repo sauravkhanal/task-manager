@@ -26,6 +26,15 @@ const userAPI = {
             return error.response.data as IAPIResponse<Partial<IUserLoginData>>;
         }
     },
+
+    async verifyOTP(OTP: string) {
+        try {
+            const response = await axiosInstance.post(`/auth/verify/${OTP}`);
+            return response.data as IAPIResponse<{}>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<{}>;
+        }
+    },
 };
 
 export default userAPI;
