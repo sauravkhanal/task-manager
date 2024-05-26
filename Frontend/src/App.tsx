@@ -10,8 +10,9 @@ function App() {
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <BrowserRouter>
                     <NavBar className="lg:px-20" />
-                    <div className="lg:px-20 font-poppins"></div>
-                    <MyRoutes />
+                    <div className="lg:px-20 font-poppins">
+                        <MyRoutes />
+                    </div>
                 </BrowserRouter>
             </ThemeProvider>
         </AuthProvider>
