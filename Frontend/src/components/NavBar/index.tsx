@@ -4,8 +4,11 @@ import { Button } from "../ui/button";
 import Icon from "./Icon";
 import { IClassName } from "@/types";
 import ScreenSizeIndicator from "@/utils/screenSizeIndicator";
+import { useContext } from "react";
+import { AuthContext } from "@/context/authContext";
 
 export default function NavBar({ className }: IClassName) {
+    const { logout } = useContext(AuthContext);
     return (
         <div
             className={`h-14 shadow-md flex justify-end gap-5 items-center ${className}`}
@@ -20,6 +23,9 @@ export default function NavBar({ className }: IClassName) {
             <Link to={"Register"} title="Create an account">
                 <Button variant={"outline"}>Register</Button>
             </Link>
+            <Button variant={"outline"} onClick={logout}>
+                Log out
+            </Button>
             <ModeToggle />
         </div>
     );

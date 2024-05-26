@@ -33,6 +33,7 @@ export default function AuthProvider({
     };
 
     const logout = () => {
+        local.clear();
         setUserDetails(null);
     };
 
@@ -44,7 +45,7 @@ export default function AuthProvider({
         <AuthContext.Provider
             value={{
                 userDetails,
-                isLoggedIn: !!userDetails,
+                isLoggedIn: !!local.get("accessToken"),
                 getUserDetails,
                 login,
                 logout,

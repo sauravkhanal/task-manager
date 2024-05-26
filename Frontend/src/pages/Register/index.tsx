@@ -10,7 +10,7 @@ export default function Register() {
     const navigate = useNavigate();
     const inputClass =
         "outline-none rounded-md bg-input px-2 py-1 w-56 sm:w-96 border-2 border-input focus:border-ring relative";
-    const errorMessage = "text-red-500 text-sm font-light w-56 sm:w-96";
+    const errorMessage = "text-red-500 text-sm w-56 sm:w-96";
     const label = "";
     const {
         register,
@@ -78,7 +78,7 @@ export default function Register() {
                         className={` ${inputClass} ${
                             errors?.lastName &&
                             "border-red-500 focus:border-red-500"
-                        } md:w-48`}
+                        }`}
                         {...register("lastName", {
                             required: "Last name is required",
                         })}

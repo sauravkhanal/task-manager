@@ -6,16 +6,19 @@ import VerifyOTP from "@/pages/VerifyOTP";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/dashboard";
+
 type TRouteProps = {
     isLoggedIn: boolean;
     redirectPath?: string;
 };
+
 const ProtectedRoute = ({ isLoggedIn, redirectPath = "/" }: TRouteProps) => {
     if (!isLoggedIn) {
         return <Navigate to={redirectPath} replace />;
     }
     return <Outlet />;
 };
+
 const PreventedRoute = ({
     isLoggedIn,
     redirectPath = "/dashboard",
@@ -25,6 +28,7 @@ const PreventedRoute = ({
     }
     return <Outlet />;
 };
+
 export default function MyRoutes() {
     const { isLoggedIn } = useContext(AuthContext);
     return (

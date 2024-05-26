@@ -1,24 +1,52 @@
-import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { IUserLoginData } from "@/types";
+import { ILoginResponse, IUserLoginData } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import userAPI from "@/api/userAPI";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { useContext } from "react";
+import { AuthContext } from "@/context/authContext";
 
 export default function Login() {
-    console.log(import.meta.env.VITE_BACKEND_ENDPOINT);
-    const [data, setData] = useState<IUserLoginData>();
+    const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
     const inputClass =
-        "outline-none rounded-md text-black px-2 py-1 w-56 md:w-96 border-2  focus:border-2 focus:border-secondary-foreground  relative ";
-    const errorMessage = "text-red-500 text-sm font-light";
+        "outline-none rounded-md text-black px-2 py-1 w-56 sm:w-96 border-2 focus:border-2 focus:border-secondary-foreground  relative ";
+    const errorMessage = "text-red-500 text-sm font-light w-56 sm:w-96";
     const label = "";
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
     } = useForm<IUserLoginData>();
 
-    const onSubmit: SubmitHandler<IUserLoginData> = (data) => {
-        setData(data);
+    const onSubmit: SubmitHandler<IUserLoginData> = async (data) => {
+        const response = await userAPI.login(data);
+
+        toast(response.message.replace(/\n/g, "<br>"));
+        if (response.success) {
+            login(response.data as ILoginResponse);
+            setTimeout(() => navigate("/dashboard"), 1500);
+        } else {
+            for (let key in response.data) {
+                setError(
+                    key as keyof IUserLoginData,
+                    {
+                        type: "custom",
+                        message:
+                            response.data[
+                                key as keyof (
+                                    | Partial<IUserLoginData>
+                                    | ILoginResponse
+                                )
+                            ],
+                    },
+                    { shouldFocus: true },
+                );
+            }
+        }
     };
 
     return (
@@ -39,7 +67,7 @@ export default function Login() {
                             "border-red-500 focus:border-red-500"
                         }`}
                         {...register("username", {
-                            required: "Username is required",
+                            // required: "Username is required",
                             maxLength: {
                                 value: 15,
                                 message:
@@ -58,7 +86,6 @@ export default function Login() {
                         </p>
                     )}
                 </span>
-
                 <span className="flex flex-col gap-1">
                     <label htmlFor="email" className={label}>
                         Email
@@ -71,7 +98,7 @@ export default function Login() {
                             "border-red-500 focus:border-red-500"
                         }`}
                         {...register("email", {
-                            required: "Email is required.",
+                            // required: "Email is required.",
                             pattern: {
                                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                                 message: "This email format is not supported.",
@@ -90,6 +117,7 @@ export default function Login() {
                     <input
                         id="password"
                         type="password"
+                        autoComplete="true"
                         className={` ${inputClass} ${
                             errors?.password &&
                             "border-red-500 focus:border-red-500"
@@ -101,11 +129,11 @@ export default function Login() {
                                 message:
                                     "Password must have at least 6 characters.",
                             },
-                            pattern: {
-                                value: /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).*$/,
-                                message:
-                                    "Password must contain at least one uppercase letter, one symbol, and one number.",
-                            },
+                            // pattern: {
+                            //     value: /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).*$/,
+                            //     message:
+                            //         "Password must contain at least one uppercase letter, one symbol, and one number.",
+                            // },
                         })}
                     />
                     {errors?.password && (
@@ -121,8 +149,14 @@ export default function Login() {
                         <span className="underline">Register</span>
                     </p>
                 </Link>
-                <Button className="w-full">Login</Button>
+                <Button
+                    className="w-full"
+                    disabled={Object.keys(errors).length > 0}
+                >
+                    Login
+                </Button>
             </form>
+            <Toaster />
         </div>
     );
 }
