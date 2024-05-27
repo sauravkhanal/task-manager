@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectItems } from "../Select";
-import { priority, tags } from "@/utils/constants";
+import { UserDetails, priority, tags } from "@/utils/constants";
 import { DatePicker } from "../DatePicker";
 import { ComboBox } from "../TagsSelector";
 import { Button } from "../ui/button";
+import { SelectUser } from "../SelectUser";
 
 export default function CreateTask() {
     return (
@@ -30,6 +31,10 @@ export default function CreateTask() {
                             type="text"
                             placeholder="Title for the task"
                         />
+                    </span>
+                    <span className="grid gap-1.5">
+                        <Label htmlFor="">Add users</Label>
+                        <SelectUser users={UserDetails} />
                     </span>
                     <span className="flex gap-2">
                         <span className="grid gap-1.5">
@@ -53,7 +58,7 @@ export default function CreateTask() {
                     <span className="grid gap-1.5">
                         <Label htmlFor="description">Description</Label>
                         <Textarea
-                            placeholder="Type your description here."
+                            placeholder="Description of the task goes here."
                             id="description"
                             className="min-h-24"
                         />
