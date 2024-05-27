@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { ITag } from "@/types";
+import { TagCreator } from "../TagCreator";
 
 export function ComboBox({ tags }: { tags: ITag[] }) {
     const [open, setOpen] = useState(false);
@@ -59,6 +60,12 @@ export function ComboBox({ tags }: { tags: ITag[] }) {
                     <CommandList>
                         <CommandEmpty>No results found.</CommandEmpty>
                         <CommandGroup>
+                            <CommandItem className="flex justify-center">
+                                {/* <Button variant={"outline"} onClick={() => {}}>
+                                    Create new tag
+                                </Button> */}
+                                <TagCreator />
+                            </CommandItem>
                             {tags.map((tag) => (
                                 <CommandItem
                                     key={tag._id}

@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectItems } from "../Select";
 import { priority, tags } from "@/utils/constants";
 import { DatePicker } from "../DatePicker";
-import { ComboBox } from "../ComboBox";
+import { ComboBox } from "../TagsSelector";
 import { Button } from "../ui/button";
 
 export default function CreateTask() {
