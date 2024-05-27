@@ -47,3 +47,12 @@ export interface IUserDetails {
     deleted: boolean;
     profilePicture: string;
 }
+
+export interface ITag {
+    _id: string;
+    authorID?: string;
+    taskIDs?: string[];
+    title: string;
+    description?: string;
+    color: string;
+}

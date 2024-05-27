@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface IModalContext {
     hideModal: () => void;
@@ -16,19 +16,19 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
     const showModal = (content: React.ReactNode) => setModalContent(content);
     const hideModal = () => setModalContent(null);
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                hideModal();
-            }
-        };
+    // useEffect(() => {
+    //     const handleKeyDown = (event: KeyboardEvent) => {
+    //         if (event.key === "Escape") {
+    //             hideModal();
+    //         }
+    //     };
 
-        window.addEventListener("keydown", handleKeyDown);
+    //     window.addEventListener("keydown", handleKeyDown);
 
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener("keydown", handleKeyDown);
+    //     };
+    // }, []);
 
     return (
         <ModalContext.Provider value={{ showModal, hideModal }}>
