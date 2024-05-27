@@ -27,9 +27,11 @@ export default function NavBar({ className }: IClassName) {
                     </Link>
                 </>
             ) : (
-                <Button variant={"outline"} onClick={logout}>
-                    Log out
-                </Button>
+                <Link to={"/"} title="logout">
+                    <Button variant={"outline"} onClick={logout}>
+                        Log out
+                    </Button>
+                </Link>
             )}
             <ModeToggle />
         </div>
