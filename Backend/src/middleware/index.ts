@@ -5,7 +5,12 @@ import cors from "cors";
 
 const middleware = express();
 
-middleware.use(cors({ origin: "http://localhost:5173", credentials: true }));
+middleware.use(
+    cors({
+        origin: ["http://localhost:5173", "https://crispy-space-pancake-gwqxvg557p72v675-5173.app.github.dev"],
+        credentials: true,
+    }),
+);
 //if withCredentials: true in request, wild card cors entry "*" doesn't work.
 middleware.use(express.json());
 middleware.use(express.urlencoded({ extended: false }));
