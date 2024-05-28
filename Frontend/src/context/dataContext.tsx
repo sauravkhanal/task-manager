@@ -1,6 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { ITag, IUserDetails } from "@/types";
-import local from "@/utils/localStorage";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
 
@@ -18,16 +17,12 @@ export const DataContext = createContext<IDataContext>({
     loading: false,
 });
 
-export default function DataProvider({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export function DataProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState<Boolean>(false);
     const [allUserDetails, setAllUserDetails] = useState<IUserDetails[] | []>(
-        local.getJSON("allUserDetails"),
+        [],
     );
-    const [tags, setTags] = useState<ITag[] | []>(local.getJSON("tags"));
+    const [tags, setTags] = useState<ITag[] | []>([]);
 
     async function refreshUsers() {
         const data = await userAPI.getAllUsers();
@@ -66,4 +61,14 @@ export default function DataProvider({
             {children}
         </DataContext.Provider>
     );
+}
+
+export default function useDataContext() {
+    const context = useContext(DataContext);
+    if (!context) {
+        throw new Error(
+            "The data context can only be used within the Data context provider",
+        );
+    }
+    return context;
 }
