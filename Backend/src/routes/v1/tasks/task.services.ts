@@ -16,6 +16,10 @@ const taskServices = {
         return taskRepository.getTaskById(_id);
     },
 
+    getAllTasks(): Promise<ITask[] | null> {
+        return taskRepository.getAllTasks();
+    },
+
     updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
         return taskRepository.updateTaskDetails(_id, creatorID, newDetails);
     },

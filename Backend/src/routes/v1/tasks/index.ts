@@ -32,6 +32,9 @@ router.patch("/:id/comments/remove", taskControllers.removeCommentFromTask);
 // Route to create task
 router.post("/", upload.array("files"), taskControllers.createTask);
 
+// Route to get all tasks
+router.get("/", taskControllers.getAllTasks);
+
 // TODO: Attachments route (not implemented yet)
 // router.post('/:id/attachments', taskControllers.createAttachment);
 // router.post('/:id/attachments/:aId', taskControllers.removeAttachment);

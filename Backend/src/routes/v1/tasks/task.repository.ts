@@ -5,6 +5,7 @@ import ITask from "./types";
 interface ITaskRepository {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask>;
     getTaskById(_id: string): Promise<ITask | null>;
+    getAllTasks(): Promise<ITask[] | null>;
     updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null>;
     deleteTask(_id: string, creatorID: string): Promise<ITask | null>;
     recoverTask(_id: string, creatorID: string): Promise<ITask | null>;
@@ -25,6 +26,15 @@ const taskRepository: ITaskRepository = {
 
     getTaskById(_id: string): Promise<ITask | null> {
         return TaskModel.findById({ _id })
+            .populate([
+                { path: "creatorID", select: "-password" },
+                { path: "assigneeIDs", select: "-password" },
+            ])
+            .exec();
+    },
+
+    getAllTasks(): Promise<ITask[] | null> {
+        return TaskModel.find()
             .populate([
                 { path: "creatorID", select: "-password" },
                 { path: "assigneeIDs", select: "-password" },

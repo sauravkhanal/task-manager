@@ -41,6 +41,16 @@ const taskControllers = {
         }
     },
 
+    async getAllTasks(_: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await taskServices.getAllTasks();
+            if (result) return successResponse(res, 200, messages.success("tasks", "retrieved"), result);
+            throw new CustomError(404, messages.failure("retrieving", "tasks"));
+        } catch (error) {
+            next(error);
+        }
+    },
+
     async updateTaskDetails(
         req: Request<{ id: string }, unknown, Partial<ITask>, unknown>,
         res: Response,
