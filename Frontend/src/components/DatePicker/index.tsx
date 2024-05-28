@@ -9,9 +9,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { UseFormGetValues, UseFormSetValue, useForm } from "react-hook-form";
+import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import { ITask } from "@/types";
-import { useTaskFormContext } from "@/context/createTask.context";
 
 interface DatePickerProps {
     getValues: UseFormGetValues<ITask>;
@@ -19,7 +18,8 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ getValues, setValue }: DatePickerProps) {
-    const [date, setDate] = useState<Date | null>(getValues("dueDate") || null);
+    const initialDate = getValues("dueDate") || null;
+    const [date, setDate] = useState<Date | null>(initialDate);
 
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {
@@ -28,29 +28,29 @@ export function DatePicker({ getValues, setValue }: DatePickerProps) {
         }
     };
 
-    // const { methods } = useTaskFormContext();
-
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 <Button
                     variant="outline"
                     className={cn(
-                        "w-[280px] justify-start text-left font-normal",
+                        "w-[240px] pl-3 text-left font-normal",
                         !date && "text-muted-foreground",
                     )}
                 >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Set Deadline</span>}
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
                 <Calendar
                     mode="single"
-                    selected={date ?? undefined}
+                    selected={date!}
                     onSelect={handleDateSelect}
+                    disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                    }
                     initialFocus
-                    // {...methods.register("dueDate")}
                 />
             </PopoverContent>
         </Popover>
