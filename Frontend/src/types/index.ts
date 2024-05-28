@@ -56,3 +56,39 @@ export interface ITag {
     description?: string;
     color: string;
 }
+
+export enum TaskPriority {
+    LOW = "LOW",
+    MED = "MED",
+    HIGH = "HIGH",
+}
+
+export enum WorkflowStage {
+    TODO = "TODO",
+    INPROGRESS = "INPROGRESS",
+    TESTING = "TESTING",
+    COMPLETED = "COMPLETED",
+}
+
+export interface IWorkflowStage {
+    _id: string;
+    title: WorkflowStage;
+    taskIDs: string[];
+    description?: string;
+}
+
+export interface ITask {
+    _id: string;
+    title: string;
+    description?: string;
+    tagIDs: string[];
+    dueDate: Date;
+    priority: TaskPriority;
+    workflowStage: WorkflowStage;
+    creatorID: string;
+    assigneeIDs: string[];
+    commentIDs?: string[];
+    attachmentIDs?: string[];
+    activityIDs?: string[];
+    deleted: boolean;
+}

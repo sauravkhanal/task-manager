@@ -1,5 +1,4 @@
 import { CheckCircle, Circle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
     Command,
     CommandEmpty,
@@ -13,23 +12,38 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
-import { ITag } from "@/types";
+import { useEffect, useState } from "react";
+import { ITag, ITask } from "@/types";
 import { TagCreator } from "../TagCreator";
+import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import { Button } from "../ui/button";
 
-export function ComboBox({ tags }: { tags: ITag[] }) {
+interface ComboBoxProps {
+    availableTags: ITag[];
+    prevTags?: ITag[];
+    getValues: UseFormGetValues<ITask>;
+    setValue: UseFormSetValue<ITask>;
+}
+
+export function ComboBox({ availableTags, prevTags, setValue }: ComboBoxProps) {
     const [open, setOpen] = useState(false);
-    const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<ITag[] | undefined>(
+        prevTags,
+    );
 
     const toggleStatus = (tag: ITag) => {
         setSelectedTags((prevSelected) => {
-            if (prevSelected.some((t) => t._id === tag._id)) {
+            if (prevSelected?.some((t) => t._id === tag._id)) {
                 return prevSelected.filter((t) => t._id !== tag._id);
             } else {
-                return [...prevSelected, tag];
+                return [...(prevSelected || []), tag];
             }
         });
     };
+
+    useEffect(() => {
+        setValue("tagIDs", selectedTags?.map((tag) => tag._id) || []);
+    }, [selectedTags]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -39,8 +53,8 @@ export function ComboBox({ tags }: { tags: ITag[] }) {
                     size="sm"
                     className="w-full justify-start overflow-hidden"
                 >
-                    {selectedTags.length > 0 ? (
-                        selectedTags.map((tag) => (
+                    {selectedTags?.length ?? 0 > 0 ? (
+                        selectedTags?.map((tag) => (
                             <span
                                 key={tag._id}
                                 className="mr-2 px-2 py-1 rounded"
@@ -61,17 +75,14 @@ export function ComboBox({ tags }: { tags: ITag[] }) {
                         <CommandEmpty>No results found.</CommandEmpty>
                         <CommandGroup>
                             <CommandItem className="flex justify-center">
-                                {/* <Button variant={"outline"} onClick={() => {}}>
-                                    Create new tag
-                                </Button> */}
                                 <TagCreator />
                             </CommandItem>
-                            {tags.map((tag) => (
+                            {availableTags.map((tag) => (
                                 <CommandItem
                                     key={tag._id}
                                     value={tag._id}
                                     onSelect={(value) => {
-                                        const selectedTag = tags.find(
+                                        const selectedTag = availableTags.find(
                                             (t) => t._id === value,
                                         );
                                         if (selectedTag) {
@@ -79,7 +90,7 @@ export function ComboBox({ tags }: { tags: ITag[] }) {
                                         }
                                     }}
                                 >
-                                    {selectedTags.some(
+                                    {selectedTags?.some(
                                         (t) => t._id === tag._id,
                                     ) ? (
                                         <CheckCircle className="mr-2 h-4 w-4 opacity-100" />

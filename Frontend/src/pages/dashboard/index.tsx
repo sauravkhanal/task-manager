@@ -10,7 +10,6 @@ export default function Dashboard() {
 
     const { showModal } = useModal();
 
-
     return (
         <div className=" flex flex-col items-center gap-2 justify-center">
             {isLoggedIn ? (

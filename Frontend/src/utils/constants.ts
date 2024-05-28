@@ -1,15 +1,20 @@
-export const priority = [
+import { TaskPriority } from "@/types";
+
+export const priority: { title: TaskPriority; _id: string; color: string }[] = [
     {
-        title: "Low",
+        title: TaskPriority.LOW,
+        _id: "LOW_ID",
         color: "#016e2d",
     },
     {
-        title: "Medium",
+        title: TaskPriority.MED,
         color: "#FFD700",
+        _id: "MED_ID",
     },
     {
-        title: "High",
+        title: TaskPriority.HIGH,
         color: "#fa1302",
+        _id: "HIGH_ID",
     },
 ];
 

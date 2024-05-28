@@ -7,21 +7,36 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { ITask, TaskPriority } from "@/types";
+import { useEffect } from "react";
+import { UseFormSetValue } from "react-hook-form";
 
 export function SelectItems({
     placeholder,
+    prevValue,
     label,
     items,
+    setValue,
 }: {
     placeholder: string;
+    prevValue?: TaskPriority;
     label: string;
     items: {
-        title: string;
+        title: TaskPriority;
         color: string;
     }[];
+    setValue: UseFormSetValue<ITask>;
 }) {
+    useEffect(() => {
+        setValue("priority", prevValue ?? TaskPriority.LOW);
+    });
     return (
-        <Select>
+        <Select
+            onValueChange={(value) => {
+                setValue("priority", value as TaskPriority);
+                console.log("Priority changed: ", value);
+            }}
+        >
             <SelectTrigger className="w-[180px]">
                 <SelectValue
                     placeholder={placeholder}
