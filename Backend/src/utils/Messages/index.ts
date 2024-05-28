@@ -34,6 +34,13 @@ export const messages = {
         not_found(name: string) {
             return `The ${name} is not found.`;
         },
+        /**
+         *
+         * @returns `The ${name} is already exists.`
+         */
+        already_exists(name: string) {
+            return `The ${name} already exists.`;
+        },
     },
     OTP: {
         email_Used: `The email is already used. Please verify the OTP sent to email at ${env.endpoint}/v1/auth/verify`,
