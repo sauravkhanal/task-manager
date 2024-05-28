@@ -18,21 +18,20 @@ import UserCard from "./UserCard";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
 import { UseFormSetValue } from "react-hook-form";
+import useDataContext from "@/context/dataContext";
 
 interface SelectUserProps {
     prevUsers: IUserDetails[];
-    availableUsers: IUserDetails[];
     setValue: UseFormSetValue<ITask>;
 }
 
-export function SelectUser({
-    prevUsers,
-    availableUsers,
-    setValue,
-}: SelectUserProps) {
+export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
     const [open, setOpen] = useState(false);
     const [selectedUsers, setSelectedUsers] =
         useState<IUserDetails[]>(prevUsers);
+
+    const context = useDataContext();
+    const availableUsers = context.allUserDetails;
 
     const toggleStatus = (user: IUserDetails) => {
         const updatedSelectedUsers = selectedUsers.some(
@@ -80,40 +79,37 @@ export function SelectUser({
                         <CommandEmpty>No results found.</CommandEmpty>
                         <CommandGroup>
                             <ScrollArea className="h-44">
-                                {availableUsers.map((user) => (
-                                    <CommandItem
-                                        key={user._id}
-                                        value={
-                                            user.firstName + " " + user.lastName
-                                        }
-                                        onSelect={(value) => {
-                                            const selectedUser =
-                                                availableUsers.find(
-                                                    (user) =>
-                                                        user.firstName +
-                                                            " " +
-                                                            user.lastName ===
-                                                        value,
-                                                );
-                                            if (selectedUser) {
-                                                toggleStatus(selectedUser);
-                                            }
-                                        }}
-                                    >
-                                        {selectedUsers.some(
-                                            (t) => t._id === user._id,
-                                        ) ? (
-                                            <CheckCircle className="mr-2 h-4 w-4 opacity-100" />
-                                        ) : (
-                                            <Circle className="mr-2 h-4 w-4 opacity-40" />
-                                        )}
-                                        <span>
-                                            {user.firstName +
-                                                " " +
-                                                user.lastName}
-                                        </span>
-                                    </CommandItem>
-                                ))}
+                                {availableUsers.map((user) => {
+                                    return (
+                                        <CommandItem
+                                            key={user._id}
+                                            value={user._id} // Use _id as the value for selection
+                                            onSelect={(value) => {
+                                                const selectedUser =
+                                                    availableUsers.find(
+                                                        (user) =>
+                                                            user._id === value,
+                                                    );
+                                                if (selectedUser) {
+                                                    toggleStatus(selectedUser);
+                                                }
+                                            }}
+                                        >
+                                            {selectedUsers.some(
+                                                (t) => t._id === user._id,
+                                            ) ? (
+                                                <CheckCircle className="mr-2 h-4 w-4 opacity-100" />
+                                            ) : (
+                                                <Circle className="mr-2 h-4 w-4 opacity-40" />
+                                            )}
+                                            <span>
+                                                {user.firstName +
+                                                    " " +
+                                                    user.lastName}
+                                            </span>
+                                        </CommandItem>
+                                    );
+                                })}
                             </ScrollArea>
                         </CommandGroup>
                     </CommandList>
