@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import taskControllers from "./task.controllers";
+import upload from "../../../middleware/multer";
 
 // Group Task routes
 router
@@ -29,7 +30,7 @@ router.post("/:id/comments", taskControllers.addCommentToTask);
 router.patch("/:id/comments/remove", taskControllers.removeCommentFromTask);
 
 // Route to create task
-router.post("/", taskControllers.createTask);
+router.post("/", upload.array("files"), taskControllers.createTask);
 
 // TODO: Attachments route (not implemented yet)
 // router.post('/:id/attachments', taskControllers.createAttachment);
