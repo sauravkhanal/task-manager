@@ -3,8 +3,7 @@ import ITask, { TaskPriority } from "./types";
 import { WorkflowStage } from "../workflowStage/types";
 
 const taskSchema = new mongoose.Schema<ITask>({
-    _id: mongoose.Types.ObjectId,
-    title: { type: String, required: true },
+    title: { type: String, required: true, unique: true },
     description: { type: String },
     tagIDs: { type: [String], required: true },
     dueDate: { type: Date, required: true },
@@ -19,11 +18,11 @@ const taskSchema = new mongoose.Schema<ITask>({
         required: true,
         default: WorkflowStage.TODO,
     },
-    creatorID: { type: String, required: true },
-    assigneeIDs: { type: [String], required: true },
-    commentIDs: { type: [String] },
-    attachmentIDs: { type: [String] },
-    activityIDs: { type: [String] },
+    creatorID: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    assigneeIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }],
+    commentIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    attachmentIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Attachment" }],
+    activityIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     deleted: { type: Boolean, default: false },
 });
 

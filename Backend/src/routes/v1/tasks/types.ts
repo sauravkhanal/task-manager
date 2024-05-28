@@ -8,17 +8,20 @@ export enum TaskPriority {
 }
 
 export default interface ITask {
-    _id: mongoose.Types.ObjectId;
     title: string;
     description?: string;
-    tagIDs: string[];
+    tagIDs: mongoose.Types.ObjectId[];
     dueDate: Date;
     priority: TaskPriority;
     workflowStage: WorkflowStage;
-    creatorID: string;
-    assigneeIDs: string[];
-    commentIDs?: string[];
-    attachmentIDs?: string[];
-    activityIDs?: string[];
+    creatorID: mongoose.Types.ObjectId;
+    assigneeIDs: mongoose.Types.ObjectId[];
+    commentIDs?: mongoose.Types.ObjectId[];
+    attachmentIDs?: mongoose.Types.ObjectId[];
+    activityIDs?: mongoose.Types.ObjectId[];
     deleted: boolean;
+}
+
+export interface ITaskDocument extends ITask {
+    _id: mongoose.Types.ObjectId;
 }
