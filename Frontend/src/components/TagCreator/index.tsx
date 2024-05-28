@@ -9,15 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
 import { ITag } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import { toast } from "sonner";
 import LoadingIcon from "../LoadingIcon";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import useDataContext from "@/context/dataContext";
-export function TagCreator() {
+
+function useTagForm() {
     const {
         register,
         handleSubmit,
@@ -27,7 +28,8 @@ export function TagCreator() {
 
     const [loading, setLoading] = useState<boolean>(false);
     const { refreshData } = useDataContext();
-    async function onFormSubmit({ title, description, color }: Partial<ITag>) {
+
+    async function createTag({ title, description, color }: Partial<ITag>) {
         setLoading(true);
         const response = await tagAPI.createTag({ title, description, color });
         if (response.success) {
@@ -43,6 +45,13 @@ export function TagCreator() {
         }
         setLoading(false);
     }
+
+    return { register, handleSubmit, errors, loading, createTag };
+}
+
+export function TagCreator() {
+    const { register, handleSubmit, errors, loading, createTag } = useTagForm();
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -52,13 +61,9 @@ export function TagCreator() {
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Create New Tag</DialogTitle>
-                    {/* <hr />
-                    <DialogDescription>
-                        Add new tags here. Click "Create Tag" when you're done.
-                    </DialogDescription> */}
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onFormSubmit)}>
+                <form onSubmit={handleSubmit(createTag)}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="title" className="text-right">
