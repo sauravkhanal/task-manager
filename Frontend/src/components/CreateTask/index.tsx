@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectItems } from "../Select";
-import { UserDetails, priority, tags } from "@/utils/constants";
+import { priority } from "@/utils/constants";
 import { DatePicker } from "../DatePicker";
 import { ComboBox } from "../TagsSelector";
 import { Button } from "../ui/button";
@@ -19,8 +19,12 @@ import { SelectUser } from "../SelectUser";
 //     useTaskFormContext,
 // } from "@/context/createTask.context";
 import { ITask, TaskPriority } from "@/types";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { DataContext } from "@/context/dataContext";
+import taskAPI from "@/api/taskAPI";
+import { toast } from "sonner";
+import { useModal } from "@/context/modalContext";
 
 export default function CreateTask() {
     // const { methods } = useTaskFormContext();
@@ -36,6 +40,9 @@ export default function CreateTask() {
         handleSubmit,
         getValues,
         setValue,
+        setError,
+        reset,
+
         formState: { errors },
     } = useForm<ITask>({
         defaultValues: {
@@ -48,10 +55,29 @@ export default function CreateTask() {
         },
     });
 
-    const onSubmit = (data: ITask) => {
-        console.log(data);
-        for (const [key, value] of Object.entries(data)) {
-            console.log(`${key}: ${value}`);
+    const onSubmit = async (data: ITask) => {
+        // for (const [key, value] of Object.entries(data)) {
+        //     console.log(`${key}: ${value}`);
+        // }
+        const response = await taskAPI.CreateTask(data);
+        if (response.success) {
+            reset();
+            toast.success(response.message);
+            // setTimeout(() => hideModal(), 1000);
+            hideModal();
+        } else {
+            toast.error(response.message);
+
+            if (response.data.title)
+                setError("title", {
+                    type: "custom",
+                    message: response.data.title,
+                });
+            if (response.data.dueDate)
+                setError("dueDate", {
+                    type: "custom",
+                    message: response.data.dueDate.toString(),
+                });
         }
     };
 
@@ -62,6 +88,8 @@ export default function CreateTask() {
         register("tagIDs");
     }, [register]);
 
+    const { tags } = useContext(DataContext);
+    const { hideModal } = useModal();
     return (
         <Card className="w-full max-w-3xl">
             <CardHeader>
@@ -79,16 +107,20 @@ export default function CreateTask() {
                             id="title"
                             type="text"
                             placeholder="Title for the task"
-                            {...register("title")}
+                            className={` ${errors.title && " border-red-600"}`}
+                            {...register("title", {
+                                required: "Title is required",
+                            })}
                         />
+                        {errors.title && (
+                            <p className="text-red-600 text-sm ">
+                                {errors.title.message?.toString()}
+                            </p>
+                        )}
                     </span>
                     <span className="grid gap-1.5">
                         <Label htmlFor="">Add users</Label>
-                        <SelectUser
-                            prevUsers={[]}
-                            availableUsers={UserDetails}
-                            setValue={setValue}
-                        />
+                        <SelectUser prevUsers={[]} setValue={setValue} />
                     </span>
                     <span className="flex gap-2">
                         <span className="grid gap-1.5">
@@ -102,11 +134,16 @@ export default function CreateTask() {
                             />
                         </span>
                         <span className="grid gap-1.5">
-                            <Label htmlFor="priority">Deadline</Label>
+                            <Label htmlFor="">Deadline</Label>
                             <DatePicker
                                 setValue={setValue}
                                 getValues={getValues}
                             />
+                            {errors.dueDate && (
+                                <p className="text-red-600 text-sm ">
+                                    {errors.dueDate.message?.toString()}
+                                </p>
+                            )}
                         </span>
                         <span className="grid gap-1.5 grow">
                             <Label htmlFor="">Tags</Label>
