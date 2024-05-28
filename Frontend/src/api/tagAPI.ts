@@ -14,12 +14,16 @@ const tagAPI = {
         }
     },
 
-    async createTag(tagData: ITag) {
+    async createTag({ title, description, color }: Partial<ITag>) {
         try {
-            const response = await axiosInstance.post("/tags", tagData);
-            return response.data as IAPIResponse<ITag[]>;
+            const response = await axiosInstance.post("/tags", {
+                title,
+                description,
+                color,
+            });
+            return response.data as IAPIResponse<ITag>;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<unknown>;
+            return error.response.data as IAPIResponse<Partial<ITag>>;
         }
     },
 

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -10,37 +9,113 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import { useForm } from "react-hook-form";
+import { Textarea } from "../ui/textarea";
+import { ITag } from "@/types";
+import tagAPI from "@/api/tagAPI";
+import { toast } from "sonner";
+import LoadingIcon from "../LoadingIcon";
+import { useState } from "react";
+import useDataContext from "@/context/dataContext";
 export function TagCreator() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+    } = useForm();
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const { refreshData } = useDataContext();
+    async function onFormSubmit({ title, description, color }: Partial<ITag>) {
+        setLoading(true);
+        const response = await tagAPI.createTag({ title, description, color });
+        if (response.success) {
+            toast.success(response.message);
+            refreshData();
+        } else {
+            toast.error(response.data.title);
+            if (response.data.title)
+                setError("title", {
+                    type: "custom",
+                    message: response.data.title,
+                });
+        }
+        setLoading(false);
+    }
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="outline">Create new tag</Button>
             </DialogTrigger>
+
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create new tag</DialogTitle>
+                    <DialogTitle>Create New Tag</DialogTitle>
+                    {/* <hr />
                     <DialogDescription>
-                        Add new tags here. Click save when you're done.
-                    </DialogDescription>
+                        Add new tags here. Click "Create Tag" when you're done.
+                    </DialogDescription> */}
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="title" className="text-right">
-                            Title
-                        </Label>
-                        <Input id="title" className="col-span-3" />
+
+                <form onSubmit={handleSubmit(onFormSubmit)}>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="title" className="text-right">
+                                Title
+                            </Label>
+                            <Input
+                                id="title"
+                                className={`col-span-3 ${
+                                    errors.title && " border-red-600"
+                                }`}
+                                {...register("title", {
+                                    required: "Title is required",
+                                })}
+                                placeholder="Name of the tag."
+                            />
+                            {errors.title && (
+                                <p className="text-red-600 text-sm col-span-3 col-start-2 justify-self-start">
+                                    {errors.title.message?.toString()}
+                                </p>
+                            )}
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="description" className="text-right">
+                                Description
+                            </Label>
+                            <Textarea
+                                id="description"
+                                className="col-span-3"
+                                {...register("description")}
+                                placeholder="Description about the tag (optional)."
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="color" className="text-right">
+                                Color
+                            </Label>
+                            <Input
+                                id="color"
+                                className="col-span-3 min-h-12"
+                                type="color"
+                                {...register("color")}
+                            />
+                        </div>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="color" className="text-right">
-                            color
-                        </Label>
-                        <Input id="color" className="col-span-3" type="color" />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                </DialogFooter>
+
+                    <DialogFooter>
+                        <Button
+                            type="submit"
+                            disabled={Object.keys(errors).length > 0}
+                        >
+                            <LoadingIcon
+                                text="Create Tag"
+                                isLoading={loading}
+                            />
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );
