@@ -1,8 +1,5 @@
+import local from "@/utils/localStorage";
 import axios, { AxiosInstance } from "axios";
-
-interface Token {
-    accessToken?: string;
-}
 
 const axiosInstance: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_ENDPOINT as string,
@@ -13,11 +10,9 @@ const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         try {
-            const token = JSON.parse(
-                localStorage.getItem("token") || "{}",
-            ) as Token;
-            if (token.accessToken) {
-                config.headers!.Authorization = `Bearer ${token.accessToken}`;
+            const token = local.get("accessToken");
+            if (token) {
+                config.headers!.Authorization = `Bearer ${token}`;
             }
         } catch (error) {
             console.error("Failed to parse token:", error);
