@@ -3,6 +3,7 @@ import ITag from "./types";
 import { failureResponse, successResponse } from "../../../utils/ApiResponse";
 import { messages } from "../../../utils/Messages";
 import tagServices from "./tag.services";
+import { IAccessToken } from "../../../types";
 
 const tagController = {
     async getAllTags(_: Request, res: Response, next: NextFunction) {
@@ -26,7 +27,8 @@ const tagController = {
 
     async createTag(req: Request<unknown, unknown, ITag>, res: Response, next: NextFunction) {
         try {
-            const authorID = res.locals.users._id;
+            const token = res.locals.user as IAccessToken;
+            const authorID = token._id;
             const { color, title, description }: ITag = req.body;
             const result = await tagServices.createTag({ color, title, description, authorID });
             if (result) return successResponse(res, 201, messages.success("created", "tag"), result);

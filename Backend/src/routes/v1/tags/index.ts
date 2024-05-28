@@ -1,14 +1,16 @@
 import express from "express";
 import tagController from "./tag.controllers";
+import requireLogin from "../../../middleware/requireLogin";
 
-const router = express.Router();
+const tagRouter = express.Router();
 
-router.get("/", tagController.getAllTags);
-router.post("/tasks", tagController.addTasksToTag);
-router.delete("/tasks", tagController.removesTaskFromTag);
-router.get("/:id", tagController.getTagById);
-router.post("/", tagController.createTag);
-router.patch("/:id", tagController.updateTag);
-router.delete("/:id", tagController.deleteTag);
+tagRouter.use(requireLogin);
+tagRouter.get("/", tagController.getAllTags);
+tagRouter.post("/tasks", tagController.addTasksToTag);
+tagRouter.delete("/tasks", tagController.removesTaskFromTag);
+tagRouter.get("/:id", tagController.getTagById);
+tagRouter.post("/", tagController.createTag);
+tagRouter.patch("/:id", tagController.updateTag);
+tagRouter.delete("/:id", tagController.deleteTag);
 
-export default router;
+export default tagRouter;

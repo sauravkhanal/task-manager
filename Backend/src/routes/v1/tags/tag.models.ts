@@ -7,7 +7,7 @@ const tagSchema = new mongoose.Schema<ITag>({
     title: { type: String, required: true, unique: true },
     description: { type: String },
     color: { type: String, required: true },
-    deleted: { type: Boolean, default: true },
+    deleted: { type: Boolean, default: false },
 });
 
 const TagModel = mongoose.model<ITag>("Tag", tagSchema);
