@@ -6,6 +6,7 @@ import MyRoutes from "./components/Routes";
 import { Toaster } from "sonner";
 import { ModalProvider } from "./context/modalContext";
 import { TaskFormProvider } from "./context/createTask.context";
+import DataProvider from "./context/dataContext";
 
 function App() {
     return (
@@ -13,14 +14,16 @@ function App() {
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <ModalProvider>
                     <TaskFormProvider>
-                        <BrowserRouter>
-                            <div className=" flex flex-col min-h-screen">
-                                <NavBar className="lg:px-20" />
-                                <MyRoutes />
-                                <Toaster />
-                                {/* <Modal /> */}
-                            </div>
-                        </BrowserRouter>
+                        <DataProvider>
+                            <BrowserRouter>
+                                <div className=" flex flex-col min-h-screen">
+                                    <NavBar className="lg:px-20" />
+                                    <MyRoutes />
+                                    <Toaster />
+                                    {/* <Modal /> */}
+                                </div>
+                            </BrowserRouter>
+                        </DataProvider>
                     </TaskFormProvider>
                 </ModalProvider>
             </ThemeProvider>
