@@ -7,6 +7,7 @@ import { messages } from "../../../utils/Messages";
 import { successResponse } from "../../../utils/ApiResponse";
 import { WorkflowStage } from "../workflowStage/types";
 import { IComment } from "../comments/types";
+import mongoose from "mongoose";
 
 const taskControllers = {
     async createTask(req: Request<unknown, unknown, ITask, unknown>, res: Response, next: NextFunction) {
@@ -15,7 +16,7 @@ const taskControllers = {
             const client_id = token._id;
             const { title, description, dueDate, assigneeIDs, priority } = req.body;
             const result = await taskServices.createNewTask({
-                creatorID: client_id,
+                creatorID: client_id as unknown as mongoose.Types.ObjectId,
                 title,
                 description,
                 dueDate,

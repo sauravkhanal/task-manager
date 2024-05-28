@@ -24,7 +24,12 @@ const taskRepository: ITaskRepository = {
     },
 
     getTaskById(_id: string): Promise<ITask | null> {
-        return TaskModel.findById({ _id });
+        return TaskModel.findById({ _id })
+            .populate([
+                { path: "creatorID", select: "-password" },
+                { path: "assigneeIDs", select: "-password" },
+            ])
+            .exec();
     },
 
     updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
