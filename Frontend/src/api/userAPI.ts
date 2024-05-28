@@ -1,6 +1,7 @@
 import {
     IAPIResponse,
     ILoginResponse,
+    IUserDetails,
     IUserLoginData,
     IUserRegisterData,
 } from "@/types";
@@ -33,6 +34,18 @@ const userAPI = {
             return response.data as IAPIResponse<{}>;
         } catch (error: any) {
             return error.response.data as IAPIResponse<{}>;
+        }
+    },
+
+    async getAllUsers() {
+        try {
+            const response = await axiosInstance.get("/users");
+            return response.data as IAPIResponse<IUserDetails[]>;
+        } catch (error: any) {
+            // return error.response.data as IAPIResponse<unknown>;
+            console.log("Get all users error: ", error);
+            // return null;
+            throw error;
         }
     },
 };
