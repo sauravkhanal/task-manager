@@ -66,18 +66,19 @@ export default function CreateTask() {
             // setTimeout(() => hideModal(), 1000);
             hideModal();
         } else {
-            toast.error(response.message);
-
             if (response.data.title)
                 setError("title", {
                     type: "custom",
                     message: response.data.title,
                 });
-            if (response.data.dueDate)
+            else if (response.data.dueDate)
                 setError("dueDate", {
                     type: "custom",
                     message: response.data.dueDate.toString(),
                 });
+            else {
+                toast.error(response.message);
+            }
         }
     };
 
