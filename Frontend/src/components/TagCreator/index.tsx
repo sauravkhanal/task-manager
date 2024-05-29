@@ -46,11 +46,19 @@ function useTagForm() {
         setLoading(false);
     }
 
-    return { register, handleSubmit, errors, loading, createTag };
+    async function handleNestedFormSubmit(
+        event: React.FormEvent<HTMLFormElement>,
+    ) {
+        event.preventDefault();
+        event.stopPropagation();
+        handleSubmit(createTag)();
+    }
+
+    return { register, handleNestedFormSubmit, errors, loading, createTag };
 }
 
 export function TagCreator() {
-    const { register, handleSubmit, errors, loading, createTag } = useTagForm();
+    const { register, handleNestedFormSubmit, errors, loading } = useTagForm();
 
     return (
         <Dialog>
@@ -63,7 +71,7 @@ export function TagCreator() {
                     <DialogTitle>Create New Tag</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(createTag)}>
+                <form id="nested" onSubmit={handleNestedFormSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="title" className="text-right">
