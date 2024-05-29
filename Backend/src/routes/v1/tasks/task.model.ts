@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema<ITask>(
     {
         title: { type: String, required: true, unique: true },
         description: { type: String },
-        tagIDs: { type: [String], required: true },
+        tagIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
         dueDate: { type: Date, required: true },
         priority: {
             type: String,

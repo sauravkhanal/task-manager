@@ -19,8 +19,8 @@ interface ITaskRepository {
 }
 
 const taskRepository: ITaskRepository = {
-    createNewTask({ creatorID, description, dueDate, priority, title, assigneeIDs }: Partial<ITask>): Promise<ITask> {
-        const newTask = new TaskModel({ creatorID, description, dueDate, priority, title, assigneeIDs });
+    createNewTask(taskDetails: Partial<ITask>): Promise<ITask> {
+        const newTask = new TaskModel(taskDetails);
         return newTask.save();
     },
 
@@ -39,6 +39,7 @@ const taskRepository: ITaskRepository = {
             .populate([
                 { path: "creatorID", select: "-password" },
                 { path: "assigneeIDs", select: "-password" },
+                { path: "tagIDs" },
             ])
             .exec();
     },

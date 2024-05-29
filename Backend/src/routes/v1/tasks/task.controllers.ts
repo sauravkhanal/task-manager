@@ -14,7 +14,7 @@ const taskControllers = {
         try {
             const token = res.locals.user as IAccessToken;
             const client_id = token._id;
-            const { title, description, dueDate, assigneeIDs, priority } = req.body;
+            const { title, description, dueDate, assigneeIDs, priority, tagIDs } = req.body;
             const result = await taskServices.createNewTask({
                 creatorID: client_id as unknown as mongoose.Types.ObjectId,
                 title,
@@ -22,6 +22,7 @@ const taskControllers = {
                 dueDate,
                 assigneeIDs,
                 priority,
+                tagIDs,
             });
             if (result) return successResponse(res, 200, messages.success("created"), result);
             throw new CustomError(500, messages.failure("creating"));

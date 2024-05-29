@@ -8,8 +8,9 @@ import taskRepository from "./task.repository";
 import ITask from "./types";
 
 const taskServices = {
-    createNewTask({ creatorID, title, description, dueDate, priority, assigneeIDs }: Partial<ITask>): Promise<ITask> {
-        return taskRepository.createNewTask({ creatorID, title, description, dueDate, priority, assigneeIDs });
+    createNewTask(taskDetails: Partial<ITask>): Promise<ITask> {
+        console.log(taskDetails.tagIDs);
+        return taskRepository.createNewTask(taskDetails);
     },
 
     getTaskById(_id: string): Promise<ITask | null> {
