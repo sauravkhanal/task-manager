@@ -29,7 +29,7 @@ export function SelectItems({
 }) {
     useEffect(() => {
         setValue("priority", prevValue ?? TaskPriority.LOW);
-    });
+    }, []);
     return (
         <Select
             onValueChange={(value) => {
