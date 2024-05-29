@@ -1,4 +1,4 @@
-import { IAPIResponse, ILoginResponse, ITask, IUserLoginData } from "@/types";
+import { IAPIResponse, ITask } from "@/types";
 import axiosInstance from "./axiosInstance";
 
 const taskAPI = {
@@ -11,12 +11,45 @@ const taskAPI = {
         }
     },
 
-    async login(userData: IUserLoginData) {
+    async getAllTasks() {
         try {
-            const response = await axiosInstance.post("/auth", userData);
-            return response.data as IAPIResponse<ILoginResponse>;
+            const response = await axiosInstance.get("/tasks");
+            return response.data as IAPIResponse<ITask[]>;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<Partial<IUserLoginData>>;
+            return null;
+        }
+    },
+    async getTask(id: string) {
+        try {
+            const response = await axiosInstance.get(`/tasks/${id}`);
+            return response.data as IAPIResponse<ITask>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+    async deleteTask(id: string) {
+        try {
+            const response = await axiosInstance.delete(`/tasks/${id}`);
+            return response.data as IAPIResponse<ITask>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+    async updateTask({
+        id,
+        taskDetails,
+    }: {
+        id: string;
+        taskDetails: Partial<ITask>;
+    }) {
+        try {
+            const response = await axiosInstance.post(
+                `/tasks/${id}`,
+                taskDetails,
+            );
+            return response.data as IAPIResponse<ITask>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
         }
     },
 };
