@@ -92,3 +92,8 @@ export interface ITask {
     activityIDs?: string[];
     deleted: boolean;
 }
+
+export interface IAllTask extends Omit<ITask, "creatorID" | "assigneeIDs"> {
+    creatorID: IUserDetails;
+    assigneeIDs: IUserDetails[];
+}
