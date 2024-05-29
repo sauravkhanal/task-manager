@@ -64,6 +64,7 @@ export default function CreateTask() {
             reset();
             toast.success(response.message);
             // setTimeout(() => hideModal(), 1000);
+            refreshData({ tasks: true });
             hideModal();
         } else {
             if (response.data.title)
@@ -89,7 +90,7 @@ export default function CreateTask() {
         register("tagIDs");
     }, [register]);
 
-    const { tags } = useContext(DataContext);
+    const { tags, refreshData } = useContext(DataContext);
     const { hideModal } = useModal();
     return (
         <Card className="w-full max-w-3xl">
