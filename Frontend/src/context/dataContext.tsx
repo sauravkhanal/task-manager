@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { ITag, ITask, IUserDetails } from "@/types";
+import { IAllTask, ITag, IUserDetails } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
 import taskAPI from "@/api/taskAPI";
+import { AuthContext } from "./authContext";
 
 interface IDataContext {
     allUserDetails: IUserDetails[];
     tags: ITag[];
-    tasks: ITask[];
+    tasks: IAllTask[];
     refreshData: (options?: {
         users?: boolean;
         tags?: boolean;
@@ -28,7 +29,7 @@ function useDataFetching() {
     const [loading, setLoading] = useState<boolean>(false);
     const [allUserDetails, setAllUserDetails] = useState<IUserDetails[]>([]);
     const [tags, setTags] = useState<ITag[]>([]);
-    const [tasks, setTasks] = useState<ITask[]>([]);
+    const [tasks, setTasks] = useState<IAllTask[]>([]);
 
     async function refreshUsers() {
         try {
@@ -98,10 +99,10 @@ function useDataFetching() {
 export function DataProvider({ children }: { children: React.ReactNode }) {
     const { loading, allUserDetails, tags, tasks, refreshData } =
         useDataFetching();
-
+    const { isLoggedIn } = useContext(AuthContext);
     useEffect(() => {
-        refreshData();
-    }, []);
+        if (isLoggedIn) refreshData();
+    }, [isLoggedIn]);
 
     return (
         <DataContext.Provider

@@ -1,4 +1,4 @@
-import { IAPIResponse, ITask } from "@/types";
+import { IAPIResponse, IAllTask, ITask } from "@/types";
 import axiosInstance from "./axiosInstance";
 
 const taskAPI = {
@@ -14,7 +14,7 @@ const taskAPI = {
     async getAllTasks() {
         try {
             const response = await axiosInstance.get("/tasks");
-            return response.data as IAPIResponse<ITask[]>;
+            return response.data as IAPIResponse<IAllTask[]>;
         } catch (error: any) {
             return null;
         }
