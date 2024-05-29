@@ -3,7 +3,7 @@ import { IUser } from "./types";
 
 const userRepository = {
     getAllUsers(): Promise<IUserDocument[] | null> {
-        return UserModel.find().select({ password: false });
+        return UserModel.find().sort({ createdAt: -1 }).select({ password: false });
     },
 
     findUserByEmail(email: string): Promise<IUserDocument | null> {

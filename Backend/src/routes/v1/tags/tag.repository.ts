@@ -4,7 +4,7 @@ import ITag from "./types";
 const tagRepository = {
     // Get all tags
     getAllTags(): Promise<ITag[]> {
-        return TagModel.find().exec();
+        return TagModel.find().sort({ createdAt: -1 }).exec();
     },
 
     // Get a single tag by ID

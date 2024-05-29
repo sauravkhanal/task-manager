@@ -35,6 +35,7 @@ const taskRepository: ITaskRepository = {
 
     getAllTasks(): Promise<ITask[] | null> {
         return TaskModel.find()
+            .sort({ createdAt: -1 })
             .populate([
                 { path: "creatorID", select: "-password" },
                 { path: "assigneeIDs", select: "-password" },
