@@ -48,27 +48,27 @@ const taskRepository: ITaskRepository = {
     },
 
     deleteTask(_id: string, creatorID: string): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: true });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: true }, { new: true });
     },
 
     recoverTask(_id: string, creatorID: string): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: false });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: false }, { new: true });
     },
 
     addAssigneesToTask(_id: string, creatorID: string, id: string[]): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $push: { assigneeIDs: id } });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $push: { assigneeIDs: id } }, { new: true });
     },
 
     removeAssigneesFromTask(_id: string, creatorID: string, id: string[]): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $pull: { assigneeIDs: id } });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $pull: { assigneeIDs: id } }, { new: true });
     },
 
     addTagsToTask(_id: string, creatorID: string, id: string[]): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $push: { tagIDs: id } });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $push: { tagIDs: id } }, { new: true });
     },
 
     removeTagsFromTask(_id: string, creatorID: string, id: string[]): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $pull: { tagIDs: id } });
+        return TaskModel.findOneAndUpdate({ _id, creatorID }, { $pull: { tagIDs: id } }, { new: true });
     },
 
     addCommentToTask(_id: string, commentID: string): Promise<ITask | null> {
@@ -76,11 +76,11 @@ const taskRepository: ITaskRepository = {
     },
 
     removeCommentFromTask(_id: string, commentID: string): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id }, { $pull: { commentID } });
+        return TaskModel.findOneAndUpdate({ _id }, { $pull: { commentID } }, { new: true });
     },
 
     changeWorkflowStage(_id: string, workflowStage: string): Promise<ITask | null> {
-        return TaskModel.findOneAndUpdate({ _id }, { workflowStage });
+        return TaskModel.findOneAndUpdate({ _id }, { workflowStage }, { new: true });
     },
 };
 
