@@ -37,6 +37,11 @@ const cells: ICells = {
             </div>
         );
     },
+    priority: ({ row }) => {
+        const priority: TaskPriority = row.getValue("priority");
+        return <Badge variant={priority}>{priority}</Badge>;
+    },
+
     dueDate: ({ row }) => {
         const date: Date = row.getValue("dueDate");
         return (

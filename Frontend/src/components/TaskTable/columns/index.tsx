@@ -63,4 +63,8 @@ export const columns: ColumnDef<IAllTask>[] = [
         header: "Deleted",
         cell: cells.deleted,
     },
+    {
+        accessorKey: "priority",
+        header: "Priority",
+    },
 ];

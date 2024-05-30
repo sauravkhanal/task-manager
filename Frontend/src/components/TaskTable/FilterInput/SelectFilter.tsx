@@ -8,8 +8,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { filterOption } from ".";
+import { ITask } from "@/types";
 
-const filterOptions = [
+const filterOptions: { value: keyof ITask; label: string }[] = [
     { value: "title", label: "Title" },
     { value: "priority", label: "Priority" },
     { value: "workflowStage", label: "Workflow Stage" },

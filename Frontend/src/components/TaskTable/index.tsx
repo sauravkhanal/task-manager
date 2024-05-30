@@ -28,6 +28,7 @@ export function DataTableDemo() {
         commentIDs: false,
         activityIDs: false,
         deleted: false,
+        priority: false,
     });
     const [rowSelection, setRowSelection] = useState({});
 
