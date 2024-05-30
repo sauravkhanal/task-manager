@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "../../ui/textarea";
 import { ITag } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import { toast } from "sonner";
-import LoadingIcon from "../LoadingIcon";
+import LoadingIcon from "../../LoadingIcon";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import useDataContext from "@/context/dataContext";

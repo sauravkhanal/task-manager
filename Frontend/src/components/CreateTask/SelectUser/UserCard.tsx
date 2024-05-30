@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card } from "../ui/card";
 import { UserRoundMinus } from "lucide-react";
-import { Button } from "../ui/button";
 import fullName from "@/utils/fullName";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function UserCard({
     profileUrl,

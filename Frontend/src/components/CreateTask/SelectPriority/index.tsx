@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
     Select,
     SelectContent,
@@ -9,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import { ITask, TaskPriority } from "@/types";
 import { UseFormSetValue } from "react-hook-form";
-import { Badge } from "../ui/badge";
 
 export function SelectPriority({
     placeholder,

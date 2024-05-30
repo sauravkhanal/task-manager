@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { ITag, ITask } from "@/types";
-import { TagCreator } from "../TagCreator";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { TagCreator } from "../TagCreator";
 
 interface ComboBoxProps {
     availableTags: ITag[];

@@ -1,4 +1,4 @@
-import UserCard from "@/components/SelectUser/UserCard";
+import UserCard from "@/components/CreateTask/SelectUser/UserCard";
 import { Badge } from "@/components/ui/badge";
 import {
     HoverCard,

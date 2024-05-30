@@ -15,10 +15,11 @@ import {
 import { useState } from "react";
 import { ITask, IUserDetails } from "@/types";
 import UserCard from "./UserCard";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { ScrollArea } from "../ui/scroll-area";
+
 import { UseFormSetValue } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SelectUserProps {
     prevUsers: IUserDetails[];
