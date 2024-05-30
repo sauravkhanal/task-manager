@@ -14,8 +14,6 @@ const customSortingFunctions: ICustomSortingFunction = {
         const stages = ["TODO", "INPROGRESS", "TESTING", "COMPLETED"];
         const valueA = rowA.getValue<WorkflowStage>(columnId);
         const valueB = rowB.getValue<WorkflowStage>(columnId);
-        console.log(valueA);
-        console.log(valueB);
         if (valueA === valueB) return 0;
         if (stages.indexOf(valueA) < stages.indexOf(valueB)) return -1;
         return 1;
