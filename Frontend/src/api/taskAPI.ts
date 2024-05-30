@@ -1,4 +1,4 @@
-import { IAPIResponse, IAllTask, ITask } from "@/types";
+import { IAPIResponse, IAllTask, ITask, WorkflowStage } from "@/types";
 import axiosInstance from "./axiosInstance";
 
 const taskAPI = {
@@ -46,6 +46,25 @@ const taskAPI = {
             const response = await axiosInstance.patch(
                 `/tasks/${id}`,
                 taskDetails,
+            );
+            return response.data as IAPIResponse<ITask>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+    async ChangeWorkflowStage({
+        id,
+        currentWorkflowStage,
+        newWorkflowStage,
+    }: {
+        id: string;
+        currentWorkflowStage: WorkflowStage;
+        newWorkflowStage: WorkflowStage;
+    }) {
+        try {
+            const response = await axiosInstance.patch(
+                `/tasks/${id}/workflow`,
+                { currentWorkflowStage, newWorkflowStage },
             );
             return response.data as IAPIResponse<ITask>;
         } catch (error: any) {

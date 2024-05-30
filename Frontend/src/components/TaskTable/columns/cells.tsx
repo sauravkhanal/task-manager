@@ -1,4 +1,3 @@
-import { SelectPriority } from "@/components/SelectPriority";
 import UserCard from "@/components/SelectUser/UserCard";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,6 +17,7 @@ import {
 import { Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ChangePriorityDialog } from "../ChangePriorityDialog";
+import { ChangeWorkflowStageDialog } from "../ChangeWorkflowStageDialog";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
@@ -54,22 +54,14 @@ const cells: ICells = {
     },
     workflowStage: ({ row }) => {
         const workflowStage: WorkflowStage = row.getValue("workflowStage");
+        const rowData: IAllTask = row.original; // Access the entire row's data
+
         return (
-            <span className="cursor-pointer flex justify-center">
-                <HoverCard>
-                    <HoverCardTrigger className="text-nowrap">
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                        <Badge variant={workflowStage}>{workflowStage}</Badge>
-                    </HoverCardContent>
-                </HoverCard>
-            </span>
+            <div className="text-center">
+                {workflowStage && (
+                    <ChangeWorkflowStageDialog taskDetail={rowData} />
+                )}
+            </div>
         );
     },
     creatorID: ({ row }) => {

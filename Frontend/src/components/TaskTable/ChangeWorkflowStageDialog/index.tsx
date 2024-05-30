@@ -19,38 +19,41 @@ import {
     SelectTrigger,
 } from "@/components/ui/select";
 import useDataContext from "@/context/dataContext";
-import { IAllTask, TaskPriority } from "@/types";
-import { priority as priorityData } from "@/utils/constants";
+import { IAllTask, WorkflowStage } from "@/types";
+import { workflowStages } from "@/utils/constants";
 import { MoveRight } from "lucide-react";
 import { FormEventHandler, useState } from "react";
 import { toast } from "sonner";
 
-export function ChangePriorityDialog({ taskDetail }: { taskDetail: IAllTask }) {
+export function ChangeWorkflowStageDialog({
+    taskDetail,
+}: {
+    taskDetail: IAllTask;
+}) {
     const dataContext = useDataContext();
-    const [selectedPriority, setSelectedPriority] = useState(
-        taskDetail.priority,
+    const [selectedStage, setSelectedStage] = useState(
+        taskDetail.workflowStage,
     );
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const handlePriorityChange = (value: TaskPriority) => {
-        setSelectedPriority(value);
+    const handleStageChange = (value: WorkflowStage) => {
+        setSelectedStage(value);
     };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         setLoading(true);
         event.preventDefault();
         event.stopPropagation();
-        const response = await taskAPI.updateTask({
+        const response = await taskAPI.ChangeWorkflowStage({
             id: taskDetail._id,
-            taskDetails: {
-                priority: selectedPriority,
-            },
+            currentWorkflowStage: taskDetail.workflowStage,
+            newWorkflowStage: selectedStage,
         });
         if (response.success) {
             toast.success(response.message);
             dataContext.refreshData({ tasks: true });
             setDialogOpen(false);
-        } else {
+        } else if (!response.success) {
             toast.error(response.message);
         }
         setLoading(false);
@@ -61,48 +64,46 @@ export function ChangePriorityDialog({ taskDetail }: { taskDetail: IAllTask }) {
             <DialogTrigger asChild>
                 <span>
                     <Badge
-                        variant={taskDetail.priority}
+                        variant={taskDetail.workflowStage}
                         onClick={() => setDialogOpen(true)}
                     >
-                        {taskDetail.priority}
+                        {taskDetail.workflowStage}
                     </Badge>
                 </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit priority order</DialogTitle>
+                    <DialogTitle>Edit workflow Stage</DialogTitle>
                     <DialogDescription>
-                        Make changes to priority of the task here. Click save
-                        when you're done.
+                        Make changes to workflow stage of the task here.
                     </DialogDescription>
                 </DialogHeader>
                 <form
                     className="flex flex-col gap-5 justify-center w-full"
                     onSubmit={handleSubmit}
                 >
-                    <div className="flex gap-5 justify-center items-center">
-                        <Badge
-                            variant={taskDetail.priority}
-                            onClick={() => setDialogOpen(true)}
-                        >
-                            {taskDetail.priority}
-                        </Badge>
+                    <div className="flex items-center gap-5 justify-center py-5">
+                        <span className="flex gap-1 items-center">
+                            <Badge variant={taskDetail.workflowStage}>
+                                {taskDetail.workflowStage}
+                            </Badge>
+                        </span>
                         <MoveRight />
                         <Select
-                            value={selectedPriority}
-                            onValueChange={handlePriorityChange}
+                            value={selectedStage}
+                            onValueChange={handleStageChange}
                         >
                             <SelectTrigger className="w-36">
                                 <span className="flex justify-center">
-                                    <Badge variant={selectedPriority}>
-                                        {selectedPriority}
+                                    <Badge variant={selectedStage}>
+                                        {selectedStage}
                                     </Badge>
                                 </span>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Change Priority</SelectLabel>
-                                    {priorityData.map((item) => (
+                                    <SelectLabel>Select new stage</SelectLabel>
+                                    {workflowStages.map((item) => (
                                         <SelectItem
                                             value={item.title}
                                             key={item.title}
@@ -117,7 +118,7 @@ export function ChangePriorityDialog({ taskDetail }: { taskDetail: IAllTask }) {
                         </Select>
                     </div>
 
-                    <Button type="submit" className="">
+                    <Button type="submit" className="grow">
                         <LoadingIcon text="Save Changes" isLoading={loading} />
                     </Button>
                 </form>
