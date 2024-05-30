@@ -18,6 +18,7 @@ import { Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ChangePriorityDialog } from "../ChangePriorityDialog";
 import { ChangeWorkflowStageDialog } from "../ChangeWorkflowStageDialog";
+import fullName from "@/utils/fullName";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
@@ -66,7 +67,18 @@ const cells: ICells = {
     },
     creatorID: ({ row }) => {
         const creatorDetail: IUserDetails = row.getValue("creatorID");
-        return `${creatorDetail.firstName} ${creatorDetail.lastName}`;
+        return (
+            <div className="w-24 text-nowrap overflow-hidden overflow-ellipsis">
+                {fullName(creatorDetail)}
+                {/* <UserCard
+                    firstName={creatorDetail.firstName}
+                    middleName={creatorDetail.middleName}
+                    lastName={creatorDetail.lastName}
+                    profileUrl={creatorDetail.profilePicture}
+                    onRemove={() => {}}
+                /> */}
+            </div>
+        );
     },
     assigneeIDs: ({ row }) => {
         const assignee: IUserDetails[] = row.getValue("assigneeIDs");

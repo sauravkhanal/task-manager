@@ -25,7 +25,7 @@ export const columns: ColumnDef<IAllTask>[] = [
     },
     {
         accessorKey: "creatorID",
-        header: headers.creatorID,
+        header: "Created By",
         cell: cells.creatorID,
         filterFn: customFilters.creatorFilter,
     },
