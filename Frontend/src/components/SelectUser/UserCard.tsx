@@ -2,15 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "../ui/card";
 import { UserRoundMinus } from "lucide-react";
 import { Button } from "../ui/button";
+import fullName from "@/utils/fullName";
 
 export default function UserCard({
     profileUrl,
     firstName,
+    middleName,
     lastName,
     onRemove,
 }: {
     profileUrl: string;
     firstName: string;
+    middleName?: string;
     lastName: string;
     onRemove: () => void;
 }) {
@@ -25,7 +28,7 @@ export default function UserCard({
                     </AvatarFallback>
                 </Avatar>
                 <p className="font-medium text-sm">
-                    {firstName + " " + lastName}
+                    {fullName({ firstName, middleName, lastName })}
                 </p>
             </div>
             <Button

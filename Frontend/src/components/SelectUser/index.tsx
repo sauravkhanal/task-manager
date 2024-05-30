@@ -60,6 +60,7 @@ export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
                         <UserCard
                             key={value._id}
                             firstName={value.firstName}
+                            middleName={value.middleName}
                             lastName={value.lastName}
                             profileUrl={value.profilePicture}
                             onRemove={() => toggleStatus(value)}
