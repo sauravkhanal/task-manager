@@ -17,8 +17,8 @@ export default function LoadingIcon({
     [key: string]: any;
 }) {
     const { theme } = useTheme();
-    const color1 = color ? color : theme == "dark" ? "#000000" : "#ffffff";
-    console.log(color1);
+    const color1 = color ? color : theme == "dark" ? "#ffffff" : "#000000";
+    // console.log(color1);
     return (
         <div
             className={`flex justify-center items-center ${className}`}
