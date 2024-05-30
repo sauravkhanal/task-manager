@@ -15,6 +15,9 @@ const filterOptions = [
     { value: "title", label: "Title" },
     { value: "priority", label: "Priority" },
     { value: "workflowStage", label: "Workflow Stage" },
+    { value: "tagIDs", label: "Tags" },
+    { value: "creatorID", label: "Creator" },
+    { value: "assigneeIDs", label: "Assignees" },
 ];
 
 function FilterInput({ table }: { table: Table<any> }) {

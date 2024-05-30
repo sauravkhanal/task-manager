@@ -38,6 +38,7 @@ export interface ILoginResponse {
 export interface IUserDetails {
     _id: string;
     firstName: string;
+    middleName?: string;
     lastName: string;
     username: string;
     email: string;
