@@ -1,5 +1,10 @@
 import UserCard from "@/components/SelectUser/UserCard";
 import { Badge } from "@/components/ui/badge";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     IAllTask,
@@ -8,11 +13,7 @@ import {
     TaskPriority,
     WorkflowStage,
 } from "@/types";
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@radix-ui/react-hover-card";
+
 import { Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 
