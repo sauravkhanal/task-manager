@@ -1,61 +1,38 @@
-import * as React from "react";
 import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Table } from "@tanstack/react-table";
+import SelectFilter from "./SelectFilter";
+import { useState } from "react";
 
-const filterOptions = [
-    { value: "title", label: "Title" },
-    { value: "priority", label: "Priority" },
-    { value: "workflowStage", label: "Workflow Stage" },
-    { value: "tagIDs", label: "Tags" },
-    { value: "creatorID", label: "Creator" },
-    { value: "assigneeIDs", label: "Assignees" },
-];
+export interface filterOption {
+    value: string;
+    label: string;
+}
 
 function FilterInput({ table }: { table: Table<any> }) {
-    const [selectedFilter, setSelectedFilter] = React.useState<string>("title");
+    const [selectedFilter, setSelectedFilter] = useState<filterOption>({
+        value: "title",
+        label: "title",
+    });
 
     return (
         <div className="flex items-center space-x-2">
-            <Select
-                onValueChange={(value) => setSelectedFilter(value)}
-                defaultValue={selectedFilter}
-            >
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select filter" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectLabel>Filter By</SelectLabel>
-                        {filterOptions.map((option) => (
-                            <SelectItem value={option.value} key={option.value}>
-                                {option.label}
-                            </SelectItem>
-                        ))}
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
+            <SelectFilter
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+            />
 
             <Input
-                placeholder={`Filter ${selectedFilter}...`}
+                placeholder={`Filter by ${selectedFilter.label}...`}
                 value={
                     (table
-                        .getColumn(selectedFilter)
+                        .getColumn(selectedFilter.value)
                         ?.getFilterValue() as string) ?? ""
                 }
-                onChange={(event) =>
+                onChange={(event) => {
                     table
-                        .getColumn(selectedFilter)
-                        ?.setFilterValue(event.target.value)
-                }
+                        .getColumn(selectedFilter.value)
+                        ?.setFilterValue(event.target.value);
+                }}
                 className="max-w-sm"
             />
         </div>

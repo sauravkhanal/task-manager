@@ -6,17 +6,21 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@radix-ui/react-select";
+} from "@/components/ui/select";
+import { filterOption } from "./FilterInput";
 
 const filterOptions = [
     { value: "title", label: "Title" },
     { value: "priority", label: "Priority" },
     { value: "workflowStage", label: "Workflow Stage" },
+    { value: "tagIDs", label: "Tags" },
+    { value: "creatorID", label: "Creator" },
+    { value: "assigneeIDs", label: "Assignees" },
 ];
 
 interface ISelectFilterProps {
-    selectedFilter: string;
-    setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+    selectedFilter: filterOption;
+    setSelectedFilter: React.Dispatch<React.SetStateAction<filterOption>>;
 }
 export default function SelectFilter({
     selectedFilter,
@@ -24,8 +28,15 @@ export default function SelectFilter({
 }: ISelectFilterProps) {
     return (
         <Select
-            onValueChange={(value) => setSelectedFilter(value)}
-            defaultValue={selectedFilter}
+            onValueChange={(value) => {
+                const selectedOption = filterOptions.find(
+                    (option) => option.value === value,
+                );
+                if (selectedOption) {
+                    setSelectedFilter(selectedOption);
+                }
+            }}
+            defaultValue={selectedFilter.value}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select filter" />
