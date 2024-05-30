@@ -1,4 +1,4 @@
-import Loader from "react-spinners/SyncLoader";
+import Loader from "react-spinners/PulseLoader";
 import { useTheme } from "next-themes";
 
 export default function LoadingIcon({
