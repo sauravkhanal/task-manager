@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SelectItems } from "../Select";
+import { SelectPriority } from "../SelectPriority";
 import { priority } from "@/utils/constants";
 import { DatePicker } from "../DatePicker";
 import { ComboBox } from "../TagsSelector";
@@ -127,10 +127,10 @@ export default function CreateTask() {
                     <span className="flex gap-2">
                         <span className="grid gap-1.5">
                             <Label htmlFor="priority">Task Priority</Label>
-                            <SelectItems
+                            <SelectPriority
                                 label="Select Priority"
                                 placeholder="Priority"
-                                prevValue={undefined}
+                                initialValue={undefined}
                                 items={priority}
                                 setValue={setValue}
                             />

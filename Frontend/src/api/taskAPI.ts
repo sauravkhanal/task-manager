@@ -43,7 +43,7 @@ const taskAPI = {
         taskDetails: Partial<ITask>;
     }) {
         try {
-            const response = await axiosInstance.post(
+            const response = await axiosInstance.patch(
                 `/tasks/${id}`,
                 taskDetails,
             );

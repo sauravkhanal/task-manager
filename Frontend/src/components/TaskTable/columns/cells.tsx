@@ -1,3 +1,4 @@
+import { SelectPriority } from "@/components/SelectPriority";
 import UserCard from "@/components/SelectUser/UserCard";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -16,6 +17,7 @@ import {
 
 import { Row } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { ChangePriorityDialog } from "../ChangePriorityDialog";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
@@ -31,7 +33,7 @@ const cells: ICells = {
 
         return (
             <div className="text-ellipsis w-36 lg:w-64 line-clamp-1 capitalize">
-                {priority && <Badge variant={priority}>{priority}</Badge>}
+                {priority && <ChangePriorityDialog taskDetail={rowData} />}
                 &nbsp;
                 {title.slice(0, 50)}
             </div>
@@ -53,9 +55,21 @@ const cells: ICells = {
     workflowStage: ({ row }) => {
         const workflowStage: WorkflowStage = row.getValue("workflowStage");
         return (
-            <div className="min-w-24 text-center">
-                <Badge variant={workflowStage}>{workflowStage}</Badge>
-            </div>
+            <span className="cursor-pointer flex justify-center">
+                <HoverCard>
+                    <HoverCardTrigger className="text-nowrap">
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                        <Badge variant={workflowStage}>{workflowStage}</Badge>
+                    </HoverCardContent>
+                </HoverCard>
+            </span>
         );
     },
     creatorID: ({ row }) => {

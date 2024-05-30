@@ -8,18 +8,18 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ITask, TaskPriority } from "@/types";
-import { useEffect } from "react";
 import { UseFormSetValue } from "react-hook-form";
+import { Badge } from "../ui/badge";
 
-export function SelectItems({
+export function SelectPriority({
     placeholder,
-    prevValue,
+    initialValue = TaskPriority.LOW,
     label,
     items,
     setValue,
 }: {
     placeholder: string;
-    prevValue?: TaskPriority;
+    initialValue?: TaskPriority;
     label: string;
     items: {
         title: TaskPriority;
@@ -27,15 +27,12 @@ export function SelectItems({
     }[];
     setValue: UseFormSetValue<ITask>;
 }) {
-    useEffect(() => {
-        setValue("priority", prevValue ?? TaskPriority.LOW);
-    }, []);
     return (
         <Select
             onValueChange={(value) => {
                 setValue("priority", value as TaskPriority);
-                console.log("Priority changed: ", value);
             }}
+            defaultValue={initialValue}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue
@@ -48,12 +45,7 @@ export function SelectItems({
                     <SelectLabel>{label}</SelectLabel>
                     {items.map((item) => (
                         <SelectItem value={item.title} key={item.title}>
-                            <p
-                                className="font-semibold mr-2 px-2 py-1 rounded"
-                                style={{ background: item.color }}
-                            >
-                                {item.title}
-                            </p>
+                            <Badge variant={item.title}>{item.title}</Badge>
                         </SelectItem>
                     ))}
                 </SelectGroup>
