@@ -54,7 +54,7 @@ export function DataTableDemo() {
     });
 
     return (
-        <div className="w-full">
+        <div className="w-full overflow-x-auto">
             <div className="flex items-center py-4">
                 <FilterInput table={table} />
                 <ColumnVisibilityDropdown table={table} />

@@ -40,7 +40,7 @@ export default function SelectFilter({
             }}
             defaultValue={selectedFilter.value}
         >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="max-w-36">
                 <SelectValue placeholder="Select filter" />
             </SelectTrigger>
             <SelectContent>

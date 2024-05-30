@@ -15,14 +15,14 @@ function FilterInput({ table }: { table: Table<any> }) {
     });
 
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center  md:grow ml-1">
             <SelectFilter
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
             />
 
             <Input
-                placeholder={`Filter by ${selectedFilter.label}...`}
+                placeholder={`Search by ${selectedFilter.label}...`}
                 value={
                     (table
                         .getColumn(selectedFilter.value)
@@ -33,7 +33,7 @@ function FilterInput({ table }: { table: Table<any> }) {
                         .getColumn(selectedFilter.value)
                         ?.setFilterValue(event.target.value);
                 }}
-                className="max-w-sm"
+                className="max-w-64"
             />
         </div>
     );
