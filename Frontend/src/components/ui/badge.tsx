@@ -52,7 +52,7 @@ function Badge({
         <div className={cn(badgeVariants({ variant }), className)} {...props}>
             {children}
             {notificationCount && notificationCount > 0 && (
-                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-xs font-bold leading-none bg-red-500 text-white cursor-">
+                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-xs font-bold leading-none bg-blue-500 text-white cursor-">
                     +{notificationCount}
                 </span>
             )}
