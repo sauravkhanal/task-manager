@@ -2,7 +2,7 @@ import * as React from "react";
 import { Table } from "@tanstack/react-table";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-import { columns } from "./columns";
+import { columns } from "../columns";
 
 interface TableBodyComponentProps {
     table: Table<any>;

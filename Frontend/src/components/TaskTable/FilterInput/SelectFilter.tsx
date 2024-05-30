@@ -7,7 +7,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { filterOption } from "./FilterInput";
+import { filterOption } from ".";
 
 const filterOptions = [
     { value: "title", label: "Title" },
