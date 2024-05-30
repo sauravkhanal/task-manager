@@ -52,7 +52,11 @@ const cells: ICells = {
     },
     workflowStage: ({ row }) => {
         const workflowStage: WorkflowStage = row.getValue("workflowStage");
-        return <Badge variant={workflowStage}>{workflowStage}</Badge>;
+        return (
+            <div className="min-w-24 text-center">
+                <Badge variant={workflowStage}>{workflowStage}</Badge>
+            </div>
+        );
     },
     creatorID: ({ row }) => {
         const creatorDetail: IUserDetails = row.getValue("creatorID");
@@ -91,18 +95,20 @@ const cells: ICells = {
     },
     tagIDs: ({ row }) => {
         const tags: ITag[] = row.getValue("tagIDs");
-        if (tags.length === 0) return null;
+        if (tags.length === 0) return <div className="w-24">&nbsp;</div>;
         if (tags.length === 1)
             return (
-                <Badge
-                    style={{ backgroundColor: tags[0].color }}
-                    className="text-white uppercase"
-                >
-                    {tags[0].title}
-                </Badge>
+                <div className="w-24 overflow-x-hidden">
+                    <Badge
+                        style={{ backgroundColor: tags[0].color }}
+                        className="text-white uppercase"
+                    >
+                        {tags[0].title}
+                    </Badge>
+                </div>
             );
         return (
-            <span className="cursor-pointer">
+            <div className="cursor-pointer w-24 ">
                 <HoverCard>
                     <HoverCardTrigger className="text-nowrap">
                         <Badge
@@ -126,7 +132,7 @@ const cells: ICells = {
                         ))}
                     </HoverCardContent>
                 </HoverCard>
-            </span>
+            </div>
         );
     },
     description: ({ row }) => {

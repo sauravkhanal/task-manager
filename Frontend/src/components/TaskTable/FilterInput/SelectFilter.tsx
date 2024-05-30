@@ -17,6 +17,7 @@ const filterOptions: { value: keyof ITask; label: string }[] = [
     { value: "tagIDs", label: "Tags" },
     { value: "creatorID", label: "Creator" },
     { value: "assigneeIDs", label: "Assignees" },
+    { value: "dueDate", label: "Due Date" },
 ];
 
 interface ISelectFilterProps {

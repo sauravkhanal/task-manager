@@ -1,11 +1,13 @@
 import { ITag, IUserDetails } from "@/types";
 import fullName from "@/utils/fullName";
 import { FilterFn } from "@tanstack/react-table";
+import { format } from "date-fns";
 
 interface CustomFilters {
     tagFilter: FilterFn<any>;
     assigneeFilter: FilterFn<any>;
     creatorFilter: FilterFn<any>;
+    dateFilter: FilterFn<any>;
 }
 
 const customFilters: CustomFilters = {
@@ -25,11 +27,23 @@ const customFilters: CustomFilters = {
                 .includes(filterValue.toLocaleLowerCase()),
         );
     },
+
     creatorFilter: (row, columnId, filterValue) => {
         const userDetail: IUserDetails = row.original[columnId];
         return fullName(userDetail)
             .toLowerCase()
             .includes(filterValue.toLowerCase());
+    },
+
+    dateFilter: (row, columnId, filterValue) => {
+        console.log("filter value: ", filterValue);
+        const date: Date = row.original[columnId];
+        const formattedDate: string = format(
+            date,
+            "do LLL hh:mm a",
+        ).toLowerCase();
+        console.log("formatted date", formattedDate);
+        return formattedDate.includes(filterValue.toLowerCase());
     },
 };
 

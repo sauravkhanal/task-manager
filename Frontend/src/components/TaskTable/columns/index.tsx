@@ -13,6 +13,7 @@ export const columns: ColumnDef<IAllTask>[] = [
         accessorKey: "dueDate",
         header: "Due Date",
         cell: cells.dueDate,
+        filterFn: customFilters.dateFilter,
     },
     {
         accessorKey: "workflowStage",
