@@ -2,27 +2,30 @@ import { ColumnDef } from "@tanstack/react-table";
 import { IAllTask } from "@/types";
 import cells from "./cells";
 import customFilters from "./customFilters";
+import headers from "./headers";
+import customSortingFunctions from "./customSortingFunctions";
 
 export const columns: ColumnDef<IAllTask>[] = [
     {
         accessorKey: "title",
-        header: "Title",
+        header: headers.title,
         cell: cells.title,
     },
     {
         accessorKey: "dueDate",
-        header: "Due Date",
+        header: headers.dueDate,
         cell: cells.dueDate,
         filterFn: customFilters.dateFilter,
     },
     {
         accessorKey: "workflowStage",
-        header: "Workflow Stage",
+        header: headers.workflowStage,
         cell: cells.workflowStage,
+        sortingFn: customSortingFunctions.workflowStage,
     },
     {
         accessorKey: "creatorID",
-        header: "Assigner",
+        header: headers.creatorID,
         cell: cells.creatorID,
         filterFn: customFilters.creatorFilter,
     },
