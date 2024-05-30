@@ -21,7 +21,16 @@ const taskServices = {
         return taskRepository.getAllTasks();
     },
 
-    updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
+    async updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
+        if (newDetails.workflowStage) {
+            const currentDetail = await taskRepository.getTaskById(_id);
+            if (!validateTransition(currentDetail?.workflowStage!, newDetails.workflowStage)) {
+                throw new CustomError(
+                    400,
+                    messages.workflowStage.transitionError(currentDetail?.workflowStage!, newDetails.workflowStage),
+                );
+            }
+        }
         return taskRepository.updateTaskDetails(_id, creatorID, newDetails);
     },
 
