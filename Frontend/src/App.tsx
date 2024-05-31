@@ -19,7 +19,7 @@ function App() {
                     <DataProvider>
                         <ModalProvider>
                             <BrowserRouter>
-                                <div className=" flex flex-col min-h-screen">
+                                <div className=" flex flex-col min-h-screen font-poppins">
                                     <NavBar className="lg:px-20 " />
                                     <section className="flex grow">
                                         <SideBar className="" />
