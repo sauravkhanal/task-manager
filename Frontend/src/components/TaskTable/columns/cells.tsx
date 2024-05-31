@@ -29,7 +29,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { deleteTask } from "./deleteRecoverTask";
+import useDataContext from "@/context/dataContext";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
@@ -81,7 +84,7 @@ const cells: ICells = {
     creatorID: ({ row }) => {
         const creatorDetail: IUserDetails = row.getValue("creatorID");
         return (
-            <div className="w-24 text-nowrap overflow-hidden overflow-ellipsis">
+            <div className="w-28 text-nowrap overflow-hidden overflow-ellipsis">
                 {fullName(creatorDetail)}
                 {/* <UserCard
                     firstName={creatorDetail.firstName}
@@ -192,7 +195,7 @@ const cells: ICells = {
     },
     action: ({ row }) => {
         const taskDetail = row.original;
-
+        const { refreshData } = useDataContext();
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -204,15 +207,25 @@ const cells: ICells = {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                        onClick={() =>
-                            navigator.clipboard.writeText(taskDetail._id)
-                        }
+                        onClick={() => {
+                            navigator.clipboard.writeText(taskDetail._id);
+                            toast.success("Copied successfully !");
+                        }}
                     >
                         copy task id
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Do one thing</DropdownMenuItem>
-                    <DropdownMenuItem>Do another thing</DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            deleteTask(row.original._id, refreshData)
+                        }
+                    >
+                        <Trash2 className="text-destructive size-5 mr-1" />
+                        Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <PencilLine className="mr-1 size-5" /> Update task
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         );
