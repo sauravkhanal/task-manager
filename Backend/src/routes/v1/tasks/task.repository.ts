@@ -136,6 +136,16 @@ const taskRepository: ITaskRepository = {
                         },
                     },
                 },
+                {
+                    $addFields: {
+                        workflowStage: "$_id",
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                    },
+                },
             ]);
             return tasks;
         } catch (error) {
@@ -178,6 +188,16 @@ const taskRepository: ITaskRepository = {
                         tasks: {
                             $push: "$$ROOT",
                         },
+                    },
+                },
+                {
+                    $addFields: {
+                        workflowStage: "$_id",
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
                     },
                 },
             ]);

@@ -102,12 +102,12 @@ export interface IAllTask extends Omit<ITask, "creatorID" | "assigneeIDs"> {
 
 // assigned by me
 
-export interface IFilteredTasks {
-    _id: WorkflowStage;
-    tasks: ITask1[];
+export interface ITasksGroupedByWorkFlowStage {
+    workflowStage: WorkflowStage;
+    tasks: ITaskWithDetails[];
 }
 
-export interface ITask1 extends ITask {
+export interface ITaskWithDetails extends ITask {
     creator?: IUserDetails;
     tags: ITag[];
     assignees: IUserDetails[];

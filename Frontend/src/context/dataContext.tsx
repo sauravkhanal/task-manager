@@ -1,5 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IAllTask, IFilteredTasks, ITag, IUserDetails } from "@/types";
+import {
+    IAllTask,
+    ITasksGroupedByWorkFlowStage,
+    ITag,
+    ITaskWithDetails,
+    IUserDetails,
+    WorkflowStage,
+} from "@/types";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
 import taskAPI from "@/api/taskAPI";
@@ -9,8 +16,8 @@ interface IDataContext {
     allUserDetails: IUserDetails[];
     tags: ITag[];
     tasks: IAllTask[];
-    tasksAssignedByMe: IFilteredTasks[];
-    tasksAssignedToMe: IFilteredTasks[];
+    tasksAssignedByMe: ITasksGroupedByWorkFlowStage[];
+    tasksAssignedToMe: ITasksGroupedByWorkFlowStage[];
     refreshData: (options?: {
         users?: boolean;
         tags?: boolean;
@@ -33,10 +40,10 @@ function useDataFetching() {
     const [loading, setLoading] = useState<boolean>(false);
     const [allUserDetails, setAllUserDetails] = useState<IUserDetails[]>([]);
     const [tasksAssignedByMe, setTasksAssignedByMe] = useState<
-        IFilteredTasks[]
+        ITasksGroupedByWorkFlowStage[]
     >([]);
     const [tasksAssignedToMe, setTasksAssignedToMe] = useState<
-        IFilteredTasks[]
+        ITasksGroupedByWorkFlowStage[]
     >([]);
     const [tags, setTags] = useState<ITag[]>([]);
     const [tasks, setTasks] = useState<IAllTask[]>([]);
