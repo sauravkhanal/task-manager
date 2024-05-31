@@ -9,6 +9,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 
 import NavBar from "./components/NavBar";
 import { Toaster } from "sonner";
+import SideBar from "./components/SideBar";
 
 function App() {
     return (
@@ -19,8 +20,13 @@ function App() {
                         <ModalProvider>
                             <BrowserRouter>
                                 <div className=" flex flex-col min-h-screen">
-                                    <NavBar className="lg:px-20" />
-                                    <MyRoutes />
+                                    <NavBar className="lg:px-20 " />
+                                    <section className="flex grow">
+                                        <SideBar className="" />
+                                        <span className="flex justify-center w-full items-center">
+                                            <MyRoutes />
+                                        </span>
+                                    </section>
                                     <Toaster />
                                     {/* <Modal /> */}
                                 </div>
