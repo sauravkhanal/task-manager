@@ -37,7 +37,7 @@ const taskRepository: ITaskRepository = {
     },
 
     getAllTasks(): Promise<ITask[] | null> {
-        return TaskModel.find()
+        return TaskModel.find({ deleted: false })
             .sort({ createdAt: -1 })
             .populate([
                 { path: "creatorID", select: "-password" },

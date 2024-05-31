@@ -88,7 +88,7 @@ const taskControllers = {
             const token = res.locals.user as IAccessToken;
             const client_id = token._id;
             const { id } = req.params;
-            const result = await taskServices.deleteTask(id, client_id);
+            const result = await taskServices.recoverTask(id, client_id);
             if (result) return successResponse(res, 200, messages.success("recovered"), result);
             throw new CustomError(404, messages.failure("recovering"));
         } catch (error) {
