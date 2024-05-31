@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IAllTask, ITag, IUserDetails } from "@/types";
+import { IAllTask, IFilteredTasks, ITag, IUserDetails } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
 import taskAPI from "@/api/taskAPI";
@@ -9,6 +9,8 @@ interface IDataContext {
     allUserDetails: IUserDetails[];
     tags: ITag[];
     tasks: IAllTask[];
+    tasksAssignedByMe: IFilteredTasks[];
+    tasksAssignedToMe: IFilteredTasks[];
     refreshData: (options?: {
         users?: boolean;
         tags?: boolean;
@@ -21,6 +23,8 @@ export const DataContext = createContext<IDataContext>({
     allUserDetails: [],
     tags: [],
     tasks: [],
+    tasksAssignedByMe: [],
+    tasksAssignedToMe: [],
     refreshData: () => {},
     loading: false,
 });
@@ -28,8 +32,38 @@ export const DataContext = createContext<IDataContext>({
 function useDataFetching() {
     const [loading, setLoading] = useState<boolean>(false);
     const [allUserDetails, setAllUserDetails] = useState<IUserDetails[]>([]);
+    const [tasksAssignedByMe, setTasksAssignedByMe] = useState<
+        IFilteredTasks[]
+    >([]);
+    const [tasksAssignedToMe, setTasksAssignedToMe] = useState<
+        IFilteredTasks[]
+    >([]);
     const [tags, setTags] = useState<ITag[]>([]);
     const [tasks, setTasks] = useState<IAllTask[]>([]);
+
+    async function refreshTasksAssignedByMe() {
+        try {
+            setLoading(true);
+            const data = await taskAPI.getTasksAssignedByMe();
+            if (data) setTasksAssignedByMe(data.data);
+        } catch (error) {
+            console.log("can't refresh tasks assigned by me: ", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function refreshTasksAssignedToMe() {
+        try {
+            setLoading(true);
+            const data = await taskAPI.getTasksAssignedToMe();
+            if (data) setTasksAssignedToMe(data.data);
+        } catch (error) {
+            console.log("can't refresh tasks assigned to me: ", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     async function refreshUsers() {
         try {
@@ -79,6 +113,12 @@ function useDataFetching() {
                 users ? refreshUsers() : Promise.resolve(),
                 tags ? refreshTags() : Promise.resolve(),
                 tasks ? refreshTasks() : Promise.resolve(),
+                tasksAssignedByMe
+                    ? refreshTasksAssignedByMe()
+                    : Promise.resolve(),
+                tasksAssignedToMe
+                    ? refreshTasksAssignedToMe()
+                    : Promise.resolve(),
             ]);
         } catch (error) {
             console.log("can't refresh data: ", error);
@@ -93,12 +133,21 @@ function useDataFetching() {
         tags,
         tasks,
         refreshData,
+        tasksAssignedToMe,
+        tasksAssignedByMe,
     };
 }
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-    const { loading, allUserDetails, tags, tasks, refreshData } =
-        useDataFetching();
+    const {
+        loading,
+        allUserDetails,
+        tags,
+        tasks,
+        refreshData,
+        tasksAssignedByMe,
+        tasksAssignedToMe,
+    } = useDataFetching();
     const { isLoggedIn } = useContext(AuthContext);
     useEffect(() => {
         if (isLoggedIn) refreshData();
@@ -112,6 +161,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 tasks,
                 refreshData,
                 loading,
+                tasksAssignedByMe,
+                tasksAssignedToMe,
             }}
         >
             {children}

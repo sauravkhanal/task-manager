@@ -56,6 +56,7 @@ export interface ITag {
     title: string;
     description?: string;
     color: string;
+    deleted?: boolean;
 }
 
 export enum TaskPriority {
@@ -97,4 +98,17 @@ export interface ITask {
 export interface IAllTask extends Omit<ITask, "creatorID" | "assigneeIDs"> {
     creatorID: IUserDetails;
     assigneeIDs: IUserDetails[];
+}
+
+// assigned by me
+
+export interface IFilteredTasks {
+    _id: WorkflowStage;
+    tasks: ITask1[];
+}
+
+export interface ITask1 extends ITask {
+    creator?: IUserDetails;
+    tags: ITag[];
+    assignees: IUserDetails[];
 }

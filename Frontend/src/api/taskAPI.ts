@@ -1,4 +1,10 @@
-import { IAPIResponse, IAllTask, ITask, WorkflowStage } from "@/types";
+import {
+    IAPIResponse,
+    IAllTask,
+    IFilteredTasks,
+    ITask,
+    WorkflowStage,
+} from "@/types";
 import axiosInstance from "./axiosInstance";
 
 const taskAPI = {
@@ -69,6 +75,23 @@ const taskAPI = {
             return response.data as IAPIResponse<ITask>;
         } catch (error: any) {
             return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+
+    async getTasksAssignedToMe() {
+        try {
+            const response = await axiosInstance.get(`tasks/assigned-to-me`);
+            return response.data as IAPIResponse<IFilteredTasks[]>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<IFilteredTasks[]>;
+        }
+    },
+    async getTasksAssignedByMe() {
+        try {
+            const response = await axiosInstance.get(`tasks/assigned-by-me`);
+            return response.data as IAPIResponse<IFilteredTasks[]>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<IFilteredTasks[]>;
         }
     },
 };
