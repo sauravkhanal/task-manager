@@ -122,7 +122,12 @@ const taskRepository: ITaskRepository = {
                         as: "tags",
                     },
                 },
-
+                {
+                    $project: {
+                        "creator.password": 0,
+                        "assignees.password": 0,
+                    },
+                },
                 {
                     $group: {
                         _id: "$workflowStage",
@@ -160,6 +165,11 @@ const taskRepository: ITaskRepository = {
                         localField: "assigneeIDs",
                         foreignField: "_id",
                         as: "assignees",
+                    },
+                },
+                {
+                    $project: {
+                        "assignees.password": 0,
                     },
                 },
                 {
