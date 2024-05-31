@@ -15,18 +15,17 @@ const badgeVariants = cva(
                     "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
                 outline: "text-foreground",
 
-                LOW: " text-green-500  ",
-                MED: " text-yellow-500  ",
-                HIGH: " text-red-500 ",
+                LOW: "border-transparent text-white bg-green-500 hover:text-green-500 hover:border-border hover:bg-secondary",
+                MED: "border-transparent text-white bg-yellow-500 hover:text-yellow-600 hover:border-border hover:bg-secondary",
+                HIGH: "border-transparent text-white bg-red-500 hover:text-red-600 hover:border-border hover:bg-secondary",
 
-                TODO: "border-transparent bg-blue-500  text-white hover:bg-blue-600",
+                TODO: " text-blue-500   hover:bg-blue-600 hover:text-white",
                 INPROGRESS:
-                    "border-transparent bg-orange-500 text-white hover:bg-orange-700",
+                    " text-orange-500  hover:bg-orange-700 hover:text-white",
                 TESTING:
-                    "border-transparent bg-purple-500 text-white hover:bg-purple-700",
-                COMPLETED:
-                    "border-transparent bg-gray-500 text-white hover:bg-gray-600",
-                custom: "border-transparent text-white hover:opacity-60",
+                    " text-purple-500  hover:bg-purple-700 hover:text-white",
+                COMPLETED: " text-gray-500  hover:bg-gray-600 hover:text-white",
+                custom: "border-transparent text-white hover:opacity-60 hover:text-white",
             },
         },
         defaultVariants: {
