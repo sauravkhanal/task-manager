@@ -59,12 +59,12 @@ export const workflowStages: IWorkflowStage[] = [
         title: WorkflowStage.INPROGRESS,
         description: "This is the description of the inprogress phase.",
     },
-    {
-        _id: "three",
-        taskIDs: [],
-        title: WorkflowStage.TESTING,
-        description: "This is the description of the testing phase.",
-    },
+    // {
+    //     _id: "three",
+    //     taskIDs: [],
+    //     title: WorkflowStage.TESTING,
+    //     description: "This is the description of the testing phase.",
+    // },
     {
         _id: "four",
         taskIDs: [],

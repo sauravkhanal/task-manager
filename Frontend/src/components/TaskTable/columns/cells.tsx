@@ -19,11 +19,24 @@ import { format } from "date-fns";
 import { ChangePriorityDialog } from "../ChangePriorityDialog";
 import { ChangeWorkflowStageDialog } from "../ChangeWorkflowStageDialog";
 import fullName from "@/utils/fullName";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
 type ICells = {
     [K in keyof IAllTask]?: CellFunction<IAllTask>;
+} & {
+    action: CellFunction<IAllTask>;
 };
 
 const cells: ICells = {
@@ -176,6 +189,33 @@ const cells: ICells = {
     deleted: ({ row }) => {
         const deleted: boolean = row.getValue("deleted");
         return <div className="text-center">{deleted ? "Yes" : "No"}</div>;
+    },
+    action: ({ row }) => {
+        const taskDetail = row.original;
+
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            navigator.clipboard.writeText(taskDetail._id)
+                        }
+                    >
+                        copy task id
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Do one thing</DropdownMenuItem>
+                    <DropdownMenuItem>Do another thing</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
     },
 };
 

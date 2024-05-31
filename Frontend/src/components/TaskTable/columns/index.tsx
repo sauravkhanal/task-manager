@@ -71,4 +71,9 @@ export const columns: ColumnDef<IAllTask>[] = [
         accessorKey: "priority",
         header: "Priority",
     },
+    {
+        id: "actions",
+        enableHiding: false,
+        cell: cells.action,
+    },
 ];
