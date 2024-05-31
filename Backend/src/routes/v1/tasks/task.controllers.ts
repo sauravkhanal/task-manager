@@ -201,6 +201,30 @@ const taskControllers = {
         }
     },
 
+    async getTaskAssignedToMe(req: Request, res: Response, next: NextFunction) {
+        try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
+            const result = await taskServices.getTasksAssignedToMe(client_id);
+            if (result) return successResponse(res, 200, messages.success("fetched", "tasks assigned to you"), result);
+            throw new CustomError(404, messages.failure("fetching", "the tasks assigned to you"));
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async getTaskAssignedByMe(req: Request, res: Response, next: NextFunction) {
+        try {
+            const token = res.locals.user as IAccessToken;
+            const client_id = token._id;
+            const result = await taskServices.getTasksAssignedByMe(client_id);
+            if (result) return successResponse(res, 200, messages.success("fetched", "tasks assigned by you"), result);
+            throw new CustomError(404, messages.failure("fetching", "tasks assigned by you"));
+        } catch (error) {
+            next(error);
+        }
+    },
+
     //TODO: attachments,
     // async createTask(req:Request, res:Response, next: NextFunction) {
     //     try {

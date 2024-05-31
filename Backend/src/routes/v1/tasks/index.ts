@@ -4,6 +4,10 @@ import taskControllers from "./task.controllers";
 import upload from "../../../middleware/multer";
 
 // Group Task routes
+
+router.get("/assigned-to-me", taskControllers.getTaskAssignedToMe);
+router.get("/assigned-by-me", taskControllers.getTaskAssignedByMe);
+
 router
     .route("/:id")
     .get(taskControllers.getTaskById)

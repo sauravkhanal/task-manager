@@ -78,6 +78,13 @@ const taskServices = {
         }
         return taskRepository.changeWorkflowStage(_id, newWorkflowStage);
     },
+
+    async getTasksAssignedToMe(_id: string): Promise<ITask[] | null> {
+        return taskRepository.getTasksAssignedToMe(_id);
+    },
+    async getTasksAssignedByMe(_id: string): Promise<ITask[] | null> {
+        return taskRepository.getTasksAssignedByMe(_id);
+    },
 };
 
 export default taskServices;

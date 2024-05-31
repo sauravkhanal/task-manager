@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { WorkflowStage } from "../workflowStage/types";
 import TaskModel from "./task.model";
 import ITask from "./types";
@@ -16,6 +17,8 @@ interface ITaskRepository {
     addCommentToTask(taskId: string, commentId: string): Promise<ITask | null>;
     removeCommentFromTask(taskId: string, commentId: string): Promise<ITask | null>;
     changeWorkflowStage(_id: string, workflowStage: WorkflowStage): Promise<ITask | null>;
+    getTasksAssignedToMe(_id: string): Promise<ITask[] | null>;
+    getTasksAssignedByMe(_id: string): Promise<ITask[] | null>;
 }
 
 const taskRepository: ITaskRepository = {
@@ -82,6 +85,97 @@ const taskRepository: ITaskRepository = {
 
     changeWorkflowStage(_id: string, workflowStage: string): Promise<ITask | null> {
         return TaskModel.findOneAndUpdate({ _id }, { workflowStage }, { new: true });
+    },
+
+    // getTasksAssignedToMe(_id: string) {
+    //     return TaskModel.find({ assigneeIDs: _id });
+    // },
+    async getTasksAssignedToMe(_id) {
+        try {
+            const tasks = await TaskModel.aggregate([
+                {
+                    $match: {
+                        assigneeIDs: new mongoose.Types.ObjectId(_id),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "users", // The collection name for the users
+                        localField: "creatorID",
+                        foreignField: "_id",
+                        as: "creator",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "assigneeIDs",
+                        foreignField: "_id",
+                        as: "assignees",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "tags", // The collection name for the users
+                        localField: "tagIDs",
+                        foreignField: "_id",
+                        as: "tags",
+                    },
+                },
+
+                {
+                    $group: {
+                        _id: "$workflowStage",
+                        tasks: {
+                            $push: "$$ROOT",
+                        },
+                    },
+                },
+            ]);
+            return tasks;
+        } catch (error) {
+            console.error("Error fetching categorized tasks:", error);
+            throw error;
+        }
+    },
+    async getTasksAssignedByMe(_id) {
+        try {
+            const tasks = await TaskModel.aggregate([
+                {
+                    $match: {
+                        creatorID: new mongoose.Types.ObjectId("665369257b1fb6f1eddafa1c"),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "tags",
+                        localField: "tagIDs",
+                        foreignField: "_id",
+                        as: "tags",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "assigneeIDs",
+                        foreignField: "_id",
+                        as: "assignees",
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$workflowStage",
+                        tasks: {
+                            $push: "$$ROOT",
+                        },
+                    },
+                },
+            ]);
+            return tasks;
+        } catch (error) {
+            console.error("Error fetching categorized tasks:", error);
+            throw error;
+        }
     },
 };
 
