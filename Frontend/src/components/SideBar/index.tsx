@@ -26,10 +26,10 @@ export default function SideBar({ className }: { className: string }) {
     return (
         <div className={`flex flex-col  gap-3 border-r px-2 py-5 ${className}`}>
             <CreateTaskButton />
-            <NavLink to="" icon={List}>
+            <NavLink to="list" icon={List}>
                 List View
             </NavLink>
-            <NavLink to="" icon={Clipboard}>
+            <NavLink to="board" icon={Clipboard}>
                 Board View
             </NavLink>
             <NavLink to="" icon={UserCheck}>

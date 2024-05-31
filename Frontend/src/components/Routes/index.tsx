@@ -6,6 +6,8 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/404";
+import ListView from "@/pages/ListView";
+import BoardView from "@/pages/BoardView";
 
 type TRouteProps = {
     isLoggedIn: boolean;
@@ -42,6 +44,8 @@ export default function MyRoutes() {
             </Route>
             <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/list" element={<ListView />} />
+                <Route path="/board" element={<BoardView />} />
             </Route>
             <Route path="/*" element={<NotFound />} />
         </Routes>
