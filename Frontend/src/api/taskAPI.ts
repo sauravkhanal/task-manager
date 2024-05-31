@@ -1,8 +1,8 @@
 import {
     IAPIResponse,
     IAllTask,
-    IFilteredTasks,
     ITask,
+    ITasksGroupedByWorkFlowStage,
     WorkflowStage,
 } from "@/types";
 import axiosInstance from "./axiosInstance";
@@ -36,6 +36,14 @@ const taskAPI = {
     async deleteTask(id: string) {
         try {
             const response = await axiosInstance.delete(`/tasks/${id}`);
+            return response.data as IAPIResponse<ITask>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+    async recoverTask(id: string) {
+        try {
+            const response = await axiosInstance.patch(`/tasks/${id}/recover`);
             return response.data as IAPIResponse<ITask>;
         } catch (error: any) {
             return error.response.data as IAPIResponse<unknown>;
@@ -81,17 +89,25 @@ const taskAPI = {
     async getTasksAssignedToMe() {
         try {
             const response = await axiosInstance.get(`tasks/assigned-to-me`);
-            return response.data as IAPIResponse<IFilteredTasks[]>;
+            return response.data as IAPIResponse<
+                ITasksGroupedByWorkFlowStage[]
+            >;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<IFilteredTasks[]>;
+            return error.response.data as IAPIResponse<
+                ITasksGroupedByWorkFlowStage[]
+            >;
         }
     },
     async getTasksAssignedByMe() {
         try {
             const response = await axiosInstance.get(`tasks/assigned-by-me`);
-            return response.data as IAPIResponse<IFilteredTasks[]>;
+            return response.data as IAPIResponse<
+                ITasksGroupedByWorkFlowStage[]
+            >;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<IFilteredTasks[]>;
+            return error.response.data as IAPIResponse<
+                ITasksGroupedByWorkFlowStage[]
+            >;
         }
     },
 };
