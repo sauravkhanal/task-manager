@@ -89,25 +89,19 @@ const taskAPI = {
     async getTasksAssignedToMe() {
         try {
             const response = await axiosInstance.get(`tasks/assigned-to-me`);
-            return response.data as IAPIResponse<
-                ITasksGroupedByWorkFlowStage[]
-            >;
+            return response.data as IAPIResponse<ITasksGroupedByWorkFlowStage>;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<
-                ITasksGroupedByWorkFlowStage[]
-            >;
+            return error.response
+                .data as IAPIResponse<ITasksGroupedByWorkFlowStage>;
         }
     },
     async getTasksAssignedByMe() {
         try {
             const response = await axiosInstance.get(`tasks/assigned-by-me`);
-            return response.data as IAPIResponse<
-                ITasksGroupedByWorkFlowStage[]
-            >;
+            return response.data as IAPIResponse<ITasksGroupedByWorkFlowStage>;
         } catch (error: any) {
-            return error.response.data as IAPIResponse<
-                ITasksGroupedByWorkFlowStage[]
-            >;
+            return error.response
+                .data as IAPIResponse<ITasksGroupedByWorkFlowStage>;
         }
     },
 };

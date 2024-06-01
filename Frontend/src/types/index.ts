@@ -68,7 +68,7 @@ export enum TaskPriority {
 export enum WorkflowStage {
     TODO = "TODO",
     INPROGRESS = "INPROGRESS",
-    TESTING = "TESTING",
+    // TESTING = "TESTING",
     COMPLETED = "COMPLETED",
 }
 
@@ -103,12 +103,17 @@ export interface IAllTask extends Omit<ITask, "creatorID" | "assigneeIDs"> {
 // assigned by me
 
 export interface ITasksGroupedByWorkFlowStage {
-    workflowStage: WorkflowStage;
-    tasks: ITaskWithDetails[];
+    TODO: ITaskWithDetails[];
+    INPROGRESS: ITaskWithDetails[];
+    COMPLETED: ITaskWithDetails[];
 }
 
 export interface ITaskWithDetails extends ITask {
-    creator?: IUserDetails;
+    deleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
     tags: ITag[];
     assignees: IUserDetails[];
+    creator?: IUserDetails;
 }

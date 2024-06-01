@@ -13,9 +13,9 @@ import { SelectPriority } from "./SelectPriority";
 //     useTaskFormContext,
 // } from "@/context/createTask.context";
 import { ITask, TaskPriority } from "@/types";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { DataContext } from "@/context/dataContext";
+import useDataContext from "@/context/dataContext";
 import taskAPI from "@/api/taskAPI";
 import { toast } from "sonner";
 import { useModal } from "@/context/modalContext";
@@ -84,7 +84,7 @@ export default function CreateTask() {
         register("tagIDs");
     }, [register]);
 
-    const { tags, refreshData } = useContext(DataContext);
+    const { tags, refreshData } = useDataContext();
     const { hideModal } = useModal();
     return (
         <Card className="w-full max-w-3xl">

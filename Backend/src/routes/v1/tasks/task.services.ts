@@ -5,7 +5,7 @@ import { IComment } from "../comments/types";
 import { WorkflowStage } from "../workflowStage/types";
 import validateTransition from "../workflowStage/workflowRule";
 import taskRepository from "./task.repository";
-import ITask from "./types";
+import ITask, { ITaskGroupedByWorkflowStage } from "./types";
 
 const taskServices = {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask> {
@@ -79,10 +79,10 @@ const taskServices = {
         return taskRepository.changeWorkflowStage(_id, newWorkflowStage);
     },
 
-    async getTasksAssignedToMe(_id: string): Promise<ITask[] | null> {
+    async getTasksAssignedToMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null> {
         return taskRepository.getTasksAssignedToMe(_id);
     },
-    async getTasksAssignedByMe(_id: string): Promise<ITask[] | null> {
+    async getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null> {
         return taskRepository.getTasksAssignedByMe(_id);
     },
 };

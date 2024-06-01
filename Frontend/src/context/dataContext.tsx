@@ -16,8 +16,8 @@ interface IDataContext {
     allUserDetails: IUserDetails[];
     tags: ITag[];
     tasks: IAllTask[];
-    tasksAssignedByMe: ITasksGroupedByWorkFlowStage[];
-    tasksAssignedToMe: ITasksGroupedByWorkFlowStage[];
+    tasksAssignedByMe: ITasksGroupedByWorkFlowStage;
+    tasksAssignedToMe: ITasksGroupedByWorkFlowStage;
     refreshData: (options?: {
         users?: boolean;
         tags?: boolean;
@@ -25,13 +25,18 @@ interface IDataContext {
     }) => void;
     loading: boolean;
 }
+const emptyGroupedData: ITasksGroupedByWorkFlowStage = {
+    TODO: [],
+    INPROGRESS: [],
+    COMPLETED: [],
+};
 
-export const DataContext = createContext<IDataContext>({
+const DataContext = createContext<IDataContext>({
     allUserDetails: [],
     tags: [],
     tasks: [],
-    tasksAssignedByMe: [],
-    tasksAssignedToMe: [],
+    tasksAssignedByMe: emptyGroupedData,
+    tasksAssignedToMe: emptyGroupedData,
     refreshData: () => {},
     loading: false,
 });
@@ -39,12 +44,10 @@ export const DataContext = createContext<IDataContext>({
 function useDataFetching() {
     const [loading, setLoading] = useState<boolean>(false);
     const [allUserDetails, setAllUserDetails] = useState<IUserDetails[]>([]);
-    const [tasksAssignedByMe, setTasksAssignedByMe] = useState<
-        ITasksGroupedByWorkFlowStage[]
-    >([]);
-    const [tasksAssignedToMe, setTasksAssignedToMe] = useState<
-        ITasksGroupedByWorkFlowStage[]
-    >([]);
+    const [tasksAssignedByMe, setTasksAssignedByMe] =
+        useState<ITasksGroupedByWorkFlowStage>(emptyGroupedData);
+    const [tasksAssignedToMe, setTasksAssignedToMe] =
+        useState<ITasksGroupedByWorkFlowStage>(emptyGroupedData);
     const [tags, setTags] = useState<ITag[]>([]);
     const [tasks, setTasks] = useState<IAllTask[]>([]);
 
@@ -53,6 +56,7 @@ function useDataFetching() {
             setLoading(true);
             const data = await taskAPI.getTasksAssignedByMe();
             if (data) setTasksAssignedByMe(data.data);
+            console.log(data.data);
         } catch (error) {
             console.log("can't refresh tasks assigned by me: ", error);
         } finally {

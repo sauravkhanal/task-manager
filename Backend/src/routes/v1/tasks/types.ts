@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import { WorkflowStage } from "../workflowStage/types";
+import { IWorkflowStage, WorkflowStage } from "../workflowStage/types";
+import { IUser } from "../users/types";
+import ITag from "../tags/types";
 
 export enum TaskPriority {
     LOW = "LOW",
@@ -25,3 +27,19 @@ export default interface ITask {
 export interface ITaskDocument extends ITask {
     _id: mongoose.Types.ObjectId;
 }
+
+export interface ITaskWithDetails extends ITask {
+    _id: string;
+    title: string;
+    deleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    tags: ITag[];
+    assignees: IUser[];
+    creator?: IUser;
+}
+
+export type ITaskGroupedByWorkflowStage = {
+    [item in WorkflowStage]: ITaskWithDetails[];
+};
