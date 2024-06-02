@@ -22,6 +22,8 @@ interface IDataContext {
         users?: boolean;
         tags?: boolean;
         tasks?: boolean;
+        tasksAssignedByMe?: boolean;
+        tasksAssignedToMe?: boolean;
     }) => void;
     loading: boolean;
 }
@@ -116,8 +118,16 @@ function useDataFetching() {
         users?: boolean;
         tags?: boolean;
         tasks?: boolean;
+        tasksAssignedByMe?: boolean;
+        tasksAssignedToMe?: boolean;
     }): Promise<void> {
-        const { users = true, tags = true, tasks = true } = options || {};
+        const {
+            users = true,
+            tags = true,
+            tasks = true,
+            tasksAssignedByMe = true,
+            tasksAssignedToMe = true,
+        } = options || {};
         try {
             setLoading(true);
             await Promise.all([
