@@ -32,10 +32,10 @@ export default function SideBar({ className }: { className: string }) {
             <NavLink to="board" icon={Clipboard}>
                 Board View
             </NavLink>
-            <NavLink to="" icon={UserCheck}>
+            <NavLink to="assigned-to-me" icon={UserCheck}>
                 Assigned To Me
             </NavLink>
-            <NavLink to="" icon={UserRoundSearch}>
+            <NavLink to="assigned-by-me" icon={UserRoundSearch}>
                 Created By Me
             </NavLink>
         </div>
