@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { IAllTask } from "@/types";
+import { ITaskWithDetails } from "@/types";
 
-export const CheckboxColumn: ColumnDef<IAllTask> = {
+export const CheckboxColumn: ColumnDef<ITaskWithDetails> = {
     id: "select",
     header: ({ table }) => (
         <Checkbox

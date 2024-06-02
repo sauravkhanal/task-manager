@@ -37,14 +37,7 @@ const taskRepository: ITaskRepository = {
     },
 
     getAllTasks() {
-        return TaskModel.find({ deleted: false })
-            .sort({ createdAt: -1 })
-            .populate([
-                { path: "creatorID", select: "-password" },
-                { path: "assigneeIDs", select: "-password" },
-                { path: "tagIDs" },
-            ])
-            .exec();
+        return TaskModel.aggregate(taskPopulatePipeline({ deleted: false }, { createdAt: -1 }));
     },
 
     updateTaskDetails(_id, creatorID, newDetails) {
@@ -92,61 +85,14 @@ const taskRepository: ITaskRepository = {
     // },
     async getTasksAssignedToMe(_id) {
         try {
-            const tasks = await TaskModel.aggregate([
-                {
-                    $match: {
+            const tasks = await TaskModel.aggregate(
+                customAggregationPipeline(
+                    {
                         assigneeIDs: new mongoose.Types.ObjectId(_id),
                     },
-                },
-                {
-                    $lookup: {
-                        from: "users", // The collection name for the users
-                        localField: "creatorID",
-                        foreignField: "_id",
-                        as: "creator",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "assigneeIDs",
-                        foreignField: "_id",
-                        as: "assignees",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "tags", // The collection name for the users
-                        localField: "tagIDs",
-                        foreignField: "_id",
-                        as: "tags",
-                    },
-                },
-                {
-                    $project: {
-                        "creator.password": 0,
-                        "assignees.password": 0,
-                    },
-                },
-                {
-                    $group: {
-                        _id: "$workflowStage",
-                        tasks: {
-                            $push: "$$ROOT",
-                        },
-                    },
-                },
-                {
-                    $addFields: {
-                        workflowStage: "$_id",
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                    },
-                },
-            ]);
+                    { createdAt: -1 },
+                ),
+            );
             const tasksByWorkflowStage = tasks.reduce((acc, curr) => {
                 acc[curr.workflowStage] = curr.tasks;
                 return acc;
@@ -159,52 +105,9 @@ const taskRepository: ITaskRepository = {
     },
     async getTasksAssignedByMe(_id) {
         try {
-            const tasks = await TaskModel.aggregate([
-                {
-                    $match: {
-                        creatorID: new mongoose.Types.ObjectId("665369257b1fb6f1eddafa1c"),
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "tags",
-                        localField: "tagIDs",
-                        foreignField: "_id",
-                        as: "tags",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "assigneeIDs",
-                        foreignField: "_id",
-                        as: "assignees",
-                    },
-                },
-                {
-                    $project: {
-                        "assignees.password": 0,
-                    },
-                },
-                {
-                    $group: {
-                        _id: "$workflowStage",
-                        tasks: {
-                            $push: "$$ROOT",
-                        },
-                    },
-                },
-                {
-                    $addFields: {
-                        workflowStage: "$_id",
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                    },
-                },
-            ]);
+            const matchStage = { creatorID: new mongoose.Types.ObjectId(_id) };
+            const sort = { dueDate: 1 };
+            const tasks = await TaskModel.aggregate(customAggregationPipeline(matchStage, { dueDate: 1 }));
             const tasksByWorkflowStage: ITaskGroupedByWorkflowStage = tasks.reduce((acc, curr) => {
                 acc[curr.workflowStage] = curr.tasks;
                 return acc;
@@ -218,3 +121,99 @@ const taskRepository: ITaskRepository = {
 };
 
 export default taskRepository;
+
+const customAggregationPipeline = (matchStage: Record<string, any> = {}, sort: Record<string, any> = {}) => {
+    return [
+        { $match: matchStage },
+        {
+            $lookup: {
+                from: "users",
+                localField: "creatorID",
+                foreignField: "_id",
+                as: "creator",
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "assigneeIDs",
+                foreignField: "_id",
+                as: "assignees",
+            },
+        },
+        {
+            $lookup: {
+                from: "tags",
+                localField: "tagIDs",
+                foreignField: "_id",
+                as: "tags",
+            },
+        },
+        {
+            $project: {
+                "creator.password": 0,
+                "assignees.password": 0,
+            },
+        },
+        {
+            $group: {
+                _id: "$workflowStage",
+                tasks: {
+                    $push: "$$ROOT",
+                },
+            },
+        },
+        {
+            $addFields: {
+                workflowStage: "$_id",
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+            },
+        },
+        {
+            $sort: sort,
+        },
+    ];
+};
+
+const taskPopulatePipeline = (matchStage: Record<string, any> = {}, sort: Record<string, any> = {}) => {
+    return [
+        { $match: matchStage },
+        {
+            $lookup: {
+                from: "users",
+                localField: "creatorID",
+                foreignField: "_id",
+                as: "creator",
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "assigneeIDs",
+                foreignField: "_id",
+                as: "assignees",
+            },
+        },
+        {
+            $lookup: {
+                from: "tags",
+                localField: "tagIDs",
+                foreignField: "_id",
+                as: "tags",
+            },
+        },
+        {
+            $project: {
+                "creator.password": 0,
+                "assignees.password": 0,
+            },
+        },
+        {
+            $sort: sort,
+        },
+    ];
+};

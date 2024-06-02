@@ -10,7 +10,7 @@ import {
     SelectTrigger,
 } from "@/components/ui/select";
 import useDataContext from "@/context/dataContext";
-import { IAllTask, WorkflowStage } from "@/types";
+import { ITaskWithDetails, WorkflowStage } from "@/types";
 import { workflowStages as priorityData } from "@/utils/constants";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -18,7 +18,7 @@ import { toast } from "sonner";
 export function ChangeWorkflowStageDialog({
     taskDetail,
 }: {
-    taskDetail: IAllTask;
+    taskDetail: ITaskWithDetails;
 }) {
     const dataContext = useDataContext();
     const [selectedPriority, setSelectedPriority] = useState<WorkflowStage>(

@@ -10,12 +10,16 @@ import {
     SelectTrigger,
 } from "@/components/ui/select";
 import useDataContext from "@/context/dataContext";
-import { IAllTask, TaskPriority } from "@/types";
+import { ITaskWithDetails, TaskPriority } from "@/types";
 import { priority as priorityData } from "@/utils/constants";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function ChangePriorityDialog({ taskDetail }: { taskDetail: IAllTask }) {
+export function ChangePriorityDialog({
+    taskDetail,
+}: {
+    taskDetail: ITaskWithDetails;
+}) {
     const dataContext = useDataContext();
     const [selectedPriority, setSelectedPriority] = useState<TaskPriority>(
         taskDetail.priority,

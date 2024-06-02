@@ -1,4 +1,4 @@
-import { IAllTask, WorkflowStage } from "@/types";
+import { ITaskWithDetails, WorkflowStage } from "@/types";
 import { Row } from "@tanstack/react-table";
 
 export type SortingFn<T> = {
@@ -6,7 +6,7 @@ export type SortingFn<T> = {
 };
 
 type ICustomSortingFunction = {
-    [K in keyof IAllTask]?: SortingFn<IAllTask>;
+    [K in keyof ITaskWithDetails]?: SortingFn<ITaskWithDetails>;
 };
 
 const customSortingFunctions: ICustomSortingFunction = {

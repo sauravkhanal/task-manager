@@ -2,6 +2,7 @@ import {
     IAPIResponse,
     IAllTask,
     ITask,
+    ITaskWithDetails,
     ITasksGroupedByWorkFlowStage,
     WorkflowStage,
 } from "@/types";
@@ -20,7 +21,7 @@ const taskAPI = {
     async getAllTasks() {
         try {
             const response = await axiosInstance.get("/tasks");
-            return response.data as IAPIResponse<IAllTask[]>;
+            return response.data as IAPIResponse<ITaskWithDetails[]>;
         } catch (error: any) {
             return null;
         }

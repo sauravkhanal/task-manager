@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Column } from "@tanstack/react-table";
 import { ArrowUpDown, SortAsc, SortDesc } from "lucide-react";
 import { ColumnDefTemplate, HeaderContext } from "@tanstack/react-table";
-import { IAllTask } from "@/types";
+import { ITaskWithDetails } from "@/types";
 
 type IHeader<T> = {
     [key in keyof T]?:
-        | ColumnDefTemplate<HeaderContext<IAllTask, unknown>>
+        | ColumnDefTemplate<HeaderContext<ITaskWithDetails, unknown>>
         | undefined;
 };
 
@@ -22,7 +22,7 @@ function SortIcon({ column }: { column: Column<any> }) {
     );
 }
 
-const headers: IHeader<IAllTask> = {
+const headers: IHeader<ITaskWithDetails> = {
     title: ({ column }) => {
         return (
             <Button variant="ghost" onClick={() => column.toggleSorting()}>

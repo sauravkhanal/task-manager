@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { IAllTask } from "@/types";
+import { ITaskWithDetails } from "@/types";
 import cells from "./cells";
 import customFilters from "./customFilters";
 import headers from "./headers";
 import customSortingFunctions from "./customSortingFunctions";
 
-export const columns: ColumnDef<IAllTask>[] = [
+export const columns: ColumnDef<ITaskWithDetails>[] = [
     {
         accessorKey: "title",
         header: headers.title,
@@ -24,22 +24,22 @@ export const columns: ColumnDef<IAllTask>[] = [
         sortingFn: customSortingFunctions.workflowStage,
     },
     {
-        accessorKey: "creatorID",
+        accessorKey: "creator",
         header: "Created By",
-        cell: cells.creatorID,
+        cell: cells.creator,
         filterFn: customFilters.creatorFilter,
     },
     {
-        accessorKey: "assigneeIDs",
+        accessorKey: "assignees",
         header: "Assignee",
         filterFn: customFilters.assigneeFilter,
-        cell: cells.assigneeIDs,
+        cell: cells.assignees,
     },
     {
-        accessorKey: "tagIDs",
+        accessorKey: "tags",
         header: "Tags",
         filterFn: customFilters.tagFilter,
-        cell: cells.tagIDs,
+        cell: cells.tags,
     },
     {
         accessorKey: "description",
@@ -75,5 +75,9 @@ export const columns: ColumnDef<IAllTask>[] = [
         id: "actions",
         enableHiding: false,
         cell: cells.action,
+    },
+    {
+        id: "checkbox",
+        enableHiding: false,
     },
 ];

@@ -13,7 +13,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
-import { ITag, ITask } from "@/types";
+import { ITag, ITaskWithDetails } from "@/types";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { TagCreator } from "../TagCreator";
@@ -21,8 +21,8 @@ import { TagCreator } from "../TagCreator";
 interface ComboBoxProps {
     availableTags: ITag[];
     prevTags?: ITag[];
-    getValues: UseFormGetValues<ITask>;
-    setValue: UseFormSetValue<ITask>;
+    getValues: UseFormGetValues<ITaskWithDetails>;
+    setValue: UseFormSetValue<ITaskWithDetails>;
 }
 
 export function ComboBox({ availableTags, prevTags, setValue }: ComboBoxProps) {

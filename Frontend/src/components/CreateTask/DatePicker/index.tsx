@@ -10,15 +10,22 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
-import { ITask } from "@/types";
+import { ITaskWithDetails } from "@/types";
 
 interface DatePickerProps {
-    getValues: UseFormGetValues<ITask>;
-    setValue: UseFormSetValue<ITask>;
+    getValues: UseFormGetValues<ITaskWithDetails>;
+    setValue: UseFormSetValue<ITaskWithDetails>;
 }
 
 export function DatePicker({ getValues, setValue }: DatePickerProps) {
-    const initialDate = getValues("dueDate") || null;
+    const initialDate =
+        getValues("dueDate") ||
+        (() => {
+            const date = new Date();
+            date.setDate(date.getDate() + 1); // Set to tomorrow
+            date.setHours(17, 0, 0, 0); // Set time to 5 PM
+            return date;
+        })();
     const [date, setDate] = useState<Date | null>(initialDate);
 
     const handleDateSelect = (selectedDate: Date | undefined) => {

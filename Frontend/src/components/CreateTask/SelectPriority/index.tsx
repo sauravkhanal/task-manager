@@ -8,15 +8,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ITask, TaskPriority } from "@/types";
-import { UseFormSetValue } from "react-hook-form";
+import { ITaskWithDetails, TaskPriority } from "@/types";
+import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 
 export function SelectPriority({
     placeholder,
-    initialValue = TaskPriority.LOW,
     label,
     items,
     setValue,
+    getValues,
 }: {
     placeholder: string;
     initialValue?: TaskPriority;
@@ -25,14 +25,15 @@ export function SelectPriority({
         title: TaskPriority;
         color: string;
     }[];
-    setValue: UseFormSetValue<ITask>;
+    setValue: UseFormSetValue<ITaskWithDetails>;
+    getValues: UseFormGetValues<ITaskWithDetails>;
 }) {
     return (
         <Select
             onValueChange={(value) => {
                 setValue("priority", value as TaskPriority);
             }}
-            defaultValue={initialValue}
+            defaultValue={getValues("priority") || TaskPriority.LOW}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue

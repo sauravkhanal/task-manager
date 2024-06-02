@@ -13,7 +13,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-import { ITask, IUserDetails } from "@/types";
+import { ITaskWithDetails, IUserDetails } from "@/types";
 import UserCard from "./UserCard";
 
 import { UseFormSetValue } from "react-hook-form";
@@ -23,7 +23,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SelectUserProps {
     prevUsers: IUserDetails[];
-    setValue: UseFormSetValue<ITask>;
+    setValue: UseFormSetValue<ITaskWithDetails>;
 }
 
 export function SelectUser({ prevUsers, setValue }: SelectUserProps) {

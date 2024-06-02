@@ -1,11 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
-    IAllTask,
     ITasksGroupedByWorkFlowStage,
     ITag,
     ITaskWithDetails,
     IUserDetails,
-    WorkflowStage,
 } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
@@ -15,7 +13,7 @@ import { AuthContext } from "./authContext";
 interface IDataContext {
     allUserDetails: IUserDetails[];
     tags: ITag[];
-    tasks: IAllTask[];
+    tasks: ITaskWithDetails[];
     tasksAssignedByMe: ITasksGroupedByWorkFlowStage;
     tasksAssignedToMe: ITasksGroupedByWorkFlowStage;
     refreshData: (options?: {
@@ -51,14 +49,13 @@ function useDataFetching() {
     const [tasksAssignedToMe, setTasksAssignedToMe] =
         useState<ITasksGroupedByWorkFlowStage>(emptyGroupedData);
     const [tags, setTags] = useState<ITag[]>([]);
-    const [tasks, setTasks] = useState<IAllTask[]>([]);
+    const [tasks, setTasks] = useState<ITaskWithDetails[]>([]);
 
     async function refreshTasksAssignedByMe() {
         try {
             setLoading(true);
             const data = await taskAPI.getTasksAssignedByMe();
             if (data) setTasksAssignedByMe(data.data);
-            console.log(data.data);
         } catch (error) {
             console.log("can't refresh tasks assigned by me: ", error);
         } finally {

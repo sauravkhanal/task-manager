@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    IAllTask,
+    ITaskWithDetails,
     ITag,
     IUserDetails,
     TaskPriority,
@@ -33,21 +33,22 @@ import { MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteTask } from "./deleteRecoverTask";
 import useDataContext from "@/context/dataContext";
+import { useModal } from "@/context/modalContext";
+import TaskForm from "@/components/CreateTask";
 
 type CellFunction<T> = (params: { row: Row<T> }) => JSX.Element | string | null;
 
 type ICells = {
-    [K in keyof IAllTask]?: CellFunction<IAllTask>;
+    [K in keyof ITaskWithDetails]?: CellFunction<ITaskWithDetails>;
 } & {
-    action: CellFunction<IAllTask>;
+    action: CellFunction<ITaskWithDetails>;
 };
 
 const cells: ICells = {
     title: ({ row }) => {
         const title: string = row.getValue("title");
-        const rowData: IAllTask = row.original; // Access the entire row's data
+        const rowData: ITaskWithDetails = row.original; // Access the entire row's data
         const priority: TaskPriority = rowData.priority;
-
         return (
             <div className="text-ellipsis w-36 lg:w-64 line-clamp-1 capitalize">
                 {priority && <ChangePriorityDialog taskDetail={rowData} />}
@@ -71,7 +72,7 @@ const cells: ICells = {
     },
     workflowStage: ({ row }) => {
         const workflowStage: WorkflowStage = row.getValue("workflowStage");
-        const rowData: IAllTask = row.original; // Access the entire row's data
+        const rowData: ITaskWithDetails = row.original; // Access the entire row's data
 
         return (
             <div className="text-center">
@@ -81,11 +82,11 @@ const cells: ICells = {
             </div>
         );
     },
-    creatorID: ({ row }) => {
-        const creatorDetail: IUserDetails = row.getValue("creatorID");
+    creator: ({ row }) => {
+        const creatorDetail: IUserDetails[] = row.getValue("creator");
         return (
             <div className="w-28 text-nowrap overflow-hidden overflow-ellipsis">
-                {fullName(creatorDetail)}
+                {fullName(creatorDetail[0])}
                 {/* <UserCard
                     firstName={creatorDetail.firstName}
                     middleName={creatorDetail.middleName}
@@ -96,8 +97,8 @@ const cells: ICells = {
             </div>
         );
     },
-    assigneeIDs: ({ row }) => {
-        const assignee: IUserDetails[] = row.getValue("assigneeIDs");
+    assignees: ({ row }) => {
+        const assignee: IUserDetails[] = row.getValue("assignees");
         if (!assignee) return null;
 
         return (
@@ -127,8 +128,8 @@ const cells: ICells = {
             </span>
         );
     },
-    tagIDs: ({ row }) => {
-        const tags: ITag[] = row.getValue("tagIDs");
+    tags: ({ row }) => {
+        const tags: ITag[] = row.getValue("tags");
         if (tags.length === 0) return <div className="w-24">&nbsp;</div>;
         if (tags.length === 1)
             return (
@@ -196,6 +197,7 @@ const cells: ICells = {
     action: ({ row }) => {
         const taskDetail = row.original;
         const { refreshData } = useDataContext();
+        const { showModal } = useModal();
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -224,7 +226,15 @@ const cells: ICells = {
                         Delete
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                        <PencilLine className="mr-1 size-5" /> Update task
+                        <PencilLine className="mr-1 size-5" />{" "}
+                        <Button
+                            variant={"ghost"}
+                            onClick={() =>
+                                showModal(<TaskForm task={row.original} />)
+                            }
+                        >
+                            Update Task
+                        </Button>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
