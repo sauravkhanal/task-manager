@@ -27,6 +27,8 @@ function useTagForm() {
     } = useForm();
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
     const { refreshData } = useDataContext();
 
     async function createTag({ title, description, color }: Partial<ITag>) {
@@ -34,7 +36,8 @@ function useTagForm() {
         const response = await tagAPI.createTag({ title, description, color });
         if (response.success) {
             toast.success(response.message);
-            refreshData();
+            setDialogOpen(false);
+            refreshData({ tags: true });
         } else {
             toast.error(response.data.title);
             if (response.data.title)
@@ -54,16 +57,33 @@ function useTagForm() {
         handleSubmit(createTag)();
     }
 
-    return { register, handleNestedFormSubmit, errors, loading, createTag };
+    return {
+        register,
+        handleNestedFormSubmit,
+        errors,
+        loading,
+        createTag,
+        dialogOpen,
+        setDialogOpen,
+    };
 }
 
 export function TagCreator() {
-    const { register, handleNestedFormSubmit, errors, loading } = useTagForm();
+    const {
+        register,
+        handleNestedFormSubmit,
+        errors,
+        loading,
+        dialogOpen,
+        setDialogOpen,
+    } = useTagForm();
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Create new tag</Button>
+                <Button variant="outline" onClick={() => setDialogOpen(true)}>
+                    Create new tag
+                </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
