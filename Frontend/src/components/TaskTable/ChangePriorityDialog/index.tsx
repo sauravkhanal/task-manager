@@ -17,8 +17,10 @@ import { toast } from "sonner";
 
 export function ChangePriorityDialog({
     taskDetail,
+    className,
 }: {
     taskDetail: ITaskWithDetails;
+    className?: string;
 }) {
     const dataContext = useDataContext();
     const [selectedPriority, setSelectedPriority] = useState<TaskPriority>(
@@ -54,7 +56,7 @@ export function ChangePriorityDialog({
             // defaultOpen
         >
             <SelectTrigger minimal={true}>
-                <span className="flex justify-center">
+                <span className={`flex justify-center ${className}`}>
                     <Badge variant={selectedPriority}>
                         <LoadingIcon
                             text={selectedPriority}
