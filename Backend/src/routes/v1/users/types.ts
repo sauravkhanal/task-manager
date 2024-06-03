@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export interface IUser {
     firstName: string;
     middleName?: string;
@@ -10,6 +12,7 @@ export interface IUser {
     role?: string;
     deleted?: boolean;
     deactivated?: boolean;
+    preferencesID: mongoose.Types.ObjectId;
 }
 
 export enum UserRoles {

@@ -70,6 +70,11 @@ const userSchema = new mongoose.Schema<IUserDocument>(
             type: Boolean,
             default: false,
         },
+
+        preferencesID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Preference",
+        },
     },
     { timestamps: true },
 );
