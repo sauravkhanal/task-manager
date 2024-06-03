@@ -115,5 +115,5 @@ export interface ITaskWithDetails extends ITask {
     __v: number;
     tags: ITag[];
     assignees: IUserDetails[];
-    creator?: IUserDetails;
+    creator: IUserDetails[];
 }
