@@ -12,10 +12,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ITaskWithDetails, IUserDetails } from "@/types";
 import UserCard from "./UserCard";
-
 import { UseFormSetValue } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -28,11 +27,18 @@ interface SelectUserProps {
 
 export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
     const [open, setOpen] = useState(false);
-    const [selectedUsers, setSelectedUsers] =
-        useState<IUserDetails[]>(prevUsers);
-
+    const [selectedUsers, setSelectedUsers] = useState<IUserDetails[]>([]);
     const context = useDataContext();
     const availableUsers = context.allUserDetails;
+
+    useEffect(() => {
+        const initialSelectedUsers = [...prevUsers];
+        setSelectedUsers(initialSelectedUsers);
+        setValue(
+            "assigneeIDs",
+            initialSelectedUsers.map((user) => user._id),
+        );
+    }, [prevUsers, setValue]);
 
     const toggleStatus = (user: IUserDetails) => {
         const updatedSelectedUsers = selectedUsers.some(
@@ -85,7 +91,7 @@ export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
                                     return (
                                         <CommandItem
                                             key={user._id}
-                                            value={user._id} // Use _id as the value for selection
+                                            value={user._id}
                                             onSelect={(value) => {
                                                 const selectedUser =
                                                     availableUsers.find(

@@ -71,8 +71,9 @@ export default function TaskForm({ task }: { task?: ITaskWithDetails }) {
         },
 
         updateTask: async (data: ITask) => {
+            console.log(data.assigneeIDs);
             const response = await taskAPI.updateTask({
-                id: data._id!,
+                id: task?._id ?? "",
                 taskDetails: data,
             });
             if (response.success) {
