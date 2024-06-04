@@ -97,7 +97,7 @@ export default function TaskForm({
     };
 
     return (
-        <Card className="w-full max-w-3xl">
+        <Card className="w-full max-w-3xl font-poppins">
             <CardHeader>
                 <CardTitle>
                     {mode === "create" ? "Create Task" : "Task Details"}

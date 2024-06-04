@@ -17,6 +17,7 @@ import { ITag, ITaskWithDetails } from "@/types";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { TagCreator } from "../TagCreator";
+import { Badge } from "@/components/ui/badge";
 
 interface ComboBoxProps {
     availableTags: ITag[];
@@ -53,21 +54,31 @@ export function ComboBox({ availableTags, prevTags, setValue }: ComboBoxProps) {
                     size="sm"
                     className="w-full justify-start overflow-hidden"
                 >
-                    {selectedTags?.length ?? 0 > 0 ? (
-                        selectedTags?.map((tag) => (
-                            <span
-                                key={tag._id}
-                                className="mr-2 px-2 py-1 rounded"
-                                style={{ backgroundColor: tag.color }}
-                            >
-                                {tag.title}
-                            </span>
-                        ))
+                    {selectedTags && selectedTags?.length > 0 ? (
+                        <>
+                            {selectedTags?.slice(0, 2).map((tag, index) => (
+                                <span
+                                    key={tag._id}
+                                    className={`mr-2 px-2 py-1 rounded ${
+                                        index === 1 ? "hidden-xs" : ""
+                                    }`}
+                                    style={{ backgroundColor: tag.color }}
+                                >
+                                    {tag.title}
+                                </span>
+                            ))}
+                            {selectedTags?.length > 2 && (
+                                <Badge className="mr-2" variant={"outline"}>
+                                    +{selectedTags.length - 2}
+                                </Badge>
+                            )}
+                        </>
                     ) : (
                         <>+ Add Tags</>
                     )}
                 </Button>
             </PopoverTrigger>
+
             <PopoverContent className="p-0" side="bottom" align="start">
                 <Command>
                     <CommandInput placeholder="Change tags..." />
