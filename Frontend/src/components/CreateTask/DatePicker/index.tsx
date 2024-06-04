@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { LuCalendarPlus as CalendarIcon } from "react-icons/lu";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,9 @@ export function DatePicker({ getValues, setValue }: DatePickerProps) {
             return date;
         })();
     const [date, setDate] = useState<Date | null>(initialDate);
+    useEffect(() => {
+        setValue("dueDate", initialDate);
+    });
 
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {

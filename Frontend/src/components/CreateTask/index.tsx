@@ -129,7 +129,6 @@ export default function TaskForm({
                     <SelectUser
                         prevUsers={task?.assignees || []}
                         setValue={setValue}
-                        // disabled={mode === "view"}
                     />
 
                     <div className="flex gap-2 items-end">
@@ -141,7 +140,6 @@ export default function TaskForm({
                                 items={priority}
                                 setValue={setValue}
                                 getValues={getValues}
-                                // disabled={mode === "view"}
                             />
                         </div>
                         <div className="grid gap-1">
@@ -149,7 +147,6 @@ export default function TaskForm({
                             <DatePicker
                                 setValue={setValue}
                                 getValues={getValues}
-                                // disabled={mode === "view"}
                             />
                         </div>
                         <div className="flex-1">
@@ -159,7 +156,6 @@ export default function TaskForm({
                                 prevTags={task?.tags || []}
                                 getValues={getValues}
                                 setValue={setValue}
-                                // disabled={mode === "view"}
                             />
                         </div>
                     </div>
@@ -173,11 +169,9 @@ export default function TaskForm({
                         {...register("description")}
                     />
 
-                    {mode !== "view" && (
-                        <Button type="submit">
-                            {mode === "update" ? "Update Task" : "Create Task"}
-                        </Button>
-                    )}
+                    <Button type="submit">
+                        {mode === "update" ? "Update Task" : "Create Task"}
+                    </Button>
                 </form>
             </CardContent>
         </Card>

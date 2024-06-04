@@ -9,6 +9,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ITaskWithDetails, TaskPriority } from "@/types";
+import { useEffect } from "react";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 
 export function SelectPriority({
@@ -28,6 +29,9 @@ export function SelectPriority({
     setValue: UseFormSetValue<ITaskWithDetails>;
     getValues: UseFormGetValues<ITaskWithDetails>;
 }) {
+    useEffect(() => {
+        setValue("priority", getValues("priority") || TaskPriority.LOW);
+    }, []);
     return (
         <Select
             onValueChange={(value) => {
