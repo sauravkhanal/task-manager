@@ -127,7 +127,7 @@ export default function KanBanBoard({
 
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-            <div className="h-full w-full grid grid-cols-3 px-5 gap-3 py-2">
+            <div className="h-full w-full grid grid-cols-3 px-5 gap-5 py-2">
                 {Object.keys(tasks).map((stage) => (
                     <Column
                         stage={stage as WorkflowStage}
