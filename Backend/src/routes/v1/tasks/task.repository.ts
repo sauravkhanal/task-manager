@@ -94,6 +94,7 @@ const taskRepository: ITaskRepository = {
                 customAggregationPipeline(
                     {
                         assigneeIDs: new mongoose.Types.ObjectId(_id),
+                        deleted: false,
                     },
                     { createdAt: -1 },
                 ),
@@ -110,7 +111,7 @@ const taskRepository: ITaskRepository = {
     },
     async getTasksAssignedByMe(_id) {
         try {
-            const matchStage = { creatorID: new mongoose.Types.ObjectId(_id) };
+            const matchStage = { creatorID: new mongoose.Types.ObjectId(_id), deleted: false };
             const sort = { dueDate: 1 };
             const tasks = await TaskModel.aggregate(customAggregationPipeline(matchStage, { dueDate: 1 }));
             const tasksByWorkflowStage: ITaskGroupedByWorkflowStage = tasks.reduce((acc, curr) => {
