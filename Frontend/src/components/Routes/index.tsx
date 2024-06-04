@@ -7,10 +7,9 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/404";
 import ListView from "@/pages/ListView";
-import BoardView from "@/BoardView/KanBanBoard";
 import TasksAssignedToMe from "@/pages/TasksAssignedToMe";
 import TasksAssignedByMe from "@/pages/TasksAssignedByMe";
-import { TaskView } from "../TaskView";
+import TaskView from "@/pages/TaskView";
 
 type TRouteProps = {
     isLoggedIn: boolean;
