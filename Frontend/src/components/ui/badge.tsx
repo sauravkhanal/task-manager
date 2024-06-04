@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-    "relative inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer",
+    "relative inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer uppercase",
     {
         variants: {
             variant: {
@@ -25,7 +25,7 @@ const badgeVariants = cva(
                 TESTING:
                     " text-purple-500  hover:bg-purple-700 hover:text-white",
                 COMPLETED: " text-gray-500  hover:bg-gray-600 hover:text-white",
-                custom: "border-transparent text-white hover:opacity-60 hover:text-white",
+                CUSTOM: "border-transparent text-white hover:opacity-60 ",
             },
         },
         defaultVariants: {
@@ -47,11 +47,17 @@ function Badge({
     children,
     ...props
 }: BadgeProps) {
+    let notification;
+    if (variant === "outline") {
+        notification = "bg-background text-black border";
+    } else notification = "bg-blue-500 text-white";
     return (
         <div className={cn(badgeVariants({ variant }), className)} {...props}>
             {children}
             {notificationCount && notificationCount > 0 && (
-                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-xs font-bold leading-none bg-blue-500 text-white">
+                <span
+                    className={`absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-xs  leading-none ${notification}`}
+                >
                     +{notificationCount}
                 </span>
             )}

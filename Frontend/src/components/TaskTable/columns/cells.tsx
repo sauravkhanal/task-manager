@@ -81,7 +81,7 @@ const cells: ICells = {
     },
     tags: ({ row }) => {
         const tags: ITag[] = row.getValue("tags");
-        return cellsUI.tags(tags);
+        return cellsUI.tags({ tags, variant: "CUSTOM" });
     },
     description: ({ row }) => {
         const description: string = row.getValue("description");

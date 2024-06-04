@@ -1,6 +1,6 @@
 import UserCard from "@/components/CreateTask/SelectUser/UserCard";
 import { TaskView } from "@/components/TaskView";
-import { Badge } from "@/components/ui/badge";
+import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -22,15 +22,22 @@ import { deleteTask } from "./deleteRecoverTask";
 import TaskForm from "@/components/CreateTask";
 
 const cellsUI = {
-    tags: (tags: ITag[]) => {
+    tags: ({
+        tags,
+        variant,
+    }: {
+        tags: ITag[];
+        variant: BadgeProps["variant"];
+    }) => {
+        let backgroundColor;
+        if (variant === "outline") {
+            backgroundColor = undefined;
+        } else backgroundColor = tags[0]?.color ?? "";
         if (tags.length === 0) return <div className="w-24">&nbsp;</div>;
         if (tags.length === 1)
             return (
                 <div className="w-24 overflow-x-hidden">
-                    <Badge
-                        style={{ backgroundColor: tags[0].color }}
-                        className="text-white uppercase"
-                    >
+                    <Badge style={{ backgroundColor }} variant={variant}>
                         {tags[0].title}
                     </Badge>
                 </div>
@@ -40,10 +47,9 @@ const cellsUI = {
                 <HoverCard>
                     <HoverCardTrigger className="text-nowrap">
                         <Badge
-                            style={{ backgroundColor: tags[0].color }}
-                            className="uppercase"
+                            style={{ backgroundColor }}
                             notificationCount={tags.length - 1}
-                            variant={"custom"}
+                            variant={variant}
                         >
                             {tags[0].title}
                         </Badge>
@@ -53,7 +59,6 @@ const cellsUI = {
                             <Badge
                                 key={index}
                                 style={{ backgroundColor: tag.color }}
-                                className="uppercase text-white"
                             >
                                 {tag.title}
                             </Badge>
