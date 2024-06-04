@@ -19,6 +19,12 @@ interface TaskCardProps {
     task: ITaskWithDetails;
 }
 
+const priorityClasses = {
+    HIGH: "border-l-red-500 ",
+    MED: "border-l-yellow-500",
+    LOW: "border-l-green-500",
+};
+
 export const TaskDueDate: React.FC<{ date: Date; className?: string }> = ({
     date,
     className,
@@ -79,7 +85,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <Card
                 className={cn(
                     `w-full rounded-md relative 
-                     h-max cursor-grab`,
+                     h-max cursor-grab border-l-2 border-l-red-500
+                     ${priorityClasses[task.priority]}`,
                 )}
                 ref={setNodeRef}
                 style={style}
