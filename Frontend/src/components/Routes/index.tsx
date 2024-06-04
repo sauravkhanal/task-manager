@@ -10,6 +10,7 @@ import ListView from "@/pages/ListView";
 import BoardView from "@/BoardView/KanBanBoard";
 import TasksAssignedToMe from "@/pages/TasksAssignedToMe";
 import TasksAssignedByMe from "@/pages/TasksAssignedByMe";
+import { TaskView } from "../TaskView";
 
 type TRouteProps = {
     isLoggedIn: boolean;
@@ -49,6 +50,8 @@ export default function MyRoutes() {
                 <Route path="/list" element={<ListView />} />
                 <Route path="/assigned-to-me" element={<TasksAssignedToMe />} />
                 <Route path="/assigned-by-me" element={<TasksAssignedByMe />} />
+                <Route path="/details/:taskID" element={<TaskView />} />
+                <Route path="/details/" element={<TaskView />} />
             </Route>
             <Route path="/*" element={<NotFound />} />
         </Routes>
