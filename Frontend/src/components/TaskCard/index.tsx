@@ -79,12 +79,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             >
                 <CardHeader className="p-4 pr-8">
                     <CardTitle className="flex gap-1 items-center">
-                        <UserAvatar
+                        {/* <UserAvatar
                             profileUrl={task.creator[0].profilePicture}
                             firstName={task.creator[0].firstName}
                             lastName={task.creator[0].lastName}
                             className=""
-                        />
+                        /> */}
                         <p className="line-clamp-1 capitalize">{task.title}</p>
                     </CardTitle>
                     <CardDescription className="line-clamp-2 pt-1">
