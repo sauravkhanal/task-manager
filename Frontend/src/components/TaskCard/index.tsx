@@ -1,30 +1,28 @@
 import { ITaskWithDetails } from "@/types";
 import React from "react";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { User, Tags, Calendar, Clock } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import cellsUI from "../TaskTable/columns/cellsUI";
 import { UserAvatar } from "../CreateTask/SelectUser/UserCard";
 import { ChangePriorityDialog } from "../TaskTable/ChangePriorityDialog";
-import { format, formatDistanceToNow, addDays, isBefore } from "date-fns";
+import { format, formatDistanceToNow, isBefore } from "date-fns";
+import fullName from "@/utils/fullName";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface TaskCardProps {
     task: ITaskWithDetails;
 }
 
-const priorityClasses = {
-    HIGH: "border-l-red-500 ",
-    MED: "border-l-yellow-500",
-    LOW: "border-l-green-500",
-};
-export const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
+export const TaskDueDate: React.FC<{ date: Date; className?: string }> = ({
+    date,
+    className,
+}) => {
     const now = new Date();
     // const sevenDaysFromNow = addDays(now, 7);
 
@@ -37,9 +35,20 @@ export const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
 
     const overdue = isBefore(date, now);
     return (
-        <span className={`text-sm text-nowrap ${overdue && "opacity-50"}`}>
-            {renderDate}
-        </span>
+        <HoverCard>
+            <HoverCardTrigger>
+                <div
+                    className={`text-sm text-nowrap ${
+                        overdue && "opacity-50"
+                    } ${className}`}
+                >
+                    {renderDate}
+                </div>
+            </HoverCardTrigger>
+            <HoverCardContent className="p-2 text-sm">
+                Due date: {format(date, "do LLL hh:mm a")}
+            </HoverCardContent>
+        </HoverCard>
     );
 };
 export const TaskTime: React.FC<{ dueDate: Date }> = ({ dueDate }) => {
@@ -69,9 +78,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         <div className="relative">
             <Card
                 className={cn(
-                    `w-full rounded-md border-l-2 relative ${
-                        priorityClasses[task.priority]
-                    } h-max cursor-grab`,
+                    `w-full rounded-md relative 
+                     h-max cursor-grab`,
                 )}
                 ref={setNodeRef}
                 style={style}
@@ -79,37 +87,39 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 {...attributes}
             >
                 <CardHeader className="p-4 pr-8">
-                    <CardTitle className="flex gap-1 items-center">
-                        {/* <UserAvatar
+                    <CardTitle className="flex gap-1 items-center text-base">
+                        <ChangePriorityDialog
+                            taskDetail={task}
+                            className="scale-[0.8]"
+                        />
+                        <p className="line-clamp-1 capitalize opacity-80">
+                            {task.title}
+                        </p>
+                    </CardTitle>
+                    {/* <CardDescription className="line-clamp-2 pt-1 text-xs">
+                        {task.description}
+                    </CardDescription> */}
+                </CardHeader>
+                <CardContent className="flex flex-row relative left-0 gap-4 pb-2 pl-2">
+                    <div className="flex items-center">
+                        <UserAvatar
                             profileUrl={task.creator[0].profilePicture}
                             firstName={task.creator[0].firstName}
                             lastName={task.creator[0].lastName}
-                            className=""
-                        /> */}
-                        <p className="line-clamp-1 capitalize">{task.title}</p>
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 pt-1">
-                        {task.description}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-row  items-center gap-4 pb-2 pl-2">
-                    {/* <UserAvatar
-                        profileUrl={task.creator[0].profilePicture}
-                        firstName={task.creator[0].firstName}
-                        lastName={task.creator[0].lastName}
-                        className=""
-                    /> */}
-                    <ChangePriorityDialog taskDetail={task} />
-                    <span className="flex gap-1">
+                            className="scale-[0.8]"
+                        />
+                        <p className="text-xs">{fullName(task.creator[0])}</p>
+                    </div>
+                    <span className="flex gap-1 items-center ml-auto">
                         <Calendar className="size-4" />
-                        <TaskDueDate date={task.dueDate} />
+                        <TaskDueDate date={task.dueDate} className="text-xs" />
                     </span>
                     {/* <span className="flex gap-1">
                         <Clock className="size-4" />
                         <TaskTime dueDate={task.dueDate} />
                     </span> */}
-                    <span className="flex items-end ml-auto">
-                        <User className="size-5 mr-1 self-center" />
+                    <span className="flex items-center">
+                        <User className="size-4 mr-1 self-center" />
                         {cellsUI.assignees(task.assignees)}
                     </span>
                     {/* {task.tags.length > 0 && (
@@ -121,10 +131,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                             })}
                         </span>
                     )} */}
-                    <span className="absolute top-1 right-1">
-                        {cellsUI.action(task)}
-                    </span>
                 </CardContent>
+                <span className="absolute top-1 right-1 ">
+                    {cellsUI.action(task)}
+                </span>
             </Card>
         </div>
     );
