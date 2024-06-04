@@ -26,15 +26,16 @@ const priorityClasses = {
 };
 const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
     const now = new Date();
-    const sevenDaysFromNow = addDays(now, 7);
+    // const sevenDaysFromNow = addDays(now, 7);
 
-    const dueDate = new Date(date);
+    // const dueDate = new Date(date);
 
-    const renderDate = isBefore(dueDate, sevenDaysFromNow)
-        ? formatDistanceToNow(dueDate, { addSuffix: true })
-        : format(dueDate, "do LLL ");
+    // const renderDate = isBefore(dueDate, sevenDaysFromNow)
+    //     ? formatDistanceToNow(dueDate, { addSuffix: true })
+    //     : format(dueDate, "do LLL ");
+    const renderDate = formatDistanceToNow(date, { addSuffix: true });
 
-    const overdue = isBefore(dueDate, now);
+    const overdue = isBefore(date, now);
     return (
         <span className={`text-sm text-nowrap ${overdue && "opacity-50"}`}>
             {renderDate}
@@ -103,10 +104,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         <Calendar className="size-4" />
                         <TaskDueDate date={task.dueDate} />
                     </span>
-                    <span className="flex gap-1">
+                    {/* <span className="flex gap-1">
                         <Clock className="size-4" />
                         <TaskTime dueDate={task.dueDate} />
-                    </span>
+                    </span> */}
                     <span className="flex items-end ml-auto">
                         <User className="size-5 mr-1 self-center" />
                         {cellsUI.assignees(task.assignees)}
