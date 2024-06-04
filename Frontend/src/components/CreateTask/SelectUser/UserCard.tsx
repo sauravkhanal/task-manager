@@ -31,7 +31,7 @@ export function UserAvatar({
             <HoverCardTrigger>
                 <Avatar
                     className={cn(
-                        "cursor-pointer hover:scale-105 transition",
+                        "cursor-pointer transition hover:ring-1 ring-ring",
                         className,
                     )}
                     {...props}
@@ -70,10 +70,11 @@ export default function UserCard({
     middleName?: string;
     lastName: string;
     size?: number;
-    onRemove: () => void;
+    onRemove: (() => void) | undefined;
 }) {
+    const onRemovePresent = onRemove === undefined;
     return (
-        <Card className="relative rounded-l-full rounded-r-full grow-0 group shadow-none">
+        <Card className="relative rounded-l-full rounded-r-full grow-0 group shadow-none w-max">
             <div className="flex gap-2 h-10 items-center pr-2">
                 <UserAvatar
                     profileUrl={profileUrl}
@@ -85,14 +86,17 @@ export default function UserCard({
                     {fullName({ firstName, middleName, lastName })}
                 </p>
             </div>
-            <Button
-                variant={"destructive"}
-                className="absolute top-0 w-full h-full flex gap-2 items-center justify-center bg-red-500 bg-opacity-75 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 rounded-full text-sm"
-                onClick={onRemove}
-            >
-                Remove
-                <UserRoundMinus className="w-6 h-6" />
-            </Button>
+
+            {!onRemovePresent && (
+                <Button
+                    variant={"destructive"}
+                    className="absolute top-0 w-full h-full flex gap-2 items-center justify-center bg-red-500 bg-opacity-75 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 rounded-full text-sm"
+                    onClick={onRemove}
+                >
+                    Remove
+                    <UserRoundMinus className="w-6 h-6" />
+                </Button>
+            )}
         </Card>
     );
 }
