@@ -8,25 +8,27 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { filterOption } from ".";
-import { ITask } from "@/types";
+import { ITaskWithDetails } from "@/types";
 
-const filterOptions: { value: keyof ITask; label: string }[] = [
+const filterOptions: { value: keyof ITaskWithDetails; label: string }[] = [
     { value: "title", label: "Title" },
     { value: "priority", label: "Priority" },
     { value: "workflowStage", label: "Workflow Stage" },
-    { value: "tagIDs", label: "Tags" },
-    { value: "creatorID", label: "Creator" },
-    { value: "assigneeIDs", label: "Assignees" },
+    { value: "tags", label: "Tags" },
+    { value: "creator", label: "Creator" },
+    { value: "assignees", label: "Assignees" },
     { value: "dueDate", label: "Due Date" },
 ];
 
 interface ISelectFilterProps {
     selectedFilter: filterOption;
     setSelectedFilter: React.Dispatch<React.SetStateAction<filterOption>>;
+    clearAllFilters: () => void;
 }
 export default function SelectFilter({
     selectedFilter,
     setSelectedFilter,
+    clearAllFilters,
 }: ISelectFilterProps) {
     return (
         <Select
@@ -35,6 +37,7 @@ export default function SelectFilter({
                     (option) => option.value === value,
                 );
                 if (selectedOption) {
+                    clearAllFilters();
                     setSelectedFilter(selectedOption);
                 }
             }}

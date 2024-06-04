@@ -29,20 +29,18 @@ const customFilters: CustomFilters = {
     },
 
     creatorFilter: (row, columnId, filterValue) => {
-        const userDetail: IUserDetails = row.original[columnId];
+        const userDetail: IUserDetails = row.original[columnId][0];
         return fullName(userDetail)
             .toLowerCase()
             .includes(filterValue.toLowerCase());
     },
 
     dateFilter: (row, columnId, filterValue) => {
-        console.log("filter value: ", filterValue);
         const date: Date = row.original[columnId];
         const formattedDate: string = format(
             date,
             "do LLL hh:mm a",
         ).toLowerCase();
-        console.log("formatted date", formattedDate);
         return formattedDate.includes(filterValue.toLowerCase());
     },
 };

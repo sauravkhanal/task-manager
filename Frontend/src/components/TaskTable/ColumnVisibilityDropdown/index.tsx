@@ -34,6 +34,7 @@ const ColumnVisibilityDropdown: React.FC<ColumnVisibilityDropdownProps> = ({
                             onCheckedChange={(value) =>
                                 column.toggleVisibility(!!value)
                             }
+                            className="capitalize"
                         >
                             {column.id}
                         </DropdownMenuCheckboxItem>

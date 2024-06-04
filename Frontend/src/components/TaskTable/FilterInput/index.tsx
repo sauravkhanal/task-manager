@@ -19,6 +19,7 @@ function FilterInput({ table }: { table: Table<any> }) {
             <SelectFilter
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
+                clearAllFilters={() => table.setColumnFilters([])}
             />
 
             <Input
