@@ -84,6 +84,10 @@ const taskServices = {
     async getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null> {
         return taskRepository.getTasksAssignedByMe(_id);
     },
+
+    bulkDelete(ids: string[]) {
+        return taskRepository.bulkDelete(ids);
+    },
 };
 
 export default taskServices;

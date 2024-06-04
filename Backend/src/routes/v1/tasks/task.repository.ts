@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { UpdateWriteOpResult } from "mongoose";
 import { WorkflowStage } from "../workflowStage/types";
 import TaskModel from "./task.model";
 import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
@@ -21,6 +21,7 @@ interface ITaskRepository {
     changeWorkflowStage(_id: string, workflowStage: WorkflowStage): Promise<ITask | null>;
     getTasksAssignedToMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null>;
     getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage>;
+    bulkDelete(_ids: string[]): Promise<UpdateWriteOpResult>;
 }
 
 const taskRepository: ITaskRepository = {
@@ -78,6 +79,10 @@ const taskRepository: ITaskRepository = {
 
     changeWorkflowStage(_id, workflowStage) {
         return TaskModel.findOneAndUpdate({ _id }, { workflowStage }, { new: true });
+    },
+
+    bulkDelete(_ids) {
+        return TaskModel.updateMany({ _id: { $in: _ids } }, { deleted: true });
     },
 
     // getTasksAssignedToMe(_id: string) {

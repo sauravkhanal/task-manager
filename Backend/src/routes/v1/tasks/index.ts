@@ -7,6 +7,7 @@ import upload from "../../../middleware/multer";
 
 router.get("/assigned-to-me", taskControllers.getTaskAssignedToMe);
 router.get("/assigned-by-me", taskControllers.getTaskAssignedByMe);
+router.post("/bulk-delete", taskControllers.bulkDelete);
 
 router
     .route("/:id")

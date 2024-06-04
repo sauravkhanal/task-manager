@@ -224,6 +224,16 @@ const taskControllers = {
             next(error);
         }
     },
+    async bulkDelete(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { ids } = req.body;
+            const result = await taskServices.bulkDelete(ids);
+            if (result) return successResponse(res, 200, messages.success("deleted", "given tasks"), result);
+            throw new CustomError(404, messages.failure("deleting", "the given tasks"));
+        } catch (error) {
+            next(error);
+        }
+    },
 
     //TODO: attachments,
     // async createTask(req:Request, res:Response, next: NextFunction) {

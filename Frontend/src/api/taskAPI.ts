@@ -105,6 +105,17 @@ const taskAPI = {
                 .data as IAPIResponse<ITasksGroupedByWorkFlowStage>;
         }
     },
+
+    async bulkDelete(ids: string[]) {
+        try {
+            const response = await axiosInstance.post("/tasks/bulk-delete", {
+                ids,
+            });
+            return response.data as IAPIResponse<unknown>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
 };
 
 export default taskAPI;
