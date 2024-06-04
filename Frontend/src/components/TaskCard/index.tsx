@@ -24,7 +24,7 @@ const priorityClasses = {
     MED: "border-l-yellow-500",
     LOW: "border-l-green-500",
 };
-const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
+export const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
     const now = new Date();
     // const sevenDaysFromNow = addDays(now, 7);
 
@@ -42,7 +42,7 @@ const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
         </span>
     );
 };
-const TaskTime: React.FC<{ dueDate: Date }> = ({ dueDate }) => {
+export const TaskTime: React.FC<{ dueDate: Date }> = ({ dueDate }) => {
     return (
         <span className="text-sm text-nowrap">
             {format(dueDate, "hh:mm a")}
