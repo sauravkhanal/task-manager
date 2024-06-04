@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import { WorkflowStage } from "../workflowStage/types";
 import TaskModel from "./task.model";
-import ITask, { ITaskGroupedByWorkflowStage } from "./types";
+import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
+import CustomError from "../../../utils/CustomError";
+import { messages } from "../../../utils/Messages";
 
 interface ITaskRepository {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask>;
-    getTaskById(_id: string): Promise<ITask | null>;
+    getTaskById(_id: string): Promise<ITaskWithDetails | null>;
     getAllTasks(): Promise<ITask[] | null>;
     updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null>;
     deleteTask(_id: string, creatorID: string): Promise<ITask | null>;
@@ -27,13 +29,11 @@ const taskRepository: ITaskRepository = {
         return newTask.save();
     },
 
-    getTaskById(_id) {
-        return TaskModel.findById({ _id })
-            .populate([
-                { path: "creatorID", select: "-password" },
-                { path: "assigneeIDs", select: "-password" },
-            ])
-            .exec();
+    async getTaskById(_id) {
+        const newID = new mongoose.Types.ObjectId(_id);
+        const task = await TaskModel.aggregate(taskPopulatePipeline({ _id: newID }, { createdAt: -1 }));
+        if (task[0]) return task[0] as ITaskWithDetails;
+        throw new CustomError(400, messages.error.not_found("task with given task id"));
     },
 
     getAllTasks() {

@@ -5,15 +5,14 @@ import { IComment } from "../comments/types";
 import { WorkflowStage } from "../workflowStage/types";
 import validateTransition from "../workflowStage/workflowRule";
 import taskRepository from "./task.repository";
-import ITask, { ITaskGroupedByWorkflowStage } from "./types";
+import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
 
 const taskServices = {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask> {
-        console.log(taskDetails.tagIDs);
         return taskRepository.createNewTask(taskDetails);
     },
 
-    getTaskById(_id: string): Promise<ITask | null> {
+    getTaskById(_id: string): Promise<ITaskWithDetails | null> {
         return taskRepository.getTaskById(_id);
     },
 
