@@ -15,9 +15,12 @@ import PaginationComponent from "./PaginationComponent";
 import FilterInput from "./FilterInput";
 import { columns } from "./columns";
 import useDataContext from "@/context/dataContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckboxColumn } from "./columns/CheckboxColumn";
 import TableBodyComponent from "./TableBodyComponent";
+import { ITaskWithDetails } from "@/types";
+import recoverSelectedFieldsFromTable from "@/utils/recoverSelectedFieldsFromTable";
+import BulkSelectActions from "./BulkSelectActions";
 
 export function DataTableDemo() {
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -53,6 +56,16 @@ export function DataTableDemo() {
         },
     });
 
+    const [selectedRowIDs, setSelectedRowIDs] = useState<string[]>([]);
+    useEffect(() => {
+        setSelectedRowIDs(
+            recoverSelectedFieldsFromTable<ITaskWithDetails>({
+                table,
+                key: "_id",
+            }),
+        );
+    }, [rowSelection]);
+
     return (
         <div className="w-full overflow-x-auto max-w-5xl">
             <div className="flex items-center py-4">
@@ -66,6 +79,15 @@ export function DataTableDemo() {
                 </Table>
             </div>
             <PaginationComponent table={table} />
+            <div>
+                {selectedRowIDs.length > 0 && (
+                    <BulkSelectActions
+                        className="fixed bottom-2 translate-x-2/3"
+                        selectedIDs={selectedRowIDs}
+                        clearSelections={() => setRowSelection({})}
+                    />
+                )}
+            </div>
         </div>
     );
 }
