@@ -21,14 +21,18 @@ function Column({
         color: isOver ? "green" : undefined,
     };
     return (
-        <Card className=" bg-muted " ref={setNodeRef} style={style}>
+        <Card
+            className="border-none shadow-none bg-muted/70"
+            ref={setNodeRef}
+            style={style}
+        >
             <CardHeader>
                 <CardTitle className="text-xl flex justify-center gap-2 items-center">
                     {stage} -<p className="text-lg">{tasks.length}</p>
                 </CardTitle>
             </CardHeader>
             <ScrollArea className="h-[78svh]">
-                <CardContent className="grid gap-2 px-2">
+                <CardContent className="grid gap-3 px-3">
                     {tasks.map((task) => (
                         <TaskCard task={task} key={task._id} />
                     ))}
