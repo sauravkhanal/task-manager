@@ -16,7 +16,13 @@ import useDataContext from "@/context/dataContext";
 import { useModal } from "@/context/modalContext";
 import { ITag, ITaskWithDetails, IUserDetails } from "@/types";
 import { HoverCard } from "@radix-ui/react-hover-card";
-import { BookOpen, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
+import {
+    BookOpen,
+    Copy,
+    MoreHorizontal,
+    PencilLine,
+    Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { deleteTask } from "./deleteRecoverTask";
 import TaskForm from "@/components/CreateTask";
@@ -105,21 +111,24 @@ const cellsUI = {
         const { showModal } = useModal();
         return (
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild className="font-poppins">
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="font-poppins">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
                         onClick={() => {
-                            navigator.clipboard.writeText(taskDetail._id);
+                            navigator.clipboard.writeText(
+                                `http://localhost:5173/details/${taskDetail._id}`,
+                            );
                             toast.success("Copied successfully !");
                         }}
                     >
-                        copy task id
+                        <Copy size={16} />
+                        &nbsp; copy task url
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem

@@ -43,7 +43,7 @@ export default function TaskView({
         );
     } else
         return (
-            <div className="w-full relative font-poppins flex flex-col gap-5 items-center ">
+            <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl ">
                 <p className="w-full capitalize text-xl flex items-center gap-2 bg-accent font-semibold px-5 py-2 justify-center">
                     {task.title}
                     {/* <Button
