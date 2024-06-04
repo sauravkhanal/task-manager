@@ -4,16 +4,16 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { User, Tags } from "lucide-react";
+import { User, Tags, Calendar, Clock } from "lucide-react";
 import cellsUI from "../TaskTable/columns/cellsUI";
 import { UserAvatar } from "../CreateTask/SelectUser/UserCard";
 import { ChangePriorityDialog } from "../TaskTable/ChangePriorityDialog";
+import { format, formatDistanceToNow, addDays, isBefore } from "date-fns";
 
 interface TaskCardProps {
     task: ITaskWithDetails;
@@ -24,7 +24,30 @@ const priorityClasses = {
     MED: "border-l-yellow-500",
     LOW: "border-l-green-500",
 };
+const TaskDueDate: React.FC<{ date: Date }> = ({ date }) => {
+    const now = new Date();
+    const sevenDaysFromNow = addDays(now, 7);
 
+    const dueDate = new Date(date);
+
+    const renderDate = isBefore(dueDate, sevenDaysFromNow)
+        ? formatDistanceToNow(dueDate, { addSuffix: true })
+        : format(dueDate, "do LLL ");
+
+    const overdue = isBefore(dueDate, now);
+    return (
+        <span className={`text-sm text-nowrap ${overdue && "opacity-50"}`}>
+            {renderDate}
+        </span>
+    );
+};
+const TaskTime: React.FC<{ dueDate: Date }> = ({ dueDate }) => {
+    return (
+        <span className="text-sm text-nowrap">
+            {format(dueDate, "hh:mm a")}
+        </span>
+    );
+};
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: task._id,
@@ -68,7 +91,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         {task.description}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-row  items-center gap-2 pb-2 pl-2">
+                <CardContent className="flex flex-row  items-center gap-4 pb-2 pl-2">
                     {/* <UserAvatar
                         profileUrl={task.creator[0].profilePicture}
                         firstName={task.creator[0].firstName}
@@ -76,16 +99,27 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         className=""
                     /> */}
                     <ChangePriorityDialog taskDetail={task} />
-                    <span className="flex items-end">
+                    <span className="flex gap-1">
+                        <Calendar className="size-4" />
+                        <TaskDueDate date={task.dueDate} />
+                    </span>
+                    <span className="flex gap-1">
+                        <Clock className="size-4" />
+                        <TaskTime dueDate={task.dueDate} />
+                    </span>
+                    <span className="flex items-end ml-auto">
                         <User className="size-5 mr-1 self-center" />
                         {cellsUI.assignees(task.assignees)}
                     </span>
-                    {task.tags.length > 0 && (
-                        <span className="flex gap-1">
-                            {/* <Tags /> */}
-                            {cellsUI.tags(task.tags)}
+                    {/* {task.tags.length > 0 && (
+                        <span className="flex gap-1 items-end">
+                            <Tags className="size-5" />
+                            {cellsUI.tags({
+                                tags: task.tags,
+                                variant: "outline",
+                            })}
                         </span>
-                    )}
+                    )} */}
                     <span className="absolute top-1 right-1">
                         {cellsUI.action(task)}
                     </span>
