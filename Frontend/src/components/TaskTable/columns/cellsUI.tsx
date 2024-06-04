@@ -89,7 +89,7 @@ const cellsUI = {
                                         profileUrl={value.profilePicture}
                                         firstName={value.firstName}
                                         lastName={value.lastName}
-                                        onRemove={() => {}}
+                                        onRemove={undefined}
                                     />
                                 ))}
                             </div>
