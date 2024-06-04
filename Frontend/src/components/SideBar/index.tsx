@@ -25,7 +25,7 @@ function NavLink({
 export default function SideBar({ className }: { className: string }) {
     return (
         <div
-            className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} fixed h-full`}
+            className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} hidden lg:flex`}
         >
             <CreateTaskButton />
             <NavLink to="list" icon={List}>
