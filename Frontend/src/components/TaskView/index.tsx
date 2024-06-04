@@ -67,14 +67,27 @@ export function TaskView({ task }: { task: ITaskWithDetails }) {
                 </div>
 
                 {/* tags */}
-                <Card className=" rounded-sm p-2 shadow-md">
-                    <CardHeader>
-                        <CardTitle className="flex gap-1">
-                            <Tag size={20} />
-                            Tags
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                {task.tags && (
+                    <Card className=" rounded-sm p-2 shadow-md">
+                        <CardHeader>
+                            <CardTitle className="flex flex-wrap gap-1">
+                                <div className="flex gap-1">
+                                    <Tag className="size-4" />
+                                    Tags
+                                </div>
+                                {task.tags.map((tag, index) => (
+                                    <Badge
+                                        key={index}
+                                        style={{
+                                            backgroundColor: tag.color,
+                                        }}
+                                    >
+                                        {tag.title}
+                                    </Badge>
+                                ))}
+                            </CardTitle>
+                        </CardHeader>{" "}
+                        {/* <CardContent>
                         <div className=" flex flex-wrap gap-1">
                             {task.tags.map((tag, index) => (
                                 <Badge
@@ -85,15 +98,20 @@ export function TaskView({ task }: { task: ITaskWithDetails }) {
                                 </Badge>
                             ))}
                         </div>
-                    </CardContent>
-                </Card>
+                    </CardContent> */}
+                    </Card>
+                )}
 
-                <Card className="rounded-sm">
-                    <CardHeader>
-                        <CardTitle>Description</CardTitle>
-                        <CardDescription>{task.description}</CardDescription>
-                    </CardHeader>
-                </Card>
+                {task.description && (
+                    <Card className="rounded-sm">
+                        <CardHeader>
+                            <CardTitle>Description</CardTitle>
+                            <CardDescription>
+                                {task.description}
+                            </CardDescription>
+                        </CardHeader>
+                    </Card>
+                )}
 
                 <Button onClick={() => hideModal()}>Close</Button>
             </CardContent>
