@@ -7,18 +7,20 @@ export default function LoadingIcon({
     className,
     color,
     size = 8,
+    children, // new prop
     ...restProps
 }: {
-    text: string;
+    text?: string;
     isLoading: boolean;
     className?: string;
     color?: string;
     size?: number;
+    children?: React.ReactNode; // new prop type
     [key: string]: any;
 }) {
     const { theme } = useTheme();
     const color1 = color ? color : theme == "dark" ? "#ffffff" : "#000000";
-    // console.log(color1);
+    const opacity = isLoading ? "opacity-0" : "";
     return (
         <div
             className={`flex justify-center items-center ${className}`}
@@ -30,13 +32,11 @@ export default function LoadingIcon({
                 color={color1}
                 size={size}
             />
-            <span>
-                {isLoading ? (
-                    <p className="opacity-0">{text}</p>
-                ) : (
-                    <p>{text}</p>
-                )}
-            </span>
+
+            <div className={`flex gap-1 ${opacity}`}>
+                <p>{text}</p>
+                {children}
+            </div>
         </div>
     );
 }
