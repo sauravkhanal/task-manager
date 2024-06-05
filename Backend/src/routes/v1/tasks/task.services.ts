@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
+import { ActivityAction, IActivity } from "../activity/activity.model";
+import activityServices from "../activity/activity.services";
 import commentServices from "../comments/comment.services";
 import { IComment } from "../comments/types";
 import { WorkflowStage } from "../workflowStage/types";
@@ -8,8 +11,13 @@ import taskRepository from "./task.repository";
 import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
 
 const taskServices = {
-    createNewTask(taskDetails: Partial<ITask>): Promise<ITask> {
-        return taskRepository.createNewTask(taskDetails);
+    async createNewTask(taskDetails: Partial<ITask>, username: string): Promise<ITask> {
+        const newActivity = await activityServices.createActivity({
+            action: ActivityAction.Created,
+            username: username,
+        });
+        const activityId = new mongoose.Types.ObjectId(newActivity?._id);
+        return taskRepository.createNewTask({ ...taskDetails, activityIDs: [activityId] });
     },
 
     getTaskById(_id: string): Promise<ITaskWithDetails | null> {
@@ -20,17 +28,37 @@ const taskServices = {
         return taskRepository.getAllTasks();
     },
 
-    async updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null> {
-        if (newDetails.workflowStage) {
+    async updateTaskDetails(
+        _id: string,
+        creatorID: string,
+        newDetails: Partial<ITask>,
+        username: string,
+    ): Promise<ITask | null> {
+        const newActivityDetails: IActivity = {
+            action: ActivityAction.Updated,
+            username,
+            updatedFields: Object.keys(newDetails),
+        };
+
+        // Perform the update
+        if (newDetails.workflowStage || newDetails.priority) {
             const currentDetail = await taskRepository.getTaskById(_id);
-            if (!validateTransition(currentDetail?.workflowStage!, newDetails.workflowStage)) {
-                throw new CustomError(
-                    400,
-                    messages.workflowStage.transitionError(currentDetail?.workflowStage!, newDetails.workflowStage),
-                );
+            if (newDetails.workflowStage) {
+                if (!validateTransition(currentDetail?.workflowStage!, newDetails.workflowStage)) {
+                    throw new CustomError(
+                        400,
+                        messages.workflowStage.transitionError(currentDetail?.workflowStage!, newDetails.workflowStage),
+                    );
+                }
+                newActivityDetails.to = currentDetail?.workflowStage;
+            } else if (newDetails.priority) {
+                newActivityDetails.to = currentDetail?.priority;
             }
         }
-        return taskRepository.updateTaskDetails(_id, creatorID, newDetails);
+
+        const newActivity = await activityServices.createActivity(newActivityDetails);
+
+        return taskRepository.updateTaskDetails(_id, creatorID, newDetails, newActivity?._id!);
     },
 
     deleteTask(_id: string, creatorID: string): Promise<ITask | null> {

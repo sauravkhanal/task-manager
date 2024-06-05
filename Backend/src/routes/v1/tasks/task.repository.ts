@@ -4,12 +4,20 @@ import TaskModel from "./task.model";
 import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
 import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
+import activityRepository from "../activity/activity.repository";
+import activityServices from "../activity/activity.services";
+import { ActivityAction, IActivityDocument } from "../activity/activity.model";
 
 interface ITaskRepository {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask>;
     getTaskById(_id: string): Promise<ITaskWithDetails | null>;
     getAllTasks(): Promise<ITask[] | null>;
-    updateTaskDetails(_id: string, creatorID: string, newDetails: Partial<ITask>): Promise<ITask | null>;
+    updateTaskDetails(
+        _id: string,
+        creatorID: string,
+        newDetails: Partial<ITask>,
+        newActivityID: string,
+    ): Promise<ITask | null>;
     deleteTask(_id: string, creatorID: string): Promise<ITask | null>;
     recoverTask(_id: string, creatorID: string): Promise<ITask | null>;
     addAssigneesToTask(_id: string, creatorID: string, assigneeIds: string[]): Promise<ITask | null>;
@@ -41,8 +49,12 @@ const taskRepository: ITaskRepository = {
         return TaskModel.aggregate(taskPopulatePipeline({ deleted: false }, { createdAt: -1 }));
     },
 
-    updateTaskDetails(_id, creatorID, newDetails) {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, newDetails, { new: true });
+    updateTaskDetails(_id, creatorID, newDetails, newActivityID) {
+        return TaskModel.findOneAndUpdate(
+            { _id, creatorID },
+            { $set: newDetails, $push: { activityIDs: newActivityID } },
+            { new: true },
+        );
     },
 
     deleteTask(_id, creatorID) {
