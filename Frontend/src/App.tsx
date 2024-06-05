@@ -23,7 +23,7 @@ function App() {
                                     <NavBar className="lg:px-20 " />
                                     <section className="flex grow">
                                         <SideBar className="" />
-                                        <span className="flex justify-center w-full items-center">
+                                        <span className="flex justify-center w-full">
                                             <MyRoutes />
                                         </span>
                                     </section>

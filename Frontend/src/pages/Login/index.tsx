@@ -46,7 +46,7 @@ export default function Login() {
         toast(response.message.replace(/\n/g, "<br>"));
         if (response.success) {
             login(response.data as ILoginResponse);
-            setTimeout(() => navigate("/dashboard"), 1500);
+            setTimeout(() => navigate("/"), 1500);
         } else {
             for (let key in response.data) {
                 setError(

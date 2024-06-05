@@ -14,7 +14,6 @@ import TableHeaderComponent from "./TableHeaderComponent";
 import PaginationComponent from "./PaginationComponent";
 import FilterInput from "./FilterInput";
 import { columns } from "./columns";
-import useDataContext from "@/context/dataContext";
 import { useEffect, useState } from "react";
 import { CheckboxColumn } from "./columns/CheckboxColumn";
 import TableBodyComponent from "./TableBodyComponent";
@@ -22,7 +21,7 @@ import { ITaskWithDetails } from "@/types";
 import recoverSelectedFieldsFromTable from "@/utils/recoverSelectedFieldsFromTable";
 import BulkSelectActions from "./BulkSelectActions";
 
-export function DataTableDemo() {
+export default function DataTable({ data }: { data: ITaskWithDetails[] }) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -35,8 +34,6 @@ export function DataTableDemo() {
     });
     const [rowSelection, setRowSelection] = useState({});
 
-    const context = useDataContext();
-    const data = context.tasks;
     const table = useReactTable({
         data,
         columns: [CheckboxColumn, ...columns],
@@ -68,7 +65,7 @@ export function DataTableDemo() {
 
     return (
         <div className="w-full overflow-x-auto max-w-5xl">
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-2">
                 <FilterInput table={table} />
                 <ColumnVisibilityDropdown table={table} />
             </div>

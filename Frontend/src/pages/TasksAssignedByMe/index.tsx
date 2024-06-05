@@ -1,7 +1,10 @@
-import BoardView from "@/BoardView";
+import TaskViewToggleGroup from "@/components/TaskViewToggleGroup";
 import useDataContext from "@/context/dataContext";
 
 export default function TasksAssignedByMe() {
-    const { tasksAssignedByMe, loading } = useDataContext();
-    return <BoardView taskGroup={tasksAssignedByMe} loading={loading} />;
+    const { tasksAssignedByMe } = useDataContext();
+
+    return (
+        <TaskViewToggleGroup tasksGroupedByWorkFlowStages={tasksAssignedByMe} />
+    );
 }

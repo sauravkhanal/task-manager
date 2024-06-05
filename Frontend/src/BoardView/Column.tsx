@@ -1,4 +1,5 @@
 import TaskCard from "@/components/TaskCard";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ITaskWithDetails, WorkflowStage } from "@/types";
@@ -22,13 +23,16 @@ function Column({
     };
     return (
         <Card
-            className="border-none shadow-none bg-muted/70"
+            className="border-none shadow-none bg-muted/40"
             ref={setNodeRef}
             style={style}
         >
-            <CardHeader>
-                <CardTitle className="text-xl flex justify-center gap-2 items-center">
-                    {stage} -<p className="text-lg">{tasks.length}</p>
+            <CardHeader className="p-0">
+                <CardTitle className="text-xl flex justify-center gap-2 items-center border rounded-xl py-2  mb-1 ">
+                    {stage}{" "}
+                    <Badge className="text-sm" variant={stage}>
+                        {tasks.length}
+                    </Badge>
                 </CardTitle>
             </CardHeader>
             <ScrollArea className="h-[78svh]">

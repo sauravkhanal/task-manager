@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import CreateTaskButton from "../CreateTaskButton";
 import { Button } from "../ui/button";
-import { Clipboard, List, UserCheck, UserRoundSearch } from "lucide-react";
+import { List, UserCheck, UserRoundSearch } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "@/context/authContext";
 
 function NavLink({
     to,
@@ -23,23 +25,23 @@ function NavLink({
 }
 
 export default function SideBar({ className }: { className: string }) {
+    const { isLoggedIn } = useContext(AuthContext);
     return (
-        <div
-            className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} hidden lg:flex`}
-        >
-            <CreateTaskButton />
-            <NavLink to="list" icon={List}>
-                List View
-            </NavLink>
-            <NavLink to="board" icon={Clipboard}>
-                Board View
-            </NavLink>
-            <NavLink to="assigned-to-me" icon={UserCheck}>
-                Assigned To Me
-            </NavLink>
-            <NavLink to="assigned-by-me" icon={UserRoundSearch}>
-                Created By Me
-            </NavLink>
-        </div>
+        isLoggedIn && (
+            <div
+                className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} hidden lg:flex`}
+            >
+                <CreateTaskButton />
+                <NavLink to="all-tasks" icon={List}>
+                    All tasks
+                </NavLink>
+                <NavLink to="assigned-to-me" icon={UserCheck}>
+                    Assigned To Me
+                </NavLink>
+                <NavLink to="assigned-by-me" icon={UserRoundSearch}>
+                    Created By Me
+                </NavLink>
+            </div>
+        )
     );
 }

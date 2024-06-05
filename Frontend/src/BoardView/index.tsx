@@ -5,17 +5,18 @@ import {
 } from "@/types";
 import { useEffect, useState } from "react";
 import KanBanBoard from "./KanBanBoard";
+import useDataContext from "@/context/dataContext";
 
 export default function BoardView({
     taskGroup,
-    loading,
 }: {
     taskGroup: ITasksGroupedByWorkFlowStage;
-    loading: boolean;
 }) {
     const [tasks, setTasks] = useState<{
         [key in WorkflowStage]: ITaskWithDetails[];
     }>({ TODO: [], INPROGRESS: [], COMPLETED: [] });
+
+    const { loading } = useDataContext();
     useEffect(() => {
         if (!loading) {
             setTasks({
