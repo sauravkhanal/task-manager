@@ -48,6 +48,15 @@ const userAPI = {
             throw error;
         }
     },
+
+    async getUserByUsername(username: string) {
+        try {
+            const response = await axiosInstance.get(`/users/${username}`);
+            return response.data as IAPIResponse<IUserDetails>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<Partial<unknown>>;
+        }
+    },
 };
 
 export default userAPI;
