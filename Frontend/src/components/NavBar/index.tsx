@@ -3,19 +3,18 @@ import { ModeToggle } from "../ModeToggle";
 import { Button } from "../ui/button";
 import Icon from "./Icon";
 import { IClassName } from "@/types";
-import ScreenSizeIndicator from "@/utils/screenSizeIndicator";
+// import ScreenSizeIndicator from "@/utils/screenSizeIndicator";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
-import CreateTaskButton from "../CreateTaskButton";
 
 export default function NavBar({ className }: IClassName) {
     const { logout, isLoggedIn } = useContext(AuthContext);
 
     return (
         <div
-            className={`h-14 w-full shadow-md flex justify-end gap-5 items-center ${className}  top-0 z-10 sticky bg-background`}
+            className={`h-14 w-full shadow-md flex justify-end gap-5 items-center ${className}  top-0 z-10 sticky bg-background dark:border-b`}
         >
-            <ScreenSizeIndicator />
+            {/* <ScreenSizeIndicator /> */}
             <Icon />
             {!isLoggedIn ? (
                 <NotLoggedInContent />
@@ -35,7 +34,6 @@ function LoggedInContent({ logout }: { logout: () => void }) {
                     Log out
                 </Button>
             </Link>
-            <CreateTaskButton />
         </>
     );
 }
