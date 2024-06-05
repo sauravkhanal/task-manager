@@ -6,9 +6,12 @@ import { ClipboardPlus } from "lucide-react";
 export default function CreateTaskButton() {
     const { showModal } = useModal();
     return (
-        <Button variant="nav" onClick={() => showModal(<CreateTask />)}>
+        <Button
+            variant="nav"
+            onClick={() => showModal(<CreateTask mode="create" />)}
+        >
             <ClipboardPlus className="size-6 mr-2" />
-            Add Task
+            Create Task
         </Button>
     );
 }

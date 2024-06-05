@@ -20,7 +20,7 @@ export default function TaskForm({
     mode,
 }: {
     task?: ITaskWithDetails;
-    mode: "create" | "update" | "view";
+    mode: "create" | "update";
 }) {
     const {
         register,
@@ -114,7 +114,6 @@ export default function TaskForm({
                         type="text"
                         placeholder="Title for the task"
                         defaultValue={task?.title}
-                        readOnly={mode === "view"}
                         {...register("title", {
                             required: "Title is required",
                         })}
@@ -165,7 +164,6 @@ export default function TaskForm({
                         id="description"
                         placeholder="Description of the task goes here."
                         defaultValue={task?.description}
-                        readOnly={mode === "view"}
                         {...register("description")}
                     />
 
