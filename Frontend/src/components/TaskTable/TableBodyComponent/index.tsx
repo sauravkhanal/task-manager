@@ -3,15 +3,12 @@ import { Table } from "@tanstack/react-table";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import { columns } from "../columns";
-import { useModal } from "@/context/modalContext";
-import { TaskView } from "@/components/TaskView";
 
 interface TableBodyComponentProps {
     table: Table<any>;
 }
 
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ table }) => {
-    const { showModal } = useModal();
     return (
         <TableBody>
             {table.getRowModel().rows?.length ? (
@@ -19,9 +16,6 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ table }) => {
                     <TableRow
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
-                        onClick={() =>
-                            showModal(<TaskView task={row.original} />)
-                        }
                         className="cursor-pointer"
                     >
                         {row.getVisibleCells().map((cell) => (
