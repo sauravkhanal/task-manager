@@ -122,7 +122,6 @@ export default function TaskActivities({
 
     return (
         <div className="flex flex-col bg-accent p-4">
-            <h2 className="text-lg font-bold mb-4">Activity Log</h2>
             {activities.length > 0 ? (
                 <ul className="">
                     {[...activities].reverse().map((activity) => (

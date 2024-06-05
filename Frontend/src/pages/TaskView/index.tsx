@@ -2,7 +2,15 @@ import { Label } from "@/components/ui/label";
 
 import { ITaskWithDetails } from "@/types";
 
-import { Calendar, Edit, ReceiptText, RefreshCcw, User } from "lucide-react";
+import {
+    Calendar,
+    Edit,
+    MessageCircleMore,
+    ReceiptText,
+    RefreshCcw,
+    SquareActivity,
+    User,
+} from "lucide-react";
 import { useParams } from "react-router-dom";
 import taskAPI from "@/api/taskAPI";
 import { useEffect, useState } from "react";
@@ -10,9 +18,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import UserCard from "@/components/CreateTask/SelectUser/UserCard";
 import { TaskDueDate } from "@/components/TaskCard";
-import { Card } from "@/components/ui/card";
 import UpdateTaskButton from "@/components/UpdateTaskButton";
 import TaskActivities from "./TaskActivities";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import useDataContext from "@/context/dataContext";
 
 export default function TaskView({
     taskDetails,
@@ -21,8 +35,10 @@ export default function TaskView({
 }) {
     const { taskID } = useParams();
     const [task, setTask] = useState<ITaskWithDetails | undefined>(taskDetails);
+
+    const { loading } = useDataContext();
     const fetchTask = async () => {
-        if (!task || task._id !== taskID) {
+        if (true) {
             const response = await taskAPI.getTask(taskID!);
             if (response.success) {
                 setTask(response.data as ITaskWithDetails);
@@ -32,9 +48,8 @@ export default function TaskView({
         }
     };
     useEffect(() => {
-        fetchTask();
-        console.log(task);
-    }, [taskID, taskDetails]);
+        if (!loading || !task || task._id !== taskID) fetchTask();
+    }, [taskID, taskDetails, loading]);
 
     if (!task) {
         return (
@@ -45,8 +60,12 @@ export default function TaskView({
     } else
         return (
             <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl ">
-                <p className="w-full capitalize text-xl flex items-center gap-2 bg-accent font-semibold px-5 py-2 justify-center">
-                    {task.title}
+                <p className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start">
+                    <Badge variant={task.priority} className="self-center">
+                        {task.priority}
+                    </Badge>
+                    <p>{task.title}</p>
+
                     {/* <Button
                         variant="ghost"
                         onClick={() => {
@@ -57,55 +76,31 @@ export default function TaskView({
                         <RefreshCcw size={16} />
                     </Button> */}
                 </p>
-                <ScrollArea className="h-[80svh] max-w-2xl border p-4 rounded-sm relative shadow-sm">
+                <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm relative shadow-sm">
+                    <div className=" flex flex-wrap gap-1">
+                        {task.tags.map((tag, index) => (
+                            <Badge
+                                key={index}
+                                style={{
+                                    backgroundColor: tag.color,
+                                }}
+                            >
+                                #{tag.title}
+                            </Badge>
+                        ))}
+                    </div>
                     <UpdateTaskButton
                         taskDetails={task}
                         variant="ghost"
                         className="absolute top-1 right-2 bg-background z-10"
                     />
-                    <div className="flex flex-col gap-5 items-start">
-                        <p className="flex items-center gap-1 font-semibold">
-                            Priority&nbsp;
-                            <Badge variant={task.priority}>
-                                {task.priority}
-                            </Badge>
-                        </p>
+                    <div className="flex flex-col gap-5 items-start mt-5">
                         <p className="flex items-center gap-1 font-semibold">
                             Workflow Stage&nbsp;
                             <Badge variant={task.workflowStage}>
                                 {task.workflowStage}
                             </Badge>
                         </p>
-
-                        {/* assignees */}
-                        {task.assignees.length > 0 && (
-                            <Card className="flex flex-col gap-2 rounded-sm p-2 shadow-md">
-                                <p className="flex items-center gap-1 font-semibold">
-                                    <User className="size-5" />
-                                    Assignees ({task.assignees.length})
-                                </p>
-                                {(task.assigneeIDs.length ?? 0) > 0 && (
-                                    <div className="flex flex-row flex-wrap gap-2 p-1  rounded-sm max-h-28 overflow-y-auto items-center">
-                                        {task.assignees.map((value) => (
-                                            <>
-                                                <UserCard
-                                                    key={value._id}
-                                                    firstName={value.firstName}
-                                                    middleName={
-                                                        value.middleName
-                                                    }
-                                                    lastName={value.lastName}
-                                                    profileUrl={
-                                                        value.profilePicture
-                                                    }
-                                                    onRemove={undefined}
-                                                />
-                                            </>
-                                        ))}
-                                    </div>
-                                )}
-                            </Card>
-                        )}
 
                         {/* due date */}
                         <div className="flex gap-1 items-center">
@@ -115,43 +110,106 @@ export default function TaskView({
                             </Label>
                             <TaskDueDate
                                 date={task.dueDate}
-                                className="capitalize opacity-80"
+                                className="capitalize opacity-80 cursor-pointer w-fit"
                             />
                         </div>
 
                         {/* tags */}
-                        {task.tagIDs.length > 0 && (
-                            <Card className="flex flex-col gap-2 rounded-sm p-2 shadow-md">
-                                <p className="font-semibold">Tags</p>
-                                <div className=" flex flex-wrap gap-1">
-                                    {task.tags.map((tag, index) => (
-                                        <Badge
-                                            key={index}
-                                            style={{
-                                                backgroundColor: tag.color,
-                                            }}
-                                        >
-                                            {tag.title}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </Card>
+                    </div>
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className="mt-5"
+                        defaultValue="item-3"
+                    >
+                        {task.description && (
+                            <AccordionItem value="item-3">
+                                <AccordionTrigger>
+                                    <span className="flex gap-1">
+                                        <ReceiptText className="size-5" />
+                                        <p className="font-semibold">
+                                            Description
+                                        </p>
+                                    </span>
+                                </AccordionTrigger>
+                                <AccordionContent className="max-w-2xl px-4 opacity-80 w-full text-justify">
+                                    {task.description}
+                                </AccordionContent>
+                            </AccordionItem>
                         )}
 
-                        {/* task description */}
-                        {task.description && (
-                            <div className="grid gap-2">
+                        <AccordionItem value="item-2">
+                            <AccordionTrigger>
                                 <span className="flex gap-1">
-                                    <ReceiptText className="size-5" />
-                                    <p className="font-semibold">Description</p>
+                                    <User className="size-5" />
+                                    <p className="font-semibold">
+                                        Assignees ({task.assignees.length})
+                                    </p>
                                 </span>
-                                <p className="max-w-2xl px-4 opacity-80 w-full text-justify">
-                                    {task.description}
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                    <TaskActivities activityIDs={task.activityIDs ?? []} />
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                {task.assignees.length > 0 ? (
+                                    <div className="flex flex-col gap-2 ">
+                                        {(task.assigneeIDs.length ?? 0) > 0 && (
+                                            <div className="flex flex-row flex-wrap gap-2 p-1 rounded-sm max-h-28 overflow-y-auto items-center">
+                                                {task.assignees.map((value) => (
+                                                    <UserCard
+                                                        key={value._id}
+                                                        firstName={
+                                                            value.firstName
+                                                        }
+                                                        middleName={
+                                                            value.middleName
+                                                        }
+                                                        lastName={
+                                                            value.lastName
+                                                        }
+                                                        profileUrl={
+                                                            value.profilePicture
+                                                        }
+                                                        onRemove={undefined}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p>No assignees added to the task.</p>
+                                )}
+                            </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>
+                                <span className="flex gap-1">
+                                    <SquareActivity className="size-5" />
+                                    <p className="font-semibold">
+                                        Activity Log&nbsp;(
+                                        {task.activityIDs?.length})
+                                    </p>
+                                </span>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <TaskActivities
+                                    activityIDs={task.activityIDs ?? []}
+                                />
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-4">
+                            <AccordionTrigger>
+                                <span className="flex gap-1">
+                                    <MessageCircleMore className="size-5" />
+                                    <p className="font-semibold">
+                                        Comments&nbsp;(
+                                        {task.commentIDs?.length})
+                                    </p>
+                                </span>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                Comments to be added later
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </ScrollArea>
             </div>
         );

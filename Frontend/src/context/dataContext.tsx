@@ -108,6 +108,7 @@ function useDataFetching() {
         } catch (error) {
             console.log("can't refresh tasks: ", error);
         } finally {
+            console.log("finished , setting loading to false");
             setLoading(false);
         }
     }
@@ -168,9 +169,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         tasksAssignedToMe,
     } = useDataFetching();
     const { isLoggedIn, userDetails } = useContext(AuthContext);
-    console.log(userDetails);
+    // console.log(userDetails);
     const isAdmin = userDetails?.role == "ADMIN";
-    console.log("is admin ", isAdmin);
+    // console.log("is admin ", isAdmin);
     useEffect(() => {
         if (isLoggedIn)
             refreshData({
