@@ -27,7 +27,7 @@ export default function VerifyOTP() {
         const result = await userAPI.verifyOTP(value!);
         toast(result.message);
         if (result.success) {
-            navigate("/dashboard");
+            navigate("/");
         }
         setLoading(false);
     }

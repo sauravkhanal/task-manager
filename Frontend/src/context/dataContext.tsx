@@ -102,6 +102,7 @@ function useDataFetching() {
     async function refreshTasks() {
         try {
             setLoading(true);
+            console.log("all data fetching");
             const data = await taskAPI.getAllTasks();
             if (data) setTasks(data.data);
         } catch (error) {
@@ -166,9 +167,19 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         tasksAssignedByMe,
         tasksAssignedToMe,
     } = useDataFetching();
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, userDetails } = useContext(AuthContext);
+    console.log(userDetails);
+    const isAdmin = userDetails?.role == "ADMIN";
+    console.log("is admin ", isAdmin);
     useEffect(() => {
-        if (isLoggedIn) refreshData();
+        if (isLoggedIn)
+            refreshData({
+                users: true,
+                tags: true,
+                tasks: isAdmin,
+                tasksAssignedByMe: true,
+                tasksAssignedToMe: true,
+            });
     }, [isLoggedIn]);
 
     return (

@@ -28,7 +28,7 @@ function Column({
             style={style}
         >
             <CardHeader className="p-0">
-                <CardTitle className="text- flex justify-center gap-2 items-center border rounded-xl py-2  mb-1 ">
+                <CardTitle className="text- flex justify-center gap-2 items-center border rounded-xl py-2  mb-2 ">
                     {stage}{" "}
                     <Badge className="text-sm" variant={stage}>
                         {tasks.length}

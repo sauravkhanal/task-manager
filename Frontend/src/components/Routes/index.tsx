@@ -31,9 +31,13 @@ const PreventedRoute = ({ isLoggedIn, redirectPath = "/" }: TRouteProps) => {
 
 export default function MyRoutes() {
     const { isLoggedIn } = useContext(AuthContext);
+
     return (
         <Routes>
-            <Route path="/" element={isLoggedIn ? <AllTasks /> : <Login />} />
+            <Route
+                path="/"
+                element={isLoggedIn ? <TasksAssignedToMe /> : <Login />}
+            />
             <Route path="/verify/:OTP" element={<VerifyOTP />} />
             <Route path="/verify" element={<VerifyOTP />} />
             <Route element={<PreventedRoute isLoggedIn={isLoggedIn} />}>
