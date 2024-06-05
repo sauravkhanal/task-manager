@@ -15,15 +15,18 @@ const taskControllers = {
             const token = res.locals.user as IAccessToken;
             const client_id = token._id;
             const { title, description, dueDate, assigneeIDs, priority, tagIDs } = req.body;
-            const result = await taskServices.createNewTask({
-                creatorID: client_id as unknown as mongoose.Types.ObjectId,
-                title,
-                description,
-                dueDate,
-                assigneeIDs,
-                priority,
-                tagIDs,
-            });
+            const result = await taskServices.createNewTask(
+                {
+                    creatorID: client_id as unknown as mongoose.Types.ObjectId,
+                    title,
+                    description,
+                    dueDate,
+                    assigneeIDs,
+                    priority,
+                    tagIDs,
+                },
+                token.username,
+            );
             if (result) return successResponse(res, 200, messages.success("created"), result);
             throw new CustomError(500, messages.failure("creating"));
         } catch (error) {
@@ -62,7 +65,7 @@ const taskControllers = {
             const client_id = token._id;
             const { id } = req.params;
             const taskDetails = req.body;
-            const result = await taskServices.updateTaskDetails(id, client_id, taskDetails);
+            const result = await taskServices.updateTaskDetails(id, client_id, taskDetails, token.username);
             if (result) return successResponse(res, 200, messages.success("updated"), result);
             throw new CustomError(404, messages.failure("updating"));
         } catch (error) {
