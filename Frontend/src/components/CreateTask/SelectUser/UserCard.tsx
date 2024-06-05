@@ -3,11 +3,6 @@ import { UserRoundMinus } from "lucide-react";
 import fullName from "@/utils/fullName";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 
 export function UserAvatar({
@@ -27,33 +22,18 @@ export function UserAvatar({
     hoverContentClassName?: string;
 }) {
     return (
-        <HoverCard>
-            <HoverCardTrigger>
-                <Avatar
-                    className={cn(
-                        "cursor-pointer transition hover:ring-1 ring-ring",
-                        className,
-                    )}
-                    {...props}
-                >
-                    <AvatarImage
-                        src={profileUrl}
-                        width={size}
-                        height={size}
-                        className="object-cover"
-                    />
-                    <AvatarFallback>
-                        {firstName.charAt(0)}
-                        {lastName.charAt(0)}
-                    </AvatarFallback>
-                </Avatar>
-            </HoverCardTrigger>
-            <HoverCardContent
-                className={cn("w-max text-sm p-3", hoverContentClassName)}
-            >
-                Created by : {firstName} {lastName}
-            </HoverCardContent>
-        </HoverCard>
+        <Avatar className={cn("cursor-pointer", className)} {...props}>
+            <AvatarImage
+                src={profileUrl}
+                width={size}
+                height={size}
+                className="object-cover"
+            />
+            <AvatarFallback>
+                {firstName.charAt(0)}
+                {lastName.charAt(0)}
+            </AvatarFallback>
+        </Avatar>
     );
 }
 
@@ -70,7 +50,7 @@ export default function UserCard({
     middleName?: string;
     lastName: string;
     size?: number;
-    onRemove: (() => void) | undefined;
+    onRemove?: () => void;
 }) {
     const onRemovePresent = onRemove === undefined;
     return (
