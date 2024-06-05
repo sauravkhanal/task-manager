@@ -1,5 +1,4 @@
 import UserCard from "@/components/CreateTask/SelectUser/UserCard";
-import { TaskView } from "@/components/TaskView";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +16,8 @@ import { useModal } from "@/context/modalContext";
 import { ITag, ITaskWithDetails, IUserDetails } from "@/types";
 import { HoverCard } from "@radix-ui/react-hover-card";
 import {
-    BookOpen,
     Copy,
+    ExternalLink,
     MoreHorizontal,
     PencilLine,
     Trash2,
@@ -133,18 +132,16 @@ const cellsUI = {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() =>
-                            showModal(<TaskView task={taskDetail} />)
+                            window.open(
+                                `http://localhost:5173/details/${taskDetail._id}`,
+                                "_blank",
+                            )
                         }
                     >
-                        <BookOpen className="size-5 mr-3" />
+                        <ExternalLink className="size-5 mr-3" />
                         View Details
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => deleteTask(taskDetail._id, refreshData)}
-                    >
-                        <Trash2 className="text-destructive size-5 mr-3" />
-                        Delete
-                    </DropdownMenuItem>
+
                     <DropdownMenuItem
                         onClick={() =>
                             showModal(
@@ -153,6 +150,12 @@ const cellsUI = {
                         }
                     >
                         <PencilLine className="mr-3 size-5" /> Update Task
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => deleteTask(taskDetail._id, refreshData)}
+                    >
+                        <Trash2 className="text-destructive size-5 mr-3" />
+                        Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
