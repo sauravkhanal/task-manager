@@ -28,7 +28,7 @@ export enum StageOrPriority {
     INPROGRESS = "INPROGRESS",
     COMPLETED = "COMPLETED",
     LOW = "LOW",
-    MEDIUM = "MEDIUM",
+    MEDIUM = "MED",
     HIGH = "HIGH",
 }
 

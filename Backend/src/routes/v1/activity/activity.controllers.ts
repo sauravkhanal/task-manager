@@ -12,6 +12,8 @@ const activityControllers = {
     ) {
         try {
             const { activityIDs } = req.body;
+            if (activityIDs?.length == 0)
+                throw new CustomError(400, messages.error.not_found("activity id in request"));
             const result = await activityServices.getActivityDetails(activityIDs);
             if (result) return successResponse(res, 200, messages.success("retrieved", "activity"), result);
             throw new CustomError(404, messages.failure("retrieving", "the given activities"));

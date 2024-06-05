@@ -11,8 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import UserCard from "@/components/CreateTask/SelectUser/UserCard";
 import { TaskDueDate } from "@/components/TaskCard";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import UpdateTaskButton from "@/components/UpdateTaskButton";
+import TaskActivities from "./TaskActivities";
 
 export default function TaskView({
     taskDetails,
@@ -33,6 +33,7 @@ export default function TaskView({
     };
     useEffect(() => {
         fetchTask();
+        console.log(task);
     }, [taskID, taskDetails]);
 
     if (!task) {
@@ -150,6 +151,7 @@ export default function TaskView({
                             </div>
                         )}
                     </div>
+                    <TaskActivities activityIDs={task.activityIDs ?? []} />
                 </ScrollArea>
             </div>
         );

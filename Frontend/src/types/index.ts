@@ -117,3 +117,24 @@ export interface ITaskWithDetails extends ITask {
     assignees: IUserDetails[];
     creator: IUserDetails[];
 }
+
+export enum ActivityAction {
+    Created = "created",
+    Deleted = "deleted",
+    Updated = "updated",
+}
+
+export interface IActivity {
+    username: string;
+    action: ActivityAction;
+    updatedFields?: string[];
+    from?: WorkflowStage;
+    to?: WorkflowStage | TaskPriority;
+}
+
+export interface IActivityDocument extends IActivity {
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
