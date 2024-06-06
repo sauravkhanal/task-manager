@@ -28,14 +28,14 @@ function Column({
             style={style}
         >
             <CardHeader className="p-0">
-                <CardTitle className="text- flex justify-center gap-2 items-center border rounded-xl py-2  mb-2 ">
+                <CardTitle className="text- flex justify-center gap-2 items-center border rounded-xl py-2  mb-2  rounded-b-none">
                     {stage}{" "}
                     <Badge className="text-sm" variant={stage}>
                         {tasks.length}
                     </Badge>
                 </CardTitle>
             </CardHeader>
-            <ScrollArea className="h-[78svh]">
+            <ScrollArea className="h-[76svh]">
                 <CardContent className="grid gap-3 px-3">
                     {tasks.map((task) => (
                         <TaskCard task={task} key={task._id} />
