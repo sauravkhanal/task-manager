@@ -111,27 +111,30 @@ export default function TaskForm({
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-5 w-full justify-center"
                 >
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                        id="title"
-                        type="text"
-                        placeholder="Title for the task"
-                        defaultValue={task?.title}
-                        {...register("title", {
-                            required: "Title is required",
-                        })}
-                    />
-                    {errors.title && (
-                        <p className="text-red-600 text-sm">
-                            {errors.title.message}
-                        </p>
-                    )}
-
-                    <Label htmlFor="">Add users</Label>
-                    <SelectUser
-                        prevUsers={task?.assignees || []}
-                        setValue={setValue}
-                    />
+                    <div>
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                            id="title"
+                            type="text"
+                            placeholder="Title for the task"
+                            defaultValue={task?.title}
+                            {...register("title", {
+                                required: "Title is required",
+                            })}
+                        />
+                        {errors.title && (
+                            <p className="text-red-600 text-sm">
+                                {errors.title.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <Label htmlFor="">Add users</Label>
+                        <SelectUser
+                            prevUsers={task?.assignees || []}
+                            setValue={setValue}
+                        />
+                    </div>
 
                     <div className="flex gap-2 items-end">
                         <div className="">
@@ -161,14 +164,15 @@ export default function TaskForm({
                             />
                         </div>
                     </div>
-
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                        id="description"
-                        placeholder="Description of the task goes here."
-                        defaultValue={task?.description}
-                        {...register("description")}
-                    />
+                    <div>
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            placeholder="Description of the task goes here."
+                            defaultValue={task?.description}
+                            {...register("description")}
+                        />
+                    </div>
 
                     <Button type="submit">
                         {mode === "update" ? "Update Task" : "Create Task"}
