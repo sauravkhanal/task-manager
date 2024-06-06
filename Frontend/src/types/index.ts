@@ -138,3 +138,12 @@ export interface IActivityDocument extends IActivity {
     updatedAt: string;
     __v: number;
 }
+
+export interface IComment {
+    _id?: string;
+    creatorUsername?: string;
+    description: string;
+    attachmentIDs?: string[];
+    deleted?: boolean;
+    createdAt?: string;
+}

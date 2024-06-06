@@ -7,6 +7,8 @@ import { messages } from "../../../utils/Messages";
 import activityRepository from "../activity/activity.repository";
 import activityServices from "../activity/activity.services";
 import { ActivityAction, IActivityDocument } from "../activity/activity.model";
+import { IComment } from "../comments/types";
+import CommentModel from "../comments/comment.model";
 
 interface ITaskRepository {
     createNewTask(taskDetails: Partial<ITask>): Promise<ITask>;
@@ -24,12 +26,13 @@ interface ITaskRepository {
     removeAssigneesFromTask(_id: string, creatorID: string, assigneeIds: string[]): Promise<ITask | null>;
     addTagsToTask(_id: string, creatorID: string, tagIds: string[]): Promise<ITask | null>;
     removeTagsFromTask(_id: string, creatorID: string, tagIds: string[]): Promise<ITask | null>;
-    addCommentToTask(taskId: string, commentId: string): Promise<ITask | null>;
+    addCommentToTask(taskId: string, commentIDs: string): Promise<ITask | null>;
     removeCommentFromTask(taskId: string, commentId: string): Promise<ITask | null>;
     changeWorkflowStage(_id: string, workflowStage: WorkflowStage): Promise<ITask | null>;
     getTasksAssignedToMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null>;
     getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage>;
     bulkDelete(_ids: string[]): Promise<UpdateWriteOpResult>;
+    getAllComments(_ids: string): Promise<IComment[]>;
 }
 
 const taskRepository: ITaskRepository = {
@@ -81,12 +84,12 @@ const taskRepository: ITaskRepository = {
         return TaskModel.findOneAndUpdate({ _id, creatorID }, { $pull: { tagIDs: id } }, { new: true });
     },
 
-    addCommentToTask(_id, commentID) {
-        return TaskModel.findOneAndUpdate({ _id }, { $push: { commentID } });
+    addCommentToTask(_id, commentIDs) {
+        return TaskModel.findOneAndUpdate({ _id }, { $push: { commentIDs: commentIDs } });
     },
 
     removeCommentFromTask(_id, commentID) {
-        return TaskModel.findOneAndUpdate({ _id }, { $pull: { commentID } }, { new: true });
+        return TaskModel.findOneAndUpdate({ _id }, { $pull: { commentIDs: commentID } }, { new: true });
     },
 
     changeWorkflowStage(_id, workflowStage) {
@@ -133,6 +136,28 @@ const taskRepository: ITaskRepository = {
             return tasksByWorkflowStage;
         } catch (error) {
             console.error("Error fetching categorized tasks:", error);
+            throw error;
+        }
+    },
+    async getAllComments(_id) {
+        try {
+            const taskWithComments = await TaskModel.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId("66616e2f83c8df80326d1d15") } },
+                {
+                    $lookup: {
+                        from: "Comment",
+                        localField: "commentIDs",
+                        foreignField: "_id",
+                        as: "comments",
+                    },
+                },
+                { $unwind: "$comments" },
+                { $replaceRoot: { newRoot: "$comments" } },
+            ]);
+
+            return taskWithComments;
+        } catch (error) {
+            console.error("Error fetching comments for task:", error);
             throw error;
         }
     },

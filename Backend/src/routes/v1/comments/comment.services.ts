@@ -10,16 +10,20 @@ const commentServices = {
         return commentRepository.getCommentById(commentID);
     },
 
-    updateComment(commentID: string, creatorID: string, data: Partial<IComment>): Promise<IComment | null> {
-        return commentRepository.updateComment(commentID, creatorID, data);
+    updateComment(commentID: string, creatorUsername: string, data: Partial<IComment>): Promise<IComment | null> {
+        return commentRepository.updateComment(commentID, creatorUsername, data);
     },
 
-    deleteComment(commentID: string, creatorID: string): Promise<IComment | null> {
-        return commentRepository.deleteComment(commentID, creatorID);
+    deleteComment(commentID: string, creatorUsername: string): Promise<IComment | null> {
+        return commentRepository.deleteComment(commentID, creatorUsername);
     },
 
-    recoverComment(commentID: string, creatorID: string): Promise<IComment | null> {
-        return commentRepository.deleteComment(commentID, creatorID);
+    recoverComment(commentID: string, creatorUsername: string): Promise<IComment | null> {
+        return commentRepository.deleteComment(commentID, creatorUsername);
+    },
+
+    getCommentDetailsByID(commentIDs: string[]) {
+        return commentRepository.getCommentDetailsByID(commentIDs);
     },
 };
 

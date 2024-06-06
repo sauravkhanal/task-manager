@@ -116,6 +116,9 @@ const taskServices = {
     bulkDelete(ids: string[]) {
         return taskRepository.bulkDelete(ids);
     },
+    getAllComments(id: string) {
+        return taskRepository.getAllComments(id);
+    },
 };
 
 export default taskServices;

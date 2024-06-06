@@ -32,7 +32,8 @@ router.patch("/:id/tags/remove", taskControllers.removeTagsFromTask);
 
 // Route for adding and removing comments
 router.post("/:id/comments", taskControllers.addCommentToTask);
-router.patch("/:id/comments/remove", taskControllers.removeCommentFromTask);
+router.get("/:id/comments", taskControllers.getAllComments);
+// router.patch("/:id/comments/remove/:commentID", taskControllers.removeCommentFromTask);
 
 // Route to create task
 router.post("/", upload.array("files"), taskControllers.createTask);

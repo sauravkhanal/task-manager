@@ -27,6 +27,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import useDataContext from "@/context/dataContext";
+import Comments from "./Comments";
 
 export default function TaskView({
     taskDetails,
@@ -36,7 +37,7 @@ export default function TaskView({
     const { taskID } = useParams();
     const [task, setTask] = useState<ITaskWithDetails | undefined>(taskDetails);
 
-    const { loading } = useDataContext();
+    const { loading, refreshData } = useDataContext();
     const fetchTask = async () => {
         if (true) {
             const response = await taskAPI.getTask(taskID!);
@@ -77,23 +78,26 @@ export default function TaskView({
                     </Button> */}
                 </p>
                 <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm relative shadow-sm">
-                    <div className=" flex flex-wrap gap-1">
-                        {task.tags.map((tag, index) => (
-                            <Badge
-                                key={index}
-                                style={{
-                                    backgroundColor: tag.color,
-                                }}
-                            >
-                                #{tag.title}
-                            </Badge>
-                        ))}
+                    <div className="flex items-center">
+                        <div className=" flex flex-wrap gap-1 grow">
+                            {task.tags.map((tag, index) => (
+                                <Badge
+                                    key={index}
+                                    style={{
+                                        backgroundColor: tag.color,
+                                    }}
+                                >
+                                    #{tag.title}
+                                </Badge>
+                            ))}
+                        </div>
+                        <UpdateTaskButton
+                            taskDetails={task}
+                            variant="ghost"
+                            className=""
+                        />
                     </div>
-                    <UpdateTaskButton
-                        taskDetails={task}
-                        variant="ghost"
-                        className="absolute top-1 right-2 bg-background z-10"
-                    />
+
                     <div className="flex flex-col gap-5 items-start mt-5">
                         <p className="flex items-center gap-1 font-semibold">
                             Workflow Stage&nbsp;
@@ -206,7 +210,11 @@ export default function TaskView({
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                Comments to be added later
+                                <Comments
+                                    taskID={task._id}
+                                    commentIDs={task.commentIDs ?? []}
+                                    fetchTask={fetchTask}
+                                />
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

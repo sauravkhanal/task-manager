@@ -182,9 +182,11 @@ const taskControllers = {
 
     async addCommentToTask(req: Request, res: Response, next: NextFunction) {
         try {
+            const token = res.locals.user as IAccessToken;
+            const creatorUsername = token.username;
             const { id } = req.params;
-            const commentDetails = req.body as Partial<IComment>;
-            const result = await taskServices.addCommentToTask(id, commentDetails);
+            const { description } = req.body as Partial<IComment>;
+            const result = await taskServices.addCommentToTask(id, { description, creatorUsername });
             if (result) return successResponse(res, 200, messages.success("added", "comment"), result);
             throw new CustomError(404, messages.failure("adding", "comment"));
         } catch (error) {
@@ -194,8 +196,9 @@ const taskControllers = {
 
     async removeCommentFromTask(req: Request, res: Response, next: NextFunction) {
         try {
-            const { id } = req.params;
-            const commentID: string = req.body;
+            const token = res.locals.user as IAccessToken;
+            const creatorUsername = token.username;
+            const { id, commentID } = req.params;
             const result = await taskServices.removeCommentFromTask(id, commentID);
             if (result) return successResponse(res, 200, messages.success("removed", "comment"), result);
             throw new CustomError(404, messages.failure("removing", "comment"));
@@ -233,6 +236,17 @@ const taskControllers = {
             const result = await taskServices.bulkDelete(ids);
             if (result) return successResponse(res, 200, messages.success("deleted", "given tasks"), result);
             throw new CustomError(404, messages.failure("deleting", "the given tasks"));
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async getAllComments(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const result = await taskServices.getAllComments(id);
+            if (result) return successResponse(res, 200, messages.success("retrieved", "comments"), result);
+            throw new CustomError(404, messages.failure("retrieving", "the given comments"));
         } catch (error) {
             next(error);
         }
