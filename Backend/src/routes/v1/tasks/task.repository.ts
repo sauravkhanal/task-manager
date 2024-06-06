@@ -142,10 +142,10 @@ const taskRepository: ITaskRepository = {
     async getAllComments(_id) {
         try {
             const taskWithComments = await TaskModel.aggregate([
-                { $match: { _id: new mongoose.Types.ObjectId("66616e2f83c8df80326d1d15") } },
+                { $match: { _id: new mongoose.Types.ObjectId(_id) } },
                 {
                     $lookup: {
-                        from: "Comment",
+                        from: "comments",
                         localField: "commentIDs",
                         foreignField: "_id",
                         as: "comments",

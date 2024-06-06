@@ -39,18 +39,9 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Edit, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import useDataContext from "@/context/dataContext";
 
-export default function Comments({
-    taskID,
-    commentIDs,
-    fetchTask,
-}: {
-    taskID: string;
-    commentIDs: string[];
-    fetchTask: () => {};
-}) {
+export default function Comments({ taskID }: { taskID: string }) {
     const [comments, setComments] = useState<IComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
     const [updatedComment, setUpdatedComment] = useState<string>("");
@@ -62,7 +53,7 @@ export default function Comments({
 
     async function fetchDetails() {
         try {
-            const response = await taskAPI.getAllComments(commentIDs);
+            const response = await taskAPI.getAllComments(taskID);
             if (response.success) {
                 setComments(response.data as IComment[]);
             } else {
@@ -75,15 +66,14 @@ export default function Comments({
 
     useEffect(() => {
         fetchDetails();
-    }, [commentIDs]);
+    }, []);
 
     async function handleCreateComment(description: string) {
         try {
             const response = await taskAPI.createComment(taskID, description);
             if (response.success) {
                 toast.success(response.message);
-                // fetchDetails(); // Refresh comments
-                fetchTask();
+                fetchDetails();
                 setNewComment("");
             } else {
                 toast.error(response.message);
@@ -98,8 +88,7 @@ export default function Comments({
             const response = await taskAPI.deleteComment(taskID, commentID);
             if (response.success) {
                 toast.success(response.message);
-                // fetchDetails(); // Refresh comments
-                fetchTask();
+                fetchDetails();
             } else {
                 toast.error(response.message);
             }
@@ -115,8 +104,7 @@ export default function Comments({
             );
             if (response.success) {
                 toast.success(response.message);
-                // fetchDetails(); // Refresh comments
-                fetchTask();
+                fetchDetails();
                 setUpdatedComment("");
                 setDialogOpen({ ...dialogOpen, [commentID]: false });
             } else {
@@ -146,16 +134,16 @@ export default function Comments({
 
     return (
         <div className="flex flex-col bg-accent p-4 rounded-sm">
-            <div className="mb-4 grid">
-                <Input
+            <div className="mb-4 grid gap-2">
+                <Textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Write a comment..."
-                    // className="w-full p-2 border rounded"
+                    className="min-h-24"
                 />
                 <Button
                     onClick={() => handleCreateComment(newComment)}
-                    className="mt-2 p-2 bg-blue-500 text-white rounded justify-self-end"
+                    className="justify-self-end"
                 >
                     Add Comment
                 </Button>
@@ -181,6 +169,7 @@ export default function Comments({
                                         </span>
                                     </div>
                                 </CardTitle>
+                                <hr />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-justify">

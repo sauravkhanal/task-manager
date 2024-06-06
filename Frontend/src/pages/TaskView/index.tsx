@@ -210,11 +210,7 @@ export default function TaskView({
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <Comments
-                                    taskID={task._id}
-                                    commentIDs={task.commentIDs ?? []}
-                                    fetchTask={fetchTask}
-                                />
+                                <Comments taskID={task._id} />
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

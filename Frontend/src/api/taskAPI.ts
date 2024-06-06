@@ -118,13 +118,22 @@ const taskAPI = {
         }
     },
 
-    async getAllComments(commentIDs: string[]) {
+    // async getAllComments(commentIDs: string[]) {
+    //     try {
+    //         const response = await axiosInstance.post(
+    //             "/comments/get-comments",
+    //             {
+    //                 commentIDs,
+    //             },
+    //         );
+    //         return response.data as IAPIResponse<IComment[]>;
+    //     } catch (error: any) {
+    //         return error.response.data as IAPIResponse<unknown>;
+    //     }
+    async getAllComments(taskID: string) {
         try {
-            const response = await axiosInstance.post(
-                "/comments/get-comments",
-                {
-                    commentIDs,
-                },
+            const response = await axiosInstance.get(
+                `/tasks/${taskID}/comments`,
             );
             return response.data as IAPIResponse<IComment[]>;
         } catch (error: any) {
