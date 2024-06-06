@@ -8,12 +8,13 @@ import cellsUI from "../TaskTable/columns/cellsUI";
 import { UserAvatar } from "../CreateTask/SelectUser/UserCard";
 import { ChangePriorityDialog } from "../TaskTable/ChangePriorityDialog";
 import { format, formatDistanceToNow, isBefore } from "date-fns";
-import fullName from "@/utils/fullName";
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useModal } from "@/context/modalContext";
+import { TaskView } from "../TaskView";
 
 interface TaskCardProps {
     task: ITaskWithDetails;
@@ -59,9 +60,7 @@ export const TaskDueDate: React.FC<{ date: Date; className?: string }> = ({
 };
 export const TaskTime: React.FC<{ dueDate: Date }> = ({ dueDate }) => {
     return (
-        <span className="text-sm text-nowrap">
-            {format(dueDate, "hh:mm a")}
-        </span>
+        <span className="text-sm text-wrap">{format(dueDate, "hh:mm a")}</span>
     );
 };
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
@@ -79,57 +78,57 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
               transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
           }
         : undefined;
-
+    const { showModal } = useModal();
     return (
-        <div className="relative">
-            <Card
-                className={cn(
-                    `w-full rounded-md relative 
+        <Card
+            className={cn(
+                `w-auto rounded-md relative flex-shrink
                      h-max cursor-grab border-l-2 border-l-red-500
                      ${priorityClasses[task.priority]}`,
-                )}
-                ref={setNodeRef}
-                style={style}
-                {...listeners}
-                {...attributes}
-            >
-                <CardHeader className="p-4 pr-8">
-                    <CardTitle className="flex gap-1 items-center text-base">
-                        <ChangePriorityDialog
-                            taskDetail={task}
-                            className="scale-[0.8]"
-                        />
-                        <p className="line-clamp-1 capitalize opacity-80">
-                            {task.title}
-                        </p>
-                    </CardTitle>
-                    {/* <CardDescription className="line-clamp-2 pt-1 text-xs">
+            )}
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
+            onClick={() => showModal(<TaskView task={task} />)}
+        >
+            <CardHeader className="p-4 pr-8">
+                <CardTitle className="md:flex gap-1 items-center text-base">
+                    <ChangePriorityDialog
+                        taskDetail={task}
+                        className="scale-[0.8]"
+                    />
+                    <p className="line-clamp-1 capitalize opacity-80">
+                        {task.title}
+                    </p>
+                </CardTitle>
+                {/* <CardDescription className="line-clamp-2 pt-1 text-xs">
                         {task.description}
                     </CardDescription> */}
-                </CardHeader>
-                <CardContent className="flex flex-row relative left-0 gap-4 pb-2 pl-2">
-                    <div className="flex items-center">
-                        <UserAvatar
-                            profileUrl={task.creator[0].profilePicture}
-                            firstName={task.creator[0].firstName}
-                            lastName={task.creator[0].lastName}
-                            className="scale-[0.8]"
-                        />
-                        <p className="text-xs">{fullName(task.creator[0])}</p>
-                    </div>
-                    <span className="flex gap-1 items-center ml-auto">
-                        <Calendar className="size-4" />
-                        <TaskDueDate date={task.dueDate} className="text-xs" />
-                    </span>
-                    {/* <span className="flex gap-1">
+            </CardHeader>
+            <CardContent className="flex flex-col md:flex-row flex-wrap relative left-0 gap-4 pb-2 pl-2">
+                <div className="hidden lg:flex items-center">
+                    <UserAvatar
+                        profileUrl={task.creator[0].profilePicture}
+                        firstName={task.creator[0].firstName}
+                        lastName={task.creator[0].lastName}
+                        className="scale-[0.8]"
+                    />
+                    <p className="text-xs">{task.creator[0].firstName}</p>
+                </div>
+                <span className="flex gap-1 items-center lg:ml-auto">
+                    <Calendar className="size-4" />
+                    <TaskDueDate date={task.dueDate} className="text-xs" />
+                </span>
+                {/* <span className="flex gap-1">
                         <Clock className="size-4" />
                         <TaskTime dueDate={task.dueDate} />
                     </span> */}
-                    <span className="flex items-center">
-                        <User className="size-4 mr-1 self-center" />
-                        {cellsUI.assignees(task.assignees)}
-                    </span>
-                    {/* {task.tags.length > 0 && (
+                <span className="hidden md:flex items-center">
+                    <User className="size-4 mr-1 self-center" />
+                    {cellsUI.assignees(task.assignees)}
+                </span>
+                {/* {task.tags.length > 0 && (
                         <span className="flex gap-1 items-end">
                             <Tags className="size-5" />
                             {cellsUI.tags({
@@ -138,12 +137,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                             })}
                         </span>
                     )} */}
-                </CardContent>
-                <span className="absolute top-1 right-1 ">
-                    {cellsUI.action(task)}
-                </span>
-            </Card>
-        </div>
+            </CardContent>
+            <span className="md:absolute top-1 right-1 ">
+                {cellsUI.action(task)}
+            </span>
+        </Card>
     );
 };
 
