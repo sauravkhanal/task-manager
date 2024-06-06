@@ -81,7 +81,7 @@ export function TagCreator() {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setDialogOpen(true)}>
+                <Button variant="ghost" className="w-full">
                     Create new tag
                 </Button>
             </DialogTrigger>
