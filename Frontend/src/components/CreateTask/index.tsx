@@ -29,6 +29,7 @@ export default function TaskForm({
         getValues,
         formState: { errors },
         setError,
+        reset,
     } = useForm<ITaskWithDetails>();
 
     const onSubmit = async (data: ITaskWithDetails) => {
@@ -88,12 +89,14 @@ export default function TaskForm({
     const { hideModal } = useModal();
 
     const resetForm = () => {
-        setValue("title", "");
-        setValue("description", "");
-        setValue("priority", TaskPriority.LOW);
-        setValue("assigneeIDs", []);
-        setValue("tagIDs", []);
-        setValue("dueDate", new Date());
+        reset({
+            title: "",
+            description: "",
+            priority: TaskPriority.LOW,
+            assigneeIDs: [],
+            tagIDs: [],
+            dueDate: new Date(),
+        });
     };
 
     return (
