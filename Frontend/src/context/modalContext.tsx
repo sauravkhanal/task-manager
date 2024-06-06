@@ -36,7 +36,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
             {children}
             {modalContent && (
                 <div
-                    className="absolute top-0 left-0 w-full min-h-screen backdrop-blur-md bg-black bg-opacity-5 flex justify-center items-center z-20 p-5 md:p-10 xl:p-20"
+                    className="absolute top-0 left-0 w-full min-h-screen backdrop-blur-md bg-black bg-opacity-5 flex justify-center items-center z-20 p-5 "
                     onClick={() => hideModal()}
                 >
                     <Button
