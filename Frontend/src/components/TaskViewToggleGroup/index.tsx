@@ -17,6 +17,13 @@ export default function TaskViewToggleGroup({
                 ...taskGroup[stage as keyof ITasksGroupedByWorkFlowStage],
             );
         });
+
+        tasks.sort(
+            (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+        );
+
         return tasks;
     }
 
@@ -26,7 +33,6 @@ export default function TaskViewToggleGroup({
             className="h-full  w-full flex flex-col items-center"
         >
             <TabsList className="flex justify-center w-fit mt-2">
-                <TabsTrigger value="tableView">Table</TabsTrigger>
                 <TabsTrigger value="boardView">KanBan Board</TabsTrigger>
                 <TabsTrigger value="tableView">Table</TabsTrigger>
             </TabsList>
