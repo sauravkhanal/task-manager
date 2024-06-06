@@ -29,7 +29,7 @@ export default function SideBar({ className }: { className: string }) {
     return (
         isLoggedIn && (
             <div
-                className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} hidden lg:flex`}
+                className={`flex flex-col  gap-3 border-r px-2 py-5 ${className} hidden xl:flex`}
             >
                 <CreateTaskButton />
                 <NavLink to="all-tasks" icon={List}>
