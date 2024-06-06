@@ -15,16 +15,12 @@ import useDataContext from "@/context/dataContext";
 import { useModal } from "@/context/modalContext";
 import { ITag, ITaskWithDetails, IUserDetails } from "@/types";
 import { HoverCard } from "@radix-ui/react-hover-card";
-import {
-    Copy,
-    ExternalLink,
-    MoreHorizontal,
-    PencilLine,
-    Trash2,
-} from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteTask } from "./deleteRecoverTask";
 import TaskForm from "@/components/CreateTask";
+import OpenTaskInNewTabButton from "@/components/OpenTaskInNewTabButton";
+const frontendURL = import.meta.env.VITE_FRONTEND_URL;
 
 const cellsUI = {
     tags: ({
@@ -122,7 +118,7 @@ const cellsUI = {
                         onClick={(e) => {
                             e.stopPropagation();
                             navigator.clipboard.writeText(
-                                `http://localhost:5173/details/${taskDetail._id}`,
+                                `${frontendURL}/details/${taskDetail._id}`,
                             );
                             toast.success("Copied successfully !");
                         }}
@@ -131,17 +127,14 @@ const cellsUI = {
                         &nbsp; copy task url
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(
-                                `http://localhost:5173/details/${taskDetail._id}`,
-                                "_blank",
-                            );
-                        }}
-                    >
-                        <ExternalLink className="size-5 mr-3" />
-                        View Details
+                    <DropdownMenuItem>
+                        <OpenTaskInNewTabButton
+                            taskID={taskDetail._id}
+                            variant={"ghost"}
+                            className="w-full h-fit"
+                        >
+                            View Details
+                        </OpenTaskInNewTabButton>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
@@ -152,7 +145,7 @@ const cellsUI = {
                             );
                         }}
                     >
-                        <PencilLine className="mr-3 size-5" /> Update Task
+                        <Edit className="mr-3 size-5" /> Update Task
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={(e) => {
