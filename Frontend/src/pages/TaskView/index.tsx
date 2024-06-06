@@ -37,7 +37,7 @@ export default function TaskView({
     const { taskID } = useParams();
     const [task, setTask] = useState<ITaskWithDetails | undefined>(taskDetails);
 
-    const { loading, refreshData } = useDataContext();
+    const { loading } = useDataContext();
     const fetchTask = async () => {
         if (true) {
             const response = await taskAPI.getTask(taskID!);
@@ -61,7 +61,7 @@ export default function TaskView({
     } else
         return (
             <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl bg-background rounded-md shadow-2xl">
-                <p className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start ml-5">
+                <div className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start ml-5">
                     <Badge variant={task.priority} className="self-center">
                         {task.priority}
                     </Badge>
@@ -76,7 +76,7 @@ export default function TaskView({
                     >
                         <RefreshCcw size={16} />
                     </Button> */}
-                </p>
+                </div>
                 <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm relative shadow-sm mb-6">
                     <div className="flex items-center">
                         <div className=" flex flex-wrap gap-1 grow">
@@ -99,12 +99,12 @@ export default function TaskView({
                     </div>
 
                     <div className="flex flex-col gap-5 items-start mt-5">
-                        <p className="flex items-center gap-1 font-semibold">
+                        <div className="flex items-center gap-1 font-semibold">
                             Workflow Stage&nbsp;
                             <Badge variant={task.workflowStage}>
                                 {task.workflowStage}
                             </Badge>
-                        </p>
+                        </div>
 
                         {/* due date */}
                         <div className="flex gap-1 items-center">

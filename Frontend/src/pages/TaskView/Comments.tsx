@@ -184,7 +184,7 @@ export default function Comments({ taskID }: { taskID: string }) {
                                 </div>
                                 <div className="flex mt-2 space-x-2">
                                     <AlertDialog>
-                                        <AlertDialogTrigger>
+                                        <AlertDialogTrigger asChild>
                                             <Button
                                                 variant="ghost"
                                                 className="absolute top-2 right-10"
@@ -210,6 +210,7 @@ export default function Comments({ taskID }: { taskID: string }) {
                                                     Cancel
                                                 </AlertDialogCancel>
                                                 <AlertDialogAction
+                                                    asChild
                                                     onClick={() =>
                                                         handleDeleteComment(
                                                             comment._id!,
@@ -236,7 +237,7 @@ export default function Comments({ taskID }: { taskID: string }) {
                                             })
                                         }
                                     >
-                                        <DialogTrigger>
+                                        <DialogTrigger asChild>
                                             <Button
                                                 variant="ghost"
                                                 className="absolute top-2 right-2"

@@ -7,7 +7,7 @@ export default function LoadingIcon({
     className,
     color,
     size = 8,
-    children, // new prop
+    children,
     ...restProps
 }: {
     text?: string;
@@ -15,7 +15,7 @@ export default function LoadingIcon({
     className?: string;
     color?: string;
     size?: number;
-    children?: React.ReactNode; // new prop type
+    children?: React.ReactNode;
     [key: string]: any;
 }) {
     const { theme } = useTheme();
