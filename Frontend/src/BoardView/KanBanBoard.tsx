@@ -4,6 +4,8 @@ import {
     DragEndEvent,
     DragStartEvent,
     DragOverlay,
+    useSensor,
+    PointerSensor,
 } from "@dnd-kit/core";
 import { IAPIResponse, ITaskWithDetails, WorkflowStage } from "@/types";
 import taskAPI from "@/api/taskAPI";
@@ -18,6 +20,16 @@ interface IDragAndDropContext {
         React.SetStateAction<{ [key in WorkflowStage]: ITaskWithDetails[] }>
     >;
 }
+
+const useCustomPointerSensor = (activationConstraint: number) => {
+    const sensor = useSensor(PointerSensor, {
+        activationConstraint: {
+            distance: activationConstraint,
+        },
+    });
+
+    return sensor;
+};
 
 export default function KanBanBoard({
     tasks,
@@ -124,9 +136,14 @@ export default function KanBanBoard({
 
         setActiveTaskCardDetails(null);
     };
+    const pointerSensor = useCustomPointerSensor(10);
 
     return (
-        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+        <DndContext
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+            sensors={[pointerSensor]}
+        >
             <div className="h-full w-full grid grid-cols-3 px-5 gap-5">
                 {Object.keys(tasks).map((stage) => (
                     <Column
