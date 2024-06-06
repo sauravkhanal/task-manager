@@ -60,8 +60,8 @@ export default function TaskView({
         );
     } else
         return (
-            <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl ">
-                <p className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start">
+            <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl bg-background rounded-md shadow-2xl">
+                <p className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start ml-5">
                     <Badge variant={task.priority} className="self-center">
                         {task.priority}
                     </Badge>
@@ -77,7 +77,7 @@ export default function TaskView({
                         <RefreshCcw size={16} />
                     </Button> */}
                 </p>
-                <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm relative shadow-sm">
+                <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm relative shadow-sm mb-6">
                     <div className="flex items-center">
                         <div className=" flex flex-wrap gap-1 grow">
                             {task.tags.map((tag, index) => (

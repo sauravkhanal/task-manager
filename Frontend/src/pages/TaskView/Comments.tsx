@@ -31,15 +31,9 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit, Trash2 } from "lucide-react";
-import useDataContext from "@/context/dataContext";
+import LoadingIcon from "@/components/LoadingIcon";
 
 export default function Comments({ taskID }: { taskID: string }) {
     const [comments, setComments] = useState<IComment[]>([]);
@@ -49,10 +43,13 @@ export default function Comments({ taskID }: { taskID: string }) {
         [key: string]: boolean;
     }>({});
 
-    const {} = useDataContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     async function fetchDetails() {
         try {
+            setIsLoading(true);
             const response = await taskAPI.getAllComments(taskID);
             if (response.success) {
                 setComments(response.data as IComment[]);
@@ -62,6 +59,7 @@ export default function Comments({ taskID }: { taskID: string }) {
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -70,6 +68,7 @@ export default function Comments({ taskID }: { taskID: string }) {
 
     async function handleCreateComment(description: string) {
         try {
+            setIsCreating(true);
             const response = await taskAPI.createComment(taskID, description);
             if (response.success) {
                 toast.success(response.message);
@@ -81,10 +80,12 @@ export default function Comments({ taskID }: { taskID: string }) {
         } catch (error: any) {
             console.error("Error creating comment:", error);
         }
+        setIsCreating(false);
     }
 
     async function handleDeleteComment(commentID: string) {
         try {
+            setIsLoading(true);
             const response = await taskAPI.deleteComment(taskID, commentID);
             if (response.success) {
                 toast.success(response.message);
@@ -95,9 +96,12 @@ export default function Comments({ taskID }: { taskID: string }) {
         } catch (error: any) {
             console.error("Error deleting comment:", error);
         }
+        setIsLoading(false);
     }
+
     async function handleUpdateComment(commentID: string, description: string) {
         try {
+            setIsUpdating(true);
             const response = await taskAPI.updateComment(
                 commentID,
                 description,
@@ -111,8 +115,9 @@ export default function Comments({ taskID }: { taskID: string }) {
                 toast.error(response.message);
             }
         } catch (error: any) {
-            console.error("Error deleting comment:", error);
+            console.error("Error updating comment:", error);
         }
+        setIsUpdating(false);
     }
 
     function FormatDate(date: string) {
@@ -145,7 +150,9 @@ export default function Comments({ taskID }: { taskID: string }) {
                     onClick={() => handleCreateComment(newComment)}
                     className="justify-self-end"
                 >
-                    Add Comment
+                    <LoadingIcon isLoading={isCreating}>
+                        Add comment
+                    </LoadingIcon>
                 </Button>
             </div>
 
@@ -268,7 +275,11 @@ export default function Comments({ taskID }: { taskID: string }) {
                                                     )
                                                 }
                                             >
-                                                Sumbit
+                                                <LoadingIcon
+                                                    isLoading={isUpdating}
+                                                >
+                                                    Update comment
+                                                </LoadingIcon>
                                             </Button>
                                         </DialogContent>
                                     </Dialog>

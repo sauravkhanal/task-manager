@@ -14,7 +14,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useModal } from "@/context/modalContext";
-import { TaskView } from "../TaskView";
+import TaskView from "@/pages/TaskView";
 
 interface TaskCardProps {
     task: ITaskWithDetails;
@@ -90,7 +90,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             style={style}
             {...listeners}
             {...attributes}
-            onClick={() => showModal(<TaskView task={task} />)}
+            onClick={() => showModal(<TaskView taskDetails={task} />)}
         >
             <CardHeader className="p-4 pr-8">
                 <CardTitle className="md:flex gap-1 items-center text-base">
