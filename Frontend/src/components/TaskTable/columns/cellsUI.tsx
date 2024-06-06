@@ -119,7 +119,8 @@ const cellsUI = {
                 <DropdownMenuContent align="end" className="font-poppins">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation();
                             navigator.clipboard.writeText(
                                 `http://localhost:5173/details/${taskDetail._id}`,
                             );
@@ -131,28 +132,33 @@ const cellsUI = {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                        onClick={() =>
+                        onClick={(e) => {
+                            e.stopPropagation();
                             window.open(
                                 `http://localhost:5173/details/${taskDetail._id}`,
                                 "_blank",
-                            )
-                        }
+                            );
+                        }}
                     >
                         <ExternalLink className="size-5 mr-3" />
                         View Details
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
-                        onClick={() =>
+                        onClick={(e) => {
+                            e.stopPropagation();
                             showModal(
                                 <TaskForm task={taskDetail} mode="update" />,
-                            )
-                        }
+                            );
+                        }}
                     >
                         <PencilLine className="mr-3 size-5" /> Update Task
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        onClick={() => deleteTask(taskDetail._id, refreshData)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deleteTask(taskDetail._id, refreshData);
+                        }}
                     >
                         <Trash2 className="text-destructive size-5 mr-3" />
                         Delete
