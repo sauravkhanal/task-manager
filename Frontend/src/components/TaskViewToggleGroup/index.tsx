@@ -29,12 +29,12 @@ export default function TaskViewToggleGroup({
 
     return (
         <Tabs
-            defaultValue="boardView"
+            defaultValue="tableView"
             className="h-full  w-full flex flex-col items-center"
         >
-            <TabsList className="flex justify-center w-fit mt-2">
-                <TabsTrigger value="boardView">KanBan Board</TabsTrigger>
+            <TabsList className="hidden sm:flex justify-center w-fit mt-2">
                 <TabsTrigger value="tableView">Table</TabsTrigger>
+                <TabsTrigger value="boardView">KanBan Board</TabsTrigger>
             </TabsList>
             <TabsContent
                 value="tableView"
