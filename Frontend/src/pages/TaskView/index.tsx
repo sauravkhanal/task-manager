@@ -38,9 +38,9 @@ export default function TaskView({
     const [task, setTask] = useState<ITaskWithDetails | undefined>(taskDetails);
 
     const { loading } = useDataContext();
-    const fetchTask = async () => {
+    const fetchTask = async (taskID: string) => {
         if (true) {
-            const response = await taskAPI.getTask(taskID!);
+            const response = await taskAPI.getTask(taskID);
             if (response.success) {
                 setTask(response.data as ITaskWithDetails);
             } else {
@@ -49,7 +49,7 @@ export default function TaskView({
         }
     };
     useEffect(() => {
-        if (!loading || !task || task._id !== taskID) fetchTask();
+        if (!taskDetails && !loading) fetchTask(taskID!);
     }, [taskID, taskDetails, loading]);
 
     if (!task) {
