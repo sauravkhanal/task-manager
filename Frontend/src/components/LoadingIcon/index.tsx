@@ -1,5 +1,4 @@
 import Loader from "react-spinners/PulseLoader";
-import { useTheme } from "next-themes";
 
 export default function LoadingIcon({
     text,
@@ -18,8 +17,7 @@ export default function LoadingIcon({
     children?: React.ReactNode;
     [key: string]: any;
 }) {
-    const { theme } = useTheme();
-    const color1 = color ? color : theme == "dark" ? "#ffffff" : "#000000";
+    // const color1 = color ? color : theme == "dark" ? "#ffffff" : "#000000";
     const opacity = isLoading ? "opacity-0" : "";
     return (
         <div
@@ -29,7 +27,7 @@ export default function LoadingIcon({
             <Loader
                 loading={isLoading}
                 className="absolute"
-                color={color1}
+                color={"#c0c0c0"}
                 size={size}
             />
 
