@@ -39,7 +39,11 @@ export function ChangePriorityDialog({
         });
         if (response.success) {
             toast.success(response.message);
-            dataContext.refreshData({ tasks: true });
+            dataContext.refreshData({
+                tasks: true,
+                tasksAssignedByMe: true,
+                tasksAssignedToMe: true,
+            });
             setSelectedPriority(value);
             // setDialogOpen(false);
         } else {
