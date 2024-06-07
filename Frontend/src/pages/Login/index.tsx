@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import { Label } from "@/components/ui/label";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -74,9 +75,9 @@ export default function Login() {
                 className=" flex flex-col gap-5 justify-center items-center bg-secondary px-10 py-8 rounded-md  max-w-xl shadow-2xl"
             >
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="emailOrUsername" className={label}>
+                    <Label htmlFor="emailOrUsername" className={label}>
                         Email or Username
-                    </label>
+                    </Label>
                     <input
                         id="emailOrUsername"
                         type="text"

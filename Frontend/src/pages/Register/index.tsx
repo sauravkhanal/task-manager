@@ -5,12 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import userAPI from "@/api/userAPI";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
 
 export default function Register() {
     const navigate = useNavigate();
     const inputClass =
-        "outline-none rounded-md bg-input px-2 py-1 w-56 sm:w-96 border-2 border-input focus:border-ring relative";
-    const errorMessage = "text-red-500 text-sm w-56 sm:w-96";
+        "outline-none rounded-md text-black px-2 py-1 w-56 sm:w-96 border-2 focus:border-2 focus:border-secondary-foreground  relative ";
+    const errorMessage = "text-red-500 text-sm font-light w-56 sm:w-96";
     const label = "";
     const {
         register,
@@ -44,12 +45,12 @@ export default function Register() {
         <div className="flex justify-center items-center min-h-[90svh] py-5">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className=" flex flex-col gap-5 justify-center items-center bg-card text-card-foreground px-10 py-8 rounded-md  max-w-xl shadow-2xl"
+                className="flex flex-col gap-5 justify-center items-center bg-secondary px-10 py-8 rounded-md  max-w-xl shadow-2xl"
             >
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="firstName" className={label}>
+                    <Label htmlFor="firstName" className={label}>
                         First Name
-                    </label>
+                    </Label>
                     <input
                         id="firstName"
                         type="text"
@@ -69,9 +70,9 @@ export default function Register() {
                 </span>
 
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="lastName" className={label}>
+                    <Label htmlFor="lastName" className={label}>
                         Last Name
-                    </label>
+                    </Label>
                     <input
                         id="lastName"
                         type="text"
@@ -90,9 +91,9 @@ export default function Register() {
                     )}
                 </span>
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="username" className={label}>
+                    <Label htmlFor="username" className={label}>
                         Username
-                    </label>
+                    </Label>
                     <input
                         id="username"
                         type="text"
@@ -122,9 +123,9 @@ export default function Register() {
                 </span>
 
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="email" className={label}>
+                    <Label htmlFor="email" className={label}>
                         Email
-                    </label>
+                    </Label>
                     <input
                         id="email"
                         type="email"
@@ -146,9 +147,9 @@ export default function Register() {
                 </span>
 
                 <span className="flex flex-col gap-1">
-                    <label htmlFor="password" className={label}>
+                    <Label htmlFor="password" className={label}>
                         Password
-                    </label>
+                    </Label>
                     <input
                         id="password"
                         type="password"
@@ -179,7 +180,7 @@ export default function Register() {
                 </span>
 
                 {/* <span className="flex flex-col gap-1">
-					<label htmlFor="confirmPassword">Confirm Password</label>
+					<Label htmlFor="confirmPassword">Confirm Password</Label>
 					<input
 						id="confirmPassword"
 						type="password"
