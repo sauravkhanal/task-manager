@@ -14,6 +14,8 @@ import { SelectUser } from "../CreateTask/SelectUser";
 import { SelectPriority } from "../CreateTask/SelectPriority";
 import { DatePicker } from "../CreateTask/DatePicker";
 import TagsSelector from "./TagsSelector";
+import { useState } from "react";
+import LoadingIcon from "../LoadingIcon";
 
 export default function TaskForm({
     task,
@@ -40,20 +42,27 @@ export default function TaskForm({
         }
     };
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const submit = {
         createTask: async (data: ITaskWithDetails) => {
+            setIsLoading(true);
             const response = await taskAPI.CreateTask(data);
             if (response.success) {
                 toast.success(response.message);
                 resetForm();
-                refreshData({ tasks: true });
+                refreshData({
+                    tasks: true,
+                });
                 hideModal();
             } else {
                 handleErrors(response);
             }
+            setIsLoading(false);
         },
 
         updateTask: async (data: ITaskWithDetails) => {
+            setIsLoading(true);
             const response = await taskAPI.updateTask({
                 id: task?._id ?? "",
                 taskDetails: data,
@@ -61,11 +70,16 @@ export default function TaskForm({
             if (response.success) {
                 toast.success(response.message);
                 resetForm();
-                refreshData({ tasks: true });
+                refreshData({
+                    tasks: true,
+                    tasksAssignedByMe: true,
+                    tasksAssignedToMe: true,
+                });
                 hideModal();
             } else {
                 toast.error(response.message);
             }
+            setIsLoading(false);
         },
     };
 
@@ -174,8 +188,10 @@ export default function TaskForm({
                         />
                     </div>
 
-                    <Button type="submit">
-                        {mode === "update" ? "Update Task" : "Create Task"}
+                    <Button type="submit" disabled={isLoading}>
+                        <LoadingIcon isLoading={isLoading}>
+                            {mode === "update" ? "Update Task" : "Create Task"}
+                        </LoadingIcon>
                     </Button>
                 </form>
             </CardContent>
