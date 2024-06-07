@@ -26,7 +26,11 @@ interface ComboBoxProps {
     setValue: UseFormSetValue<ITaskWithDetails>;
 }
 
-export function ComboBox({ availableTags, prevTags, setValue }: ComboBoxProps) {
+export default function TagsSelector({
+    availableTags,
+    prevTags,
+    setValue,
+}: ComboBoxProps) {
     const [open, setOpen] = useState(false);
     const [selectedTags, setSelectedTags] = useState<ITag[] | undefined>(
         prevTags,

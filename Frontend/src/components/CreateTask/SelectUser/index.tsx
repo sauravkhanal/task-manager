@@ -1,4 +1,4 @@
-import { CheckCircle, Circle } from "lucide-react";
+import { CheckCircle, Circle, Plus, SquarePlus } from "lucide-react";
 import {
     Command,
     CommandEmpty,
@@ -19,6 +19,7 @@ import { UseFormSetValue } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import fullName from "@/utils/fullName";
 
 interface SelectUserProps {
     prevUsers: IUserDetails[];
@@ -27,16 +28,15 @@ interface SelectUserProps {
 
 export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
     const [open, setOpen] = useState(false);
-    const [selectedUsers, setSelectedUsers] = useState<IUserDetails[]>([]);
+    const [selectedUsers, setSelectedUsers] =
+        useState<IUserDetails[]>(prevUsers);
     const context = useDataContext();
     const availableUsers = context.allUserDetails;
 
     useEffect(() => {
-        const initialSelectedUsers = [...prevUsers];
-        setSelectedUsers(initialSelectedUsers);
         setValue(
             "assigneeIDs",
-            initialSelectedUsers.map((user) => user._id),
+            prevUsers.map((user) => user._id),
         );
     }, [prevUsers, setValue]);
 
@@ -61,7 +61,9 @@ export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
             <PopoverTrigger asChild>
                 <div className="border border-border rounded-md bg-background flex flex-wrap gap-2 min-h-20 shadow-sm p-4 max-h-44 overflow-y-auto cursor-pointer items-center">
                     <Avatar>
-                        <AvatarFallback>+</AvatarFallback>
+                        <AvatarFallback>
+                            <Plus />
+                        </AvatarFallback>
                     </Avatar>
                     {selectedUsers.map((value) => (
                         <UserCard
@@ -75,14 +77,14 @@ export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
                     ))}
                     {selectedUsers.length === 0 && (
                         <p className="text-sm text-muted-foreground">
-                            Click to assign availableUsers to this task...
+                            Click to assign users to this task...
                         </p>
                     )}
                 </div>
             </PopoverTrigger>
             <PopoverContent className="p-0" side="bottom" align="start">
                 <Command>
-                    <CommandInput placeholder="Search availableUsers..." />
+                    <CommandInput placeholder="Search users..." />
                     <CommandList>
                         <CommandEmpty>No results found.</CommandEmpty>
                         <CommandGroup>
@@ -110,11 +112,7 @@ export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
                                             ) : (
                                                 <Circle className="mr-2 h-4 w-4 opacity-40" />
                                             )}
-                                            <span>
-                                                {user.firstName +
-                                                    " " +
-                                                    user.lastName}
-                                            </span>
+                                            {fullName(user)}
                                         </CommandItem>
                                     );
                                 })}

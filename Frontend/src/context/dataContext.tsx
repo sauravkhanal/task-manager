@@ -121,11 +121,11 @@ function useDataFetching() {
         tasksAssignedToMe?: boolean;
     }): Promise<void> {
         const {
-            users = true,
-            tags = true,
-            tasks = true,
-            tasksAssignedByMe = true,
-            tasksAssignedToMe = true,
+            users = false,
+            tags = false,
+            tasks = false,
+            tasksAssignedByMe = false,
+            tasksAssignedToMe = false,
         } = options || {};
         try {
             setLoading(true);

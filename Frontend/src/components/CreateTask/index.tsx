@@ -13,7 +13,7 @@ import { useModal } from "@/context/modalContext";
 import { SelectUser } from "../CreateTask/SelectUser";
 import { SelectPriority } from "../CreateTask/SelectPriority";
 import { DatePicker } from "../CreateTask/DatePicker";
-import { ComboBox } from "../CreateTask/TagsSelector";
+import TagsSelector from "./TagsSelector";
 
 export default function TaskForm({
     task,
@@ -156,7 +156,7 @@ export default function TaskForm({
                         </div>
                         <div className="flex-1">
                             <Label htmlFor="">Tags</Label>
-                            <ComboBox
+                            <TagsSelector
                                 availableTags={tags}
                                 prevTags={task?.tags || []}
                                 getValues={getValues}
