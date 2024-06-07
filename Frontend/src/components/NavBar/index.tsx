@@ -6,6 +6,7 @@ import { IClassName } from "@/types";
 // import ScreenSizeIndicator from "@/utils/screenSizeIndicator";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import CreateTaskButton from "../CreateTaskButton";
 
 export default function NavBar({ className }: IClassName) {
     const { logout, isLoggedIn } = useContext(AuthContext);
@@ -29,6 +30,7 @@ export default function NavBar({ className }: IClassName) {
 function LoggedInContent({ logout }: { logout: () => void }) {
     return (
         <>
+            <CreateTaskButton variant={"outline"} />
             <Link to={"/"} title="logout">
                 <Button variant={"outline"} onClick={logout}>
                     Log out
