@@ -4,7 +4,7 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import { columns } from "../columns";
 import { useModal } from "@/context/modalContext";
-import { TaskView } from "@/components/TaskView";
+import TaskView from "@/pages/TaskView";
 
 interface TableBodyComponentProps {
     table: Table<any>;
@@ -21,7 +21,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ table }) => {
                         data-state={row.getIsSelected() && "selected"}
                         className="cursor-pointer"
                         onClick={() =>
-                            showModal(<TaskView task={row.original} />)
+                            showModal(<TaskView taskDetails={row.original} />)
                         }
                     >
                         {row.getVisibleCells().map((cell) => (
