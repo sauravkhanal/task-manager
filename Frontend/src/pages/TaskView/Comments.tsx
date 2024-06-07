@@ -67,6 +67,7 @@ export default function Comments({ taskID }: { taskID: string }) {
     }, []);
 
     async function handleCreateComment(description: string) {
+        if (!newComment.trim()) return;
         try {
             setIsCreating(true);
             const response = await taskAPI.createComment(taskID, description);
@@ -84,6 +85,7 @@ export default function Comments({ taskID }: { taskID: string }) {
     }
 
     async function handleDeleteComment(commentID: string) {
+        if (!updatedComment.trim()) return;
         try {
             setIsLoading(true);
             const response = await taskAPI.deleteComment(taskID, commentID);
@@ -148,9 +150,10 @@ export default function Comments({ taskID }: { taskID: string }) {
                 />
                 <Button
                     onClick={() => handleCreateComment(newComment)}
-                    className="justify-self-end"
+                    className="justify-self-end relative"
+                    // disabled={!newComment.trim()}
                 >
-                    <LoadingIcon isLoading={isCreating}>
+                    <LoadingIcon isLoading={isCreating} className="">
                         Add comment
                     </LoadingIcon>
                 </Button>
@@ -263,10 +266,7 @@ export default function Comments({ taskID }: { taskID: string }) {
                                                         e.target.value,
                                                     )
                                                 }
-                                                value={
-                                                    updatedComment ||
-                                                    comment.description
-                                                }
+                                                value={updatedComment}
                                             ></Textarea>
                                             <Button
                                                 onClick={() =>
