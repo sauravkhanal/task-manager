@@ -219,13 +219,8 @@ export default function Comments({ taskID }: { taskID: string }) {
                                                             comment._id!,
                                                         )
                                                     }
-                                                    className="bg-transparent hover:bg-transparent "
                                                 >
-                                                    <Button
-                                                        variant={"destructive"}
-                                                    >
-                                                        Continue
-                                                    </Button>
+                                                    <Button>Continues</Button>
                                                 </AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
