@@ -6,6 +6,8 @@ import userAPI from "@/api/userAPI";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import LoadingIcon from "@/components/LoadingIcon";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -20,24 +22,35 @@ export default function Register() {
         setError,
     } = useForm<IUserRegisterData>();
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const onSubmit: SubmitHandler<IUserRegisterData> = async (data) => {
-        const response = await userAPI.createUser(data);
+        try {
+            setIsLoading(true);
+            const response = await userAPI.createUser(data);
 
-        if (response.success) {
-            toast(response.message.replace(/\n/g, "<br>"));
-            setTimeout(() => navigate("/verify"), 1500);
-        } else {
-            toast(`${Object.keys(response.data).toString()} is already used`);
-            for (let key in response.data) {
-                setError(
-                    key as keyof IUserRegisterData,
-                    {
-                        type: "custom",
-                        message: response.data[key as keyof IUserRegisterData],
-                    },
-                    { shouldFocus: true },
+            if (response.success) {
+                toast(response.message.replace(/\n/g, "<br>"));
+                setTimeout(() => navigate("/verify"), 1500);
+            } else {
+                toast(
+                    `${Object.keys(response.data).toString()} is already used`,
                 );
+                for (let key in response.data) {
+                    setError(
+                        key as keyof IUserRegisterData,
+                        {
+                            type: "custom",
+                            message:
+                                response.data[key as keyof IUserRegisterData],
+                        },
+                        { shouldFocus: true },
+                    );
+                }
             }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -209,9 +222,9 @@ export default function Register() {
                 </Link>
                 <Button
                     className="w-full"
-                    disabled={Object.keys(errors).length > 0}
+                    disabled={Object.keys(errors).length > 0 || isLoading}
                 >
-                    Register
+                    <LoadingIcon isLoading={isLoading}>Register</LoadingIcon>
                 </Button>
             </form>
             <Toaster />

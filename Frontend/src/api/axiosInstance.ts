@@ -25,7 +25,6 @@ axiosInstance.interceptors.request.use(
     },
 );
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
         // If the response is successful, just return the response

@@ -5,9 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import userAPI from "@/api/userAPI";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import { Label } from "@/components/ui/label";
+import LoadingIcon from "@/components/LoadingIcon";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -22,6 +23,8 @@ export default function Login() {
         formState: { errors },
         setError,
     } = useForm<IUserLoginData>();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const validateEmailOrUsername = (value: string) => {
         if (value.includes("@")) {
@@ -42,29 +45,39 @@ export default function Login() {
     };
 
     const onSubmit: SubmitHandler<IUserLoginData> = async (data) => {
-        const response = await userAPI.login(data);
+        setIsLoading(true);
 
-        toast(response.message.replace(/\n/g, "<br>"));
-        if (response.success) {
-            login(response.data as ILoginResponse);
-            setTimeout(() => navigate("/"), 1500);
-        } else {
-            for (let key in response.data) {
-                setError(
-                    key as keyof IUserLoginData,
-                    {
-                        type: "custom",
-                        message:
-                            response.data[
-                                key as keyof (
-                                    | Partial<IUserLoginData>
-                                    | ILoginResponse
-                                )
-                            ],
-                    },
-                    { shouldFocus: true },
-                );
+        try {
+            const response = await userAPI.login(data);
+            console.log(response);
+
+            if (response.success) {
+                toast(response.message.replace(/\n/g, "<br>"));
+                login(response.data as ILoginResponse);
+                setTimeout(() => navigate("/"), 1500);
+            } else {
+                for (let key in response.data) {
+                    setError(
+                        key as keyof IUserLoginData,
+                        {
+                            type: "custom",
+                            message:
+                                response.data[
+                                    key as keyof (
+                                        | Partial<IUserLoginData>
+                                        | ILoginResponse
+                                    )
+                                ],
+                        },
+                        { shouldFocus: true },
+                    );
+                }
             }
+        } catch (error) {
+            console.error(error);
+            // toast("An error occurred. Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -138,9 +151,9 @@ export default function Login() {
                 </Link>
                 <Button
                     className="w-full"
-                    disabled={Object.keys(errors).length > 0}
+                    disabled={Object.keys(errors).length > 0 || isLoading}
                 >
-                    Login
+                    <LoadingIcon isLoading={isLoading}>Login</LoadingIcon>
                 </Button>
             </form>
             <Toaster />
