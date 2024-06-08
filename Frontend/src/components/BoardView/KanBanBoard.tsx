@@ -13,6 +13,7 @@ import validateWorkflowStageTransition from "@/utils/validateWorkflowStageTransi
 import { toast } from "sonner";
 import Column from "./Column";
 import TaskCard from "@/components/TaskCard";
+import useDataContext from "@/context/dataContext";
 
 interface IDragAndDropContext {
     tasks: { [key in WorkflowStage]: ITaskWithDetails[] };
@@ -35,6 +36,7 @@ export default function KanBanBoard({
     tasks,
     setTasks,
 }: IDragAndDropContext): React.JSX.Element {
+    const { refreshData } = useDataContext();
     const [activeTaskCardDetails, setActiveTaskCardDetails] =
         useState<ITaskWithDetails | null>(null);
 
@@ -107,10 +109,21 @@ export default function KanBanBoard({
         // show appropriate message as toast, may use axios interceptor
         async function sendRequestToServer(): Promise<IAPIResponse<any>> {
             try {
-                const result = await taskAPI.ChangeWorkflowStage({
+                const result = await taskAPI.updateTask({
                     id: activeId,
-                    currentWorkflowStage: activeWorkflowStage,
-                    newWorkflowStage: overWorkflowStage,
+                    taskDetails: {
+                        workflowStage: overWorkflowStage,
+                    },
+                }); // TODO: update not visible immediately in activity log.
+                // const result = await taskAPI.ChangeWorkflowStage({
+                //     id: activeId,
+                //     currentWorkflowStage: activeWorkflowStage,
+                //     newWorkflowStage: overWorkflowStage,
+                // });
+                refreshData({
+                    tasks: true,
+                    tasksAssignedByMe: true,
+                    tasksAssignedToMe: true,
                 });
                 return result;
             } catch (error: any) {

@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DataTable from "../TaskTable";
 import { ITaskWithDetails, ITasksGroupedByWorkFlowStage } from "@/types";
-import BoardView from "@/BoardView";
+import BoardView from "@/components/BoardView";
 
 export default function TaskViewToggleGroup({
     tasks,

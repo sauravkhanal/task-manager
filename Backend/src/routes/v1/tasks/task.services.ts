@@ -50,7 +50,7 @@ const taskServices = {
                         messages.workflowStage.transitionError(currentDetail?.workflowStage!, newDetails.workflowStage),
                     );
                 }
-                newActivityDetails.to = currentDetail?.workflowStage;
+                newActivityDetails.to = newDetails?.workflowStage;
             } else if (newDetails.priority) {
                 newActivityDetails.to = currentDetail?.priority;
             }
