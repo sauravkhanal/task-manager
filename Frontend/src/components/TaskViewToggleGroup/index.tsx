@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DataTable from "../TaskTable";
 import { ITaskWithDetails, ITasksGroupedByWorkFlowStage } from "@/types";
-import BoardView from "@/components/BoardView";
+import KanBanBoard from "../KanBanBoard";
 
 export default function TaskViewToggleGroup({
     tasks,
@@ -47,7 +47,7 @@ export default function TaskViewToggleGroup({
                 />
             </TabsContent>
             <TabsContent value="boardView" className="w-full grow">
-                <BoardView taskGroup={tasksGroupedByWorkFlowStages} />
+                <KanBanBoard tasks={tasksGroupedByWorkFlowStages} />
             </TabsContent>
         </Tabs>
     );
