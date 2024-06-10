@@ -14,6 +14,7 @@ export const CheckboxColumn: ColumnDef<ITaskWithDetails> = {
                 table.toggleAllPageRowsSelected(!!value)
             }
             aria-label="Select all"
+            className="w-4  mx-2"
         />
     ),
     cell: ({ row }) => (
@@ -22,6 +23,7 @@ export const CheckboxColumn: ColumnDef<ITaskWithDetails> = {
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
             onClick={(e) => e.stopPropagation()}
+            className="w-4 mx-2"
         />
     ),
     enableSorting: false,

@@ -28,7 +28,7 @@ const cells: ICells = {
         const rowData: ITaskWithDetails = row.original; // Access the entire row's data
         const priority: TaskPriority = rowData.priority;
         return (
-            <div className="text-ellipsis w-36 lg:w-64 line-clamp-1 capitalize">
+            <div className="text-ellipsis w-36 lg:w-60 line-clamp-1 capitalize">
                 {priority && <ChangePriorityDialog taskDetail={rowData} />}
                 &nbsp;
                 {title.slice(0, 50)}
@@ -64,7 +64,7 @@ const cells: ICells = {
         const creatorDetail: IUserDetails[] = row.getValue("creator");
         return (
             <div className="w-28 text-nowrap overflow-hidden overflow-ellipsis">
-                {fullName(creatorDetail[0])}
+                {fullName({ ...creatorDetail[0] })}
                 {/* <UserCard
                     firstName={creatorDetail.firstName}
                     middleName={creatorDetail.middleName}

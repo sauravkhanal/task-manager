@@ -4,6 +4,8 @@ import cells from "./cells";
 import customFilters from "./customFilters";
 import headers from "./headers";
 import customSortingFunctions from "./customSortingFunctions";
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const columns: ColumnDef<ITaskWithDetails>[] = [
     {
@@ -25,7 +27,7 @@ export const columns: ColumnDef<ITaskWithDetails>[] = [
     },
     {
         accessorKey: "creator",
-        header: "Created By",
+        header: () => <div className="w-28 text-center">Created By</div>,
         cell: cells.creator,
         filterFn: customFilters.creatorFilter,
     },
@@ -37,7 +39,7 @@ export const columns: ColumnDef<ITaskWithDetails>[] = [
     },
     {
         accessorKey: "tags",
-        header: "Tags",
+        header: () => <div className="w-24 text-center">Tags</div>,
         filterFn: customFilters.tagFilter,
         cell: cells.tags,
     },
@@ -74,6 +76,11 @@ export const columns: ColumnDef<ITaskWithDetails>[] = [
     {
         id: "actions",
         enableHiding: false,
+        header: () => (
+            <Button variant="ghost" className="h-8 w-8 p-0" disabled>
+                <MoreHorizontal />
+            </Button>
+        ),
         cell: cells.action,
     },
     {

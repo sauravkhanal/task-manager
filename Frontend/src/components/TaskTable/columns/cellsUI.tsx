@@ -37,7 +37,7 @@ const cellsUI = {
         if (tags.length === 0) return <div className="w-24">&nbsp;</div>;
         if (tags.length === 1)
             return (
-                <div className="w-24 overflow-x-hidden">
+                <div className="w-24 max-w-28 overflow-x-hidden">
                     <Badge style={{ backgroundColor }} variant={variant}>
                         {tags[0].title}
                     </Badge>
@@ -46,16 +46,17 @@ const cellsUI = {
         return (
             <div className="cursor-pointer w-24 ">
                 <HoverCard>
-                    <HoverCardTrigger className="text-nowrap">
+                    <HoverCardTrigger className="text-nowrap max-w-28 overflow-x-hidden">
                         <Badge
                             style={{ backgroundColor }}
                             notificationCount={tags.length - 1}
                             variant={variant}
+                            className="max-w-28  "
                         >
                             {tags[0].title}
                         </Badge>
                     </HoverCardTrigger>
-                    <HoverCardContent className="flex flex-wrap gap-1">
+                    <HoverCardContent className="flex flex-wrap gap-1 ">
                         {tags.map((tag, index) => (
                             <Badge
                                 key={index}
@@ -108,7 +109,7 @@ const cellsUI = {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild className="font-poppins">
                     <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        {/* <span className="sr-only">Open menu</span> */}
                         <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>

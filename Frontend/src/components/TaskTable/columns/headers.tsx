@@ -25,7 +25,11 @@ function SortIcon({ column }: { column: Column<any> }) {
 const headers: IHeader<ITaskWithDetails> = {
     title: ({ column }) => {
         return (
-            <Button variant="ghost" onClick={() => column.toggleSorting()}>
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting()}
+                className="w-36 lg:w-60 flex justify-start"
+            >
                 Title <SortIcon column={column} />
             </Button>
         );
@@ -33,7 +37,11 @@ const headers: IHeader<ITaskWithDetails> = {
 
     dueDate: ({ column }) => {
         return (
-            <Button variant="ghost" onClick={() => column.toggleSorting()}>
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting()}
+                className="flex justify-start w-36"
+            >
                 Due Date <SortIcon column={column} />
             </Button>
         );

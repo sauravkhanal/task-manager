@@ -10,6 +10,8 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import FormatUsername from "./FormatUsername";
+import { RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function TaskActivities({
     activityIDs,
@@ -17,8 +19,9 @@ export default function TaskActivities({
     activityIDs: string[];
 }) {
     const [activities, setActivities] = useState<IActivityDocument[]>([]);
-
+    const [loading, setLoading] = useState<boolean>(false);
     async function fetchDetails() {
+        setLoading(true);
         try {
             const response = await activityAPI.getActivities(activityIDs);
             if (response.success) {
@@ -28,6 +31,8 @@ export default function TaskActivities({
             }
         } catch (error) {
             console.error("Error fetching activities:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -121,7 +126,7 @@ export default function TaskActivities({
     };
 
     return (
-        <div className="flex flex-col bg-accent p-4">
+        <div className="flex flex-col bg-accent p-4 relative">
             {activities.length > 0 ? (
                 <ul className="">
                     {[...activities].reverse().map((activity) => (
@@ -133,6 +138,15 @@ export default function TaskActivities({
             ) : (
                 <div>No activities found</div>
             )}
+            <Button
+                variant={"outline"}
+                className="absolute top-1 right-1"
+                size={"icon"}
+                onClick={() => fetchDetails()}
+                disabled={loading}
+            >
+                <RefreshCcw className="size-4 " />
+            </Button>
         </div>
     );
 }

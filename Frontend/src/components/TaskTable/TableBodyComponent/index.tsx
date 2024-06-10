@@ -5,6 +5,8 @@ import { flexRender } from "@tanstack/react-table";
 import { columns } from "../columns";
 import { useModal } from "@/context/modalContext";
 import TaskView from "@/pages/TaskView";
+// import useDataContext from "@/context/dataContext";
+// import { Skeleton } from "@/components/ui/skeleton";
 
 interface TableBodyComponentProps {
     table: Table<any>;
@@ -12,6 +14,23 @@ interface TableBodyComponentProps {
 
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ table }) => {
     const { showModal } = useModal();
+    // const { loading } = useDataContext();
+    // if (loading)
+    //     return (
+    //         <TableBody>
+    //             {Array(10)
+    //                 .fill(0)
+    //                 .map((_, index) => (
+    //                     <TableRow key={index}>
+    //                         {columns.map((_, colIndex) => (
+    //                             <TableCell key={colIndex}>
+    //                                 <Skeleton className="w-[100px] h-[20px] rounded-sm my-2" />
+    //                             </TableCell>
+    //                         ))}
+    //                     </TableRow>
+    //                 ))}
+    //         </TableBody>
+    //     );
     return (
         <TableBody>
             {table.getRowModel().rows?.length ? (
@@ -26,10 +45,19 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ table }) => {
                     >
                         {row.getVisibleCells().map((cell) => (
                             <TableCell key={cell.id}>
-                                {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext(),
-                                )}
+                                {
+                                    // loading ? (
+                                    //     cell.id === "select" ? (
+                                    //         <Skeleton className="w-4 h-[20px] rounded-sm my-2" />
+                                    //     ) : (
+                                    //         <Skeleton className="w-full h-[20px] rounded-sm my-2" />
+                                    //     )
+                                    // ) :
+                                    flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                    )
+                                }
                             </TableCell>
                         ))}
                     </TableRow>
