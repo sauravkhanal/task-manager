@@ -27,7 +27,7 @@ function App() {
                                             <MyRoutes />
                                         </span>
                                     </section>
-                                    <Toaster richColors />
+                                    <Toaster richColors closeButton />
                                     {/* <Modal /> */}
                                 </div>
                             </BrowserRouter>
