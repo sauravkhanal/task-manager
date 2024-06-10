@@ -9,6 +9,7 @@ import { WorkflowStage } from "../workflowStage/types";
 import validateTransition from "../workflowStage/workflowRule";
 import taskRepository from "./task.repository";
 import ITask, { ITaskGroupedByWorkflowStage, ITaskWithDetails } from "./types";
+import { IAccessToken } from "../../../types";
 
 const taskServices = {
     async createNewTask(taskDetails: Partial<ITask>, username: string): Promise<ITask> {
@@ -95,15 +96,28 @@ const taskServices = {
         return taskRepository.removeCommentFromTask(_id, commentID);
     },
 
-    changeWorkflowStage(
+    async changeWorkflowStage(
         _id: string,
+        client: IAccessToken,
         currentWorkflowStage: WorkflowStage,
         newWorkflowStage: WorkflowStage,
     ): Promise<ITask | null> {
+        //test if transition is valid
         if (!validateTransition(currentWorkflowStage, newWorkflowStage)) {
             throw new CustomError(400, messages.workflowStage.transitionError(currentWorkflowStage, newWorkflowStage));
         }
-        return taskRepository.changeWorkflowStage(_id, newWorkflowStage);
+
+        //if valid create activity
+        const newActivityDetails: IActivity = {
+            action: ActivityAction.Updated,
+            username: client.username,
+            updatedFields: ["workflowStage"],
+            to: newWorkflowStage,
+        };
+
+        const activity = await activityServices.createActivity(newActivityDetails);
+        if (!activity) throw new CustomError(500, messages.failure("generating", "action for given transition"));
+        return taskRepository.changeWorkflowStage(_id, client._id, newWorkflowStage, activity._id);
     },
 
     async getTasksAssignedToMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null> {

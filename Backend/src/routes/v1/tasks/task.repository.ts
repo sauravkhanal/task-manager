@@ -28,7 +28,12 @@ interface ITaskRepository {
     removeTagsFromTask(_id: string, creatorID: string, tagIds: string[]): Promise<ITask | null>;
     addCommentToTask(taskId: string, commentIDs: string): Promise<ITask | null>;
     removeCommentFromTask(taskId: string, commentId: string): Promise<ITask | null>;
-    changeWorkflowStage(_id: string, workflowStage: WorkflowStage): Promise<ITask | null>;
+    changeWorkflowStage(
+        _id: string,
+        client_id: string,
+        workflowStage: WorkflowStage,
+        activityID: string,
+    ): Promise<ITask | null>;
     getTasksAssignedToMe(_id: string): Promise<ITaskGroupedByWorkflowStage | null>;
     getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage>;
     bulkDelete(_ids: string[]): Promise<UpdateWriteOpResult>;
@@ -111,8 +116,18 @@ const taskRepository: ITaskRepository = {
         return TaskModel.findOneAndUpdate({ _id }, { $pull: { commentIDs: commentID } }, { new: true });
     },
 
-    changeWorkflowStage(_id, workflowStage) {
-        return TaskModel.findOneAndUpdate({ _id }, { workflowStage }, { new: true });
+    async changeWorkflowStage(_id, client_id, workflowStage, activityID) {
+        const updatedData = await TaskModel.findOneAndUpdate(
+            { _id, assigneeIDs: client_id },
+            { workflowStage, $push: { activityIDs: activityID } },
+            { new: true },
+        );
+        if (!updatedData)
+            throw new CustomError(
+                401,
+                messages.user.not_authorized("move", "task", "The user is not assigned to the task."),
+            );
+        return updatedData;
     },
 
     bulkDelete(_ids) {

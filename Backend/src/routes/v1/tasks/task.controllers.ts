@@ -138,9 +138,11 @@ const taskControllers = {
         next: NextFunction,
     ) {
         try {
+            const token = res.locals.user as IAccessToken;
+
             const { id } = req.params;
             const { currentWorkflowStage, newWorkflowStage } = req.body;
-            const result = await taskServices.changeWorkflowStage(id, currentWorkflowStage, newWorkflowStage);
+            const result = await taskServices.changeWorkflowStage(id, token, currentWorkflowStage, newWorkflowStage);
             return successResponse(
                 res,
                 200,
