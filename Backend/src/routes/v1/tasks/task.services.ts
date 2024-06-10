@@ -52,7 +52,7 @@ const taskServices = {
                 }
                 newActivityDetails.to = newDetails?.workflowStage;
             } else if (newDetails.priority) {
-                newActivityDetails.to = currentDetail?.priority;
+                newActivityDetails.to = newDetails?.priority;
             }
         }
 
