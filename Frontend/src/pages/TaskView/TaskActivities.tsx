@@ -1,4 +1,3 @@
-import activityAPI from "@/api/activityAPI";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { IActivityDocument } from "@/types";
 import { format, formatDistanceToNow } from "date-fns";
@@ -12,18 +11,15 @@ import {
 import FormatUsername from "./FormatUsername";
 import { RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import taskAPI from "@/api/taskAPI";
 
-export default function TaskActivities({
-    activityIDs,
-}: {
-    activityIDs: string[];
-}) {
+export default function TaskActivities({ taskID }: { taskID: string }) {
     const [activities, setActivities] = useState<IActivityDocument[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     async function fetchDetails() {
         setLoading(true);
         try {
-            const response = await activityAPI.getActivities(activityIDs);
+            const response = await taskAPI.getAllActivities(taskID);
             if (response.success) {
                 setActivities(response.data as IActivityDocument[]);
             } else {
@@ -38,7 +34,7 @@ export default function TaskActivities({
 
     useEffect(() => {
         fetchDetails();
-    }, [activityIDs]);
+    }, [taskID]);
 
     function FormatDate(date: string) {
         const renderDate = formatDistanceToNow(date, { addSuffix: true });

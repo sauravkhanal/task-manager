@@ -251,6 +251,16 @@ const taskControllers = {
             next(error);
         }
     },
+    async getAllActivities(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const result = await taskServices.getAllActivities(id);
+            if (result) return successResponse(res, 200, messages.success("retrieved", "activities"), result);
+            throw new CustomError(404, messages.failure("retrieving", "the given activities"));
+        } catch (error) {
+            next(error);
+        }
+    },
 
     //TODO: attachments,
     // async createTask(req:Request, res:Response, next: NextFunction) {

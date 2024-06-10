@@ -6,7 +6,7 @@ import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
 import activityRepository from "../activity/activity.repository";
 import activityServices from "../activity/activity.services";
-import { ActivityAction, IActivityDocument } from "../activity/activity.model";
+import { ActivityAction, IActivity, IActivityDocument } from "../activity/activity.model";
 import { IComment } from "../comments/types";
 import CommentModel from "../comments/comment.model";
 
@@ -33,6 +33,7 @@ interface ITaskRepository {
     getTasksAssignedByMe(_id: string): Promise<ITaskGroupedByWorkflowStage>;
     bulkDelete(_ids: string[]): Promise<UpdateWriteOpResult>;
     getAllComments(_ids: string): Promise<IComment[]>;
+    getAllActivities(_ids: string): Promise<IActivity[]>;
 }
 
 const taskRepository: ITaskRepository = {
@@ -176,6 +177,28 @@ const taskRepository: ITaskRepository = {
             return taskWithComments;
         } catch (error) {
             console.error("Error fetching comments for task:", error);
+            throw error;
+        }
+    },
+    async getAllActivities(_id) {
+        try {
+            const taskWithComments = await TaskModel.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(_id) } },
+                {
+                    $lookup: {
+                        from: "activities",
+                        localField: "activityIDs",
+                        foreignField: "_id",
+                        as: "activities",
+                    },
+                },
+                { $unwind: "$activities" },
+                { $replaceRoot: { newRoot: "$activities" } },
+            ]);
+
+            return taskWithComments;
+        } catch (error) {
+            console.error("Error fetching activities for task:", error);
             throw error;
         }
     },

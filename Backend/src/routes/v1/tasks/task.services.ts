@@ -119,6 +119,9 @@ const taskServices = {
     getAllComments(id: string) {
         return taskRepository.getAllComments(id);
     },
+    getAllActivities(id: string) {
+        return taskRepository.getAllActivities(id);
+    },
 };
 
 export default taskServices;

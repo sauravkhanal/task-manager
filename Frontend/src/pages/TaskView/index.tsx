@@ -196,9 +196,7 @@ export default function TaskView({
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <TaskActivities
-                                    activityIDs={task.activityIDs ?? []}
-                                />
+                                <TaskActivities taskID={task._id} />
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-4">

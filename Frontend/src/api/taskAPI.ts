@@ -1,5 +1,6 @@
 import {
     IAPIResponse,
+    IActivityDocument,
     IAllTask,
     IComment,
     ITask,
@@ -136,6 +137,16 @@ const taskAPI = {
                 `/tasks/${taskID}/comments`,
             );
             return response.data as IAPIResponse<IComment[]>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<unknown>;
+        }
+    },
+    async getAllActivities(taskID: string) {
+        try {
+            const response = await axiosInstance.get(
+                `/tasks/${taskID}/activities`,
+            );
+            return response.data as IAPIResponse<IActivityDocument[]>;
         } catch (error: any) {
             return error.response.data as IAPIResponse<unknown>;
         }
