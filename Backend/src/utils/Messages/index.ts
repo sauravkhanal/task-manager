@@ -18,7 +18,7 @@ export const messages = {
          * @returns `The user is not authorized to ${action} the ${item}. or "The user is not authorized." if no args provided`
          */
         not_authorized: (action?: string, item?: string, extraMessage?: string) =>
-            `The user is not authorized${action ? " to" : "."} ${action}${item ? " the" : "."} ${item}.${extraMessage && " " + extraMessage}`,
+            `The user is not authorized${action ? " to" : "."} ${action}${item ? " the" : "."} ${item}.${extraMessage ? " " + extraMessage : ""}`,
     },
     auth: {
         login_success: "LoggedIn Successfully.",
