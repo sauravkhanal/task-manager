@@ -52,16 +52,34 @@ const taskRepository: ITaskRepository = {
         return TaskModel.aggregate(taskPopulatePipeline({ deleted: false }, { createdAt: -1 }));
     },
 
-    updateTaskDetails(_id, creatorID, newDetails, newActivityID) {
-        return TaskModel.findOneAndUpdate(
-            { _id, creatorID },
-            { $set: newDetails, $push: { activityIDs: newActivityID } },
-            { new: true },
-        );
+    async updateTaskDetails(_id, creatorID, newDetails, newActivityID) {
+        try {
+            const updatedTask = await TaskModel.findOneAndUpdate(
+                { _id, creatorID },
+                { $set: newDetails, $push: { activityIDs: newActivityID } },
+                { new: true },
+            );
+
+            if (!updatedTask) {
+                throw new CustomError(401, messages.user.not_authorized("update", "task"));
+            }
+
+            return updatedTask;
+        } catch (error) {
+            throw error;
+        }
     },
 
-    deleteTask(_id, creatorID) {
-        return TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: true }, { new: true });
+    async deleteTask(_id, creatorID) {
+        try {
+            const updatedTask = await TaskModel.findOneAndUpdate({ _id, creatorID }, { deleted: true }, { new: true });
+            if (!updatedTask) {
+                throw new CustomError(401, messages.user.not_authorized("delete", "task"));
+            }
+            return updatedTask;
+        } catch (error) {
+            throw error;
+        }
     },
 
     recoverTask(_id, creatorID) {

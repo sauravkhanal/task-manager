@@ -13,6 +13,12 @@ export const messages = {
             reactivation_success: "User reactivated successfully.",
         },
         404: "User not found.",
+        /**
+         *
+         * @returns `The user is not authorized to ${action} the ${item}. or "The user is not authorized." if no args provided`
+         */
+        not_authorized: (action?: string, item?: string) =>
+            `The user is not authorized${action ? " to" : "."} ${action}${item ? " the" : "."} ${item}`,
     },
     auth: {
         login_success: "LoggedIn Successfully.",
