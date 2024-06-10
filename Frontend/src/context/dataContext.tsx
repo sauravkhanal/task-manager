@@ -4,6 +4,7 @@ import {
     ITag,
     ITaskWithDetails,
     IUserDetails,
+    WorkflowStage,
 } from "@/types";
 import tagAPI from "@/api/tagAPI";
 import userAPI from "@/api/userAPI";
@@ -16,6 +17,8 @@ interface IDataContext {
     tasks: ITaskWithDetails[];
     tasksAssignedByMe: ITasksGroupedByWorkFlowStage;
     tasksAssignedToMe: ITasksGroupedByWorkFlowStage;
+    updateTasksLocally: (newTaskDetail: ITaskWithDetails) => void;
+    revertTaskChanges: () => void;
     refreshData: (options?: {
         users?: boolean;
         tags?: boolean;
@@ -25,6 +28,7 @@ interface IDataContext {
     }) => void;
     loading: boolean;
 }
+
 const emptyGroupedData: ITasksGroupedByWorkFlowStage = {
     TODO: [],
     INPROGRESS: [],
@@ -39,6 +43,8 @@ const DataContext = createContext<IDataContext>({
     tasksAssignedToMe: emptyGroupedData,
     refreshData: () => {},
     loading: false,
+    updateTasksLocally: () => {},
+    revertTaskChanges: () => {},
 });
 
 function useDataFetching() {
@@ -102,13 +108,13 @@ function useDataFetching() {
     async function refreshTasks() {
         try {
             setLoading(true);
-            console.log("all data fetching");
+            // console.log("all data fetching");
             const data = await taskAPI.getAllTasks();
             if (data) setTasks(data.data);
         } catch (error) {
             console.log("can't refresh tasks: ", error);
         } finally {
-            console.log("finished , setting loading to false");
+            // console.log("finished , setting loading to false");
             setLoading(false);
         }
     }
@@ -147,6 +153,70 @@ function useDataFetching() {
         }
     }
 
+    function updateTasksLocally(newTaskDetail: ITaskWithDetails) {
+        localStorage.setItem(
+            "previousState",
+            JSON.stringify({
+                tasks,
+                tasksAssignedByMe,
+                tasksAssignedToMe,
+            }),
+        );
+
+        setTasks((prev) =>
+            prev.map((task) =>
+                task._id === newTaskDetail._id
+                    ? { ...task, ...newTaskDetail }
+                    : task,
+            ),
+        );
+
+        function updateGroupedTask(
+            groupedTask: ITasksGroupedByWorkFlowStage,
+            newTaskDetail: ITaskWithDetails,
+        ): ITasksGroupedByWorkFlowStage {
+            const updatedTaskGroup: ITasksGroupedByWorkFlowStage = {
+                ...emptyGroupedData,
+            };
+
+            let taskPresent = false;
+            Object.keys(emptyGroupedData).forEach((stage) => {
+                // Filter the current stage to remove the task
+                updatedTaskGroup[stage as WorkflowStage] = (
+                    groupedTask[stage as WorkflowStage] || []
+                ).filter((task) => {
+                    if (task._id !== newTaskDetail._id) return true;
+                    else {
+                        taskPresent = true;
+                        return false;
+                    }
+                });
+            });
+
+            // Add the new task to it's corresponding stage
+            if (taskPresent) {
+                updatedTaskGroup[newTaskDetail.workflowStage].push(
+                    newTaskDetail,
+                );
+            }
+
+            return updatedTaskGroup;
+        }
+
+        setTasksAssignedByMe((prev) => updateGroupedTask(prev, newTaskDetail));
+        setTasksAssignedToMe((prev) => updateGroupedTask(prev, newTaskDetail));
+    }
+
+    function revertTaskChanges() {
+        // Roll back to previous state
+        const previousState = JSON.parse(
+            localStorage.getItem("previousState") || "{}",
+        );
+        setTasks(previousState.tasks);
+        setTasksAssignedByMe(previousState.tasksAssignedByMe);
+        setTasksAssignedToMe(previousState.tasksAssignedToMe);
+        localStorage.removeItem("previousState");
+    }
     return {
         loading,
         allUserDetails,
@@ -155,6 +225,8 @@ function useDataFetching() {
         refreshData,
         tasksAssignedToMe,
         tasksAssignedByMe,
+        updateTasksLocally,
+        revertTaskChanges,
     };
 }
 
@@ -167,11 +239,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         refreshData,
         tasksAssignedByMe,
         tasksAssignedToMe,
+        updateTasksLocally,
+        revertTaskChanges,
     } = useDataFetching();
     const { isLoggedIn, userDetails } = useContext(AuthContext);
-    // console.log(userDetails);
+
     const isAdmin = userDetails?.role == "ADMIN";
-    // console.log("is admin ", isAdmin);
+
     useEffect(() => {
         if (isLoggedIn)
             refreshData({
@@ -193,6 +267,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 loading,
                 tasksAssignedByMe,
                 tasksAssignedToMe,
+                updateTasksLocally,
+                revertTaskChanges,
             }}
         >
             {children}
