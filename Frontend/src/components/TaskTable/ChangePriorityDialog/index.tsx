@@ -39,11 +39,7 @@ export function ChangePriorityDialog({
         });
         if (response.success) {
             toast.success(response.message);
-            dataContext.refreshData({
-                tasks: true,
-                tasksAssignedByMe: true,
-                tasksAssignedToMe: true,
-            });
+            dataContext.updateTasksLocally({ ...taskDetail, priority: value });
             setSelectedPriority(value);
             // setDialogOpen(false);
         } else {
@@ -77,9 +73,9 @@ export function ChangePriorityDialog({
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Change Priority</SelectLabel>
-                    {priorityData.map((item) => (
-                        <SelectItem value={item.title} key={item.title}>
-                            <Badge variant={item.title}>{item.title}</Badge>
+                    {Object.keys(TaskPriority).map((item) => (
+                        <SelectItem value={item} key={item}>
+                            <Badge variant={item as TaskPriority}>{item}</Badge>
                         </SelectItem>
                     ))}
                 </SelectGroup>

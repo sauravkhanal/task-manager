@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import useDataContext from "@/context/dataContext";
 import { ITaskWithDetails, WorkflowStage } from "@/types";
-import { workflowStages as priorityData } from "@/utils/constants";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -21,13 +20,12 @@ export function ChangeWorkflowStageDialog({
     taskDetail: ITaskWithDetails;
 }) {
     const dataContext = useDataContext();
-    const [selectedPriority, setSelectedPriority] = useState<WorkflowStage>(
-        taskDetail.workflowStage,
-    );
+    const [selectedWorkflowStage, setSelectedWorkflowStage] =
+        useState<WorkflowStage>(taskDetail.workflowStage);
     // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handlePriorityChange = async (value: WorkflowStage) => {
+    const handleWorkflowStageChange = async (value: WorkflowStage) => {
         setLoading(true);
         const response = await taskAPI.updateTask({
             id: taskDetail._id,
@@ -37,12 +35,11 @@ export function ChangeWorkflowStageDialog({
         });
         if (response.success) {
             toast.success(response.message);
-            dataContext.refreshData({
-                tasks: true,
-                tasksAssignedByMe: true,
-                tasksAssignedToMe: true,
+            dataContext.updateTasksLocally({
+                ...taskDetail,
+                workflowStage: value,
             });
-            setSelectedPriority(value);
+            setSelectedWorkflowStage(value);
             // setDialogOpen(false);
         } else {
             toast.error(response.message);
@@ -52,16 +49,16 @@ export function ChangeWorkflowStageDialog({
 
     return (
         <Select
-            value={selectedPriority}
-            onValueChange={handlePriorityChange}
+            value={selectedWorkflowStage}
+            onValueChange={handleWorkflowStageChange}
             disabled={loading}
             // defaultOpen
         >
             <SelectTrigger minimal={true}>
                 <span className="flex justify-center">
-                    <Badge variant={selectedPriority}>
+                    <Badge variant={selectedWorkflowStage}>
                         <LoadingIcon
-                            text={selectedPriority}
+                            text={selectedWorkflowStage}
                             isLoading={loading}
                             color="#ffffff"
                         />
@@ -71,9 +68,11 @@ export function ChangeWorkflowStageDialog({
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Change Stage</SelectLabel>
-                    {priorityData.map((item) => (
-                        <SelectItem value={item.title} key={item.title}>
-                            <Badge variant={item.title}>{item.title}</Badge>
+                    {Object.keys(WorkflowStage).map((item) => (
+                        <SelectItem value={item} key={item}>
+                            <Badge variant={item as WorkflowStage}>
+                                {item}
+                            </Badge>
                         </SelectItem>
                     ))}
                 </SelectGroup>
