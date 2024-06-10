@@ -53,6 +53,8 @@ export default function TaskForm({
                 resetForm();
                 refreshData({
                     tasks: true,
+                    tasksAssignedByMe: true,
+                    tasksAssignedToMe: true,
                 });
                 hideModal();
             } else {
