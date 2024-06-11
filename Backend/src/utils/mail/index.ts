@@ -94,12 +94,29 @@ export async function sendPasswordResetMail(userEmail: string, resetToken: strin
       We received a request to reset your password. Please click on the link below to reset your password:
 
       ${resetURL}
-
+      
+      Note: The link is valid for 5 minutes only.
       If you did not request a password reset, please ignore this email or contact support if you have questions.
 
       Best regards,
       The TASK-MANAGER Team
-`,
+    `,
+        html: `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Password Reset</title>
+    </head>
+    <body>
+        <p>Hi,</p>
+        <p>We received a request to reset your password. Please click on the link below to reset your password:</p>
+        <a href="${resetURL}">Click here to create new password</a>
+        <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+        <p>Best regards,<br/>The TASK-MANAGER Team</p>
+        <p><strong>Note:</strong> This link is valid for 5 minutes.</p>
+    </body>
+    </html>
+    `,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
