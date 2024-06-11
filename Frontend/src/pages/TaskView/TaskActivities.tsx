@@ -9,11 +9,21 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import FormatUsername from "./FormatUsername";
-import { RefreshCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import taskAPI from "@/api/taskAPI";
+import LoadingIcon from "@/components/LoadingIcon";
 
-export default function TaskActivities({ taskID }: { taskID: string }) {
+export default function TaskActivities({
+    taskID,
+    setLengths,
+}: {
+    taskID: string;
+    setLengths: React.Dispatch<
+        React.SetStateAction<{
+            activity: number;
+            comments: number;
+        }>
+    >;
+}) {
     const [activities, setActivities] = useState<IActivityDocument[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     async function fetchDetails() {
@@ -21,7 +31,11 @@ export default function TaskActivities({ taskID }: { taskID: string }) {
         try {
             const response = await taskAPI.getAllActivities(taskID);
             if (response.success) {
-                setActivities(response.data as IActivityDocument[]);
+                const activities = response.data as IActivityDocument[];
+                setActivities(activities);
+                setLengths((prev) => {
+                    return { ...prev, activity: activities.length };
+                });
             } else {
                 console.error("Failed to fetch activities", response.message);
             }
@@ -104,8 +118,8 @@ export default function TaskActivities({ taskID }: { taskID: string }) {
                         {<FormatUsername username={username} />} updated
                         multiple fields
                         {FormatDate(createdAt)}
-                        <div className="capitalize">
-                            Fields: {updatedFields.join(", ")}
+                        <div className="capitalize text-xs">
+                            Fields updated: {updatedFields.join(", ")}
                         </div>
                     </div>
                 );
@@ -122,27 +136,20 @@ export default function TaskActivities({ taskID }: { taskID: string }) {
     };
 
     return (
-        <div className="flex flex-col bg-accent p-4 relative">
-            {activities.length > 0 ? (
-                <ul className="">
-                    {[...activities].reverse().map((activity) => (
-                        <li key={activity._id} className="mb-4 text-sm">
-                            {renderActivityMessage(activity)}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <div>No activities found</div>
-            )}
-            <Button
-                variant={"outline"}
-                className="absolute top-1 right-1"
-                size={"icon"}
-                onClick={() => fetchDetails()}
-                disabled={loading}
-            >
-                <RefreshCcw className="size-4 " />
-            </Button>
-        </div>
+        <LoadingIcon isLoading={loading}>
+            <div className="flex flex-col bg-accent p-4 relative w-full">
+                {activities.length > 0 ? (
+                    <ul className="">
+                        {[...activities].reverse().map((activity) => (
+                            <li key={activity._id} className="mb-4 text-sm">
+                                {renderActivityMessage(activity)}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div>No activities found</div>
+                )}
+            </div>
+        </LoadingIcon>
     );
 }

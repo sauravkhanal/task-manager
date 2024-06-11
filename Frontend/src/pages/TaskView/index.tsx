@@ -4,10 +4,8 @@ import { ITaskWithDetails } from "@/types";
 
 import {
     Calendar,
-    Edit,
     MessageCircleMore,
     ReceiptText,
-    RefreshCcw,
     SquareActivity,
     User,
 } from "lucide-react";
@@ -36,19 +34,36 @@ export default function TaskView({
 }) {
     const { taskID } = useParams();
     const [task, setTask] = useState<ITaskWithDetails | undefined>(taskDetails);
-
+    const [lengths, setLengths] = useState<{
+        activity: number;
+        comments: number;
+    }>({
+        activity: 0,
+        comments: 0,
+    });
     const { loading } = useDataContext();
     const fetchTask = async (taskID: string) => {
         if (true) {
             const response = await taskAPI.getTask(taskID);
             if (response.success) {
+                const task = response.data as ITaskWithDetails;
                 setTask(response.data as ITaskWithDetails);
+                setLengths({
+                    activity: task.activityIDs?.length ?? 0,
+                    comments: task.commentIDs?.length ?? 0,
+                });
             } else {
                 console.log("Couldn't fetch the task: ", response.message);
             }
         }
     };
     useEffect(() => {
+        if (taskDetails) {
+            setLengths({
+                activity: taskDetails.activityIDs?.length ?? 0,
+                comments: taskDetails.commentIDs?.length ?? 0,
+            });
+        }
         if (!taskDetails && !loading) fetchTask(taskID!);
     }, [taskID, taskDetails, loading]);
 
@@ -191,12 +206,15 @@ export default function TaskView({
                                     <SquareActivity className="size-5" />
                                     <p className="font-semibold">
                                         Activity Log&nbsp;(
-                                        {task.activityIDs?.length})
+                                        {lengths.activity})
                                     </p>
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <TaskActivities taskID={task._id} />
+                                <TaskActivities
+                                    taskID={task._id}
+                                    setLengths={setLengths}
+                                />
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-4">
@@ -205,12 +223,15 @@ export default function TaskView({
                                     <MessageCircleMore className="size-5" />
                                     <p className="font-semibold">
                                         Comments&nbsp;(
-                                        {task.commentIDs?.length})
+                                        {lengths.comments})
                                     </p>
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <Comments taskID={task._id} />
+                                <Comments
+                                    taskID={task._id}
+                                    setLengths={setLengths}
+                                />
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

@@ -19,23 +19,24 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit } from "lucide-react";
 import LoadingIcon from "@/components/LoadingIcon";
+import DeleteAlertDialog from "@/components/DeleteAlertDialog";
 
-export default function Comments({ taskID }: { taskID: string }) {
+export default function Comments({
+    taskID,
+    setLengths,
+}: {
+    taskID: string;
+    setLengths: React.Dispatch<
+        React.SetStateAction<{
+            activity: number;
+            comments: number;
+        }>
+    >;
+}) {
     const [comments, setComments] = useState<IComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
     const [updatedComment, setUpdatedComment] = useState<string>("");
@@ -52,7 +53,11 @@ export default function Comments({ taskID }: { taskID: string }) {
             setIsLoading(true);
             const response = await taskAPI.getAllComments(taskID);
             if (response.success) {
-                setComments(response.data as IComment[]);
+                const comments = response.data as IComment[];
+                setComments(comments);
+                setLengths((prev) => {
+                    return { ...prev, comments: comments.length };
+                });
             } else {
                 console.error("Failed to fetch comments", response.message);
             }
@@ -85,13 +90,15 @@ export default function Comments({ taskID }: { taskID: string }) {
     }
 
     async function handleDeleteComment(commentID: string) {
-        if (!updatedComment.trim()) return;
         try {
             setIsLoading(true);
             const response = await taskAPI.deleteComment(taskID, commentID);
             if (response.success) {
                 toast.success(response.message);
-                fetchDetails();
+                // fetchDetails();
+                setComments((prev) => {
+                    return prev.filter((comment) => comment._id !== commentID);
+                });
             } else {
                 toast.error(response.message);
             }
@@ -110,7 +117,14 @@ export default function Comments({ taskID }: { taskID: string }) {
             );
             if (response.success) {
                 toast.success(response.message);
-                fetchDetails();
+                // fetchDetails();
+                setComments((prev) => {
+                    return prev.map((comment) =>
+                        comment._id !== commentID
+                            ? comment
+                            : { ...comment, description: description },
+                    );
+                });
                 setUpdatedComment("");
                 setDialogOpen({ ...dialogOpen, [commentID]: false });
             } else {
@@ -140,7 +154,7 @@ export default function Comments({ taskID }: { taskID: string }) {
     }
 
     return (
-        <div className="flex flex-col bg-accent p-4 rounded-sm">
+        <div className="grid bg-accent p-4 rounded-sm w-full">
             <div className="mb-4 grid gap-2">
                 <Textarea
                     value={newComment}
@@ -159,134 +173,107 @@ export default function Comments({ taskID }: { taskID: string }) {
                 </Button>
             </div>
 
-            {comments.length > 0 ? (
-                <div className="grid gap-4">
-                    {[...comments].reverse().map((comment) => (
-                        <Card key={comment._id} className="relative">
-                            <CardHeader>
-                                <CardTitle>
-                                    <div>
-                                        {
-                                            <FormatUsername
-                                                username={
-                                                    comment.creatorUsername!
-                                                }
-                                            />
-                                        }
-                                        <span className="font-normal">
-                                            &nbsp;commented&nbsp;
-                                            {FormatDate(comment.createdAt!)}
-                                        </span>
+            <LoadingIcon isLoading={isLoading} className="min-w-full">
+                {comments.length > 0 ? (
+                    <div className="grid gap-4 min-w-full">
+                        {[...comments].reverse().map((comment) => (
+                            <Card key={comment._id} className="relative w-full">
+                                <CardHeader className="w-full">
+                                    <CardTitle>
+                                        <div className="grid md:flex items-center">
+                                            {
+                                                <FormatUsername
+                                                    username={
+                                                        comment.creatorUsername!
+                                                    }
+                                                />
+                                            }
+                                            <span className="font-normal text-xs md:text-sm">
+                                                <span className="space-x-1 hidden md:inline">
+                                                    commented
+                                                </span>
+                                                {FormatDate(comment.createdAt!)}
+                                            </span>
+                                        </div>
+                                    </CardTitle>
+                                    <hr />
+                                </CardHeader>
+                                <CardContent className="">
+                                    <div className="text-justify">
+                                        {comment.description}
                                     </div>
-                                </CardTitle>
-                                <hr />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-justify">
-                                    {comment.description}
-                                </div>
-                                <div className="flex mt-2 space-x-2">
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="absolute top-2 right-10"
-                                                size="sm"
-                                            >
-                                                <Trash2 className="size-4" />
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>
-                                                    Are you absolutely sure?
-                                                </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be
-                                                    undone. This will
-                                                    permanently delete the
-                                                    comment.{" "}
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>
-                                                    Cancel
-                                                </AlertDialogCancel>
-                                                <AlertDialogAction
-                                                    asChild
+                                    <div className="flex mt-2 space-x-2">
+                                        <DeleteAlertDialog
+                                            onContinueAction={() =>
+                                                handleDeleteComment(
+                                                    comment._id!,
+                                                )
+                                            }
+                                            item="comment"
+                                        />
+
+                                        <Dialog
+                                            open={dialogOpen[comment._id!]}
+                                            onOpenChange={(isOpen) =>
+                                                setDialogOpen({
+                                                    ...dialogOpen,
+                                                    [comment._id!]: isOpen,
+                                                })
+                                            }
+                                        >
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    className="absolute top-2 right-2"
+                                                    size="sm"
+                                                >
+                                                    <Edit className="size-4" />
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>
+                                                        Update comment
+                                                    </DialogTitle>
+                                                    <DialogDescription>
+                                                        Make changes to the
+                                                        comment here.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <Textarea
+                                                    placeholder="Updated comment content"
+                                                    onChange={(e) =>
+                                                        setUpdatedComment(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    value={updatedComment}
+                                                ></Textarea>
+                                                <Button
                                                     onClick={() =>
-                                                        handleDeleteComment(
+                                                        handleUpdateComment(
                                                             comment._id!,
+                                                            updatedComment,
                                                         )
                                                     }
                                                 >
-                                                    <Button>Continues</Button>
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-
-                                    <Dialog
-                                        open={dialogOpen[comment._id!]}
-                                        onOpenChange={(isOpen) =>
-                                            setDialogOpen({
-                                                ...dialogOpen,
-                                                [comment._id!]: isOpen,
-                                            })
-                                        }
-                                    >
-                                        <DialogTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="absolute top-2 right-2"
-                                                size="sm"
-                                            >
-                                                <Edit className="size-4" />
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Update comment
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Make changes to the comment
-                                                    here.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <Textarea
-                                                placeholder="Updated comment content"
-                                                onChange={(e) =>
-                                                    setUpdatedComment(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                value={updatedComment}
-                                            ></Textarea>
-                                            <Button
-                                                onClick={() =>
-                                                    handleUpdateComment(
-                                                        comment._id!,
-                                                        updatedComment,
-                                                    )
-                                                }
-                                            >
-                                                <LoadingIcon
-                                                    isLoading={isUpdating}
-                                                >
-                                                    Update comment
-                                                </LoadingIcon>
-                                            </Button>
-                                        </DialogContent>
-                                    </Dialog>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            ) : (
-                <div>No comments found</div>
-            )}
+                                                    <LoadingIcon
+                                                        isLoading={isUpdating}
+                                                    >
+                                                        Update comment
+                                                    </LoadingIcon>
+                                                </Button>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                ) : (
+                    <div>No comments found</div>
+                )}
+            </LoadingIcon>
         </div>
     );
 }

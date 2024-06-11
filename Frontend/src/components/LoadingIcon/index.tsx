@@ -31,7 +31,7 @@ export default function LoadingIcon({
                 size={size}
             />
 
-            <div className={`flex gap-1 ${opacity}`}>
+            <div className={`flex gap-1 ${opacity} w-full`}>
                 <p>{text}</p>
                 {children}
             </div>
