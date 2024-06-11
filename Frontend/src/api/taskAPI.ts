@@ -1,7 +1,6 @@
 import {
     IAPIResponse,
     IActivityDocument,
-    IAllTask,
     IComment,
     ITask,
     ITaskWithDetails,

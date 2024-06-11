@@ -73,8 +73,14 @@ export default function TaskForm({
             };
             if (task) {
                 setIsLoading(true);
-                const { title, dueDate, priority, assigneeIDs, description } =
-                    data;
+                const {
+                    title,
+                    dueDate,
+                    priority,
+                    assigneeIDs,
+                    description,
+                    tagIDs,
+                } = data;
                 const newTaskDetail: Partial<ITask> = {};
                 if (title !== task.title) {
                     newTaskDetail.title = title;
@@ -90,6 +96,9 @@ export default function TaskForm({
                 }
                 if (description !== task.description) {
                     newTaskDetail.description = description;
+                }
+                if (!arraysEqual(task.tagIDs, tagIDs)) {
+                    newTaskDetail.tagIDs = tagIDs;
                 }
                 const response = await taskAPI.updateTask({
                     id: task._id,
