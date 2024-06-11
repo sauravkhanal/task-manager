@@ -98,8 +98,7 @@ export default function TaskActivities({
                             {FormatDate(createdAt)}
                         </div>
                     );
-                }
-                if (isPriority) {
+                } else if (isPriority) {
                     return (
                         <div>
                             {<FormatUsername username={username} />} changed the
@@ -108,6 +107,15 @@ export default function TaskActivities({
                                 {to}
                             </Badge>
                             &nbsp;
+                            {FormatDate(createdAt)}
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div>
+                            {<FormatUsername username={username} />} updated
+                            the&nbsp;
+                            {updatedFields[0]}&nbsp;
                             {FormatDate(createdAt)}
                         </div>
                     );

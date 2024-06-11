@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { priority } from "@/utils/constants";
 import { Button } from "../ui/button";
-import { ITaskWithDetails, TaskPriority } from "@/types";
+import { ITask, ITaskWithDetails, TaskPriority } from "@/types";
 import { useForm } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
 import taskAPI from "@/api/taskAPI";
@@ -64,24 +64,48 @@ export default function TaskForm({
         },
 
         updateTask: async (data: ITaskWithDetails) => {
-            setIsLoading(true);
-            const response = await taskAPI.updateTask({
-                id: task?._id ?? "",
-                taskDetails: data,
-            });
-            if (response.success) {
-                toast.success(response.message);
-                resetForm();
-                refreshData({
-                    tasks: true,
-                    tasksAssignedByMe: true,
-                    tasksAssignedToMe: true,
+            const arraysEqual = (arr1: any[], arr2: any[]): boolean => {
+                if (arr1.length !== arr2.length) return false;
+                for (let i = 0; i < arr1.length; i++) {
+                    if (arr1[i] !== arr2[i]) return false;
+                }
+                return true;
+            };
+            if (task) {
+                setIsLoading(true);
+                const { title, dueDate, priority, assigneeIDs, description } =
+                    data;
+                const newTaskDetail: Partial<ITask> = {};
+                console.log(assigneeIDs);
+                console.log(task.assigneeIDs);
+                if (title !== task.title) newTaskDetail.title = title;
+                if (dueDate !== task.dueDate) newTaskDetail.dueDate = dueDate;
+                if (priority !== task.priority)
+                    newTaskDetail.priority = priority;
+                if (!arraysEqual(task.assigneeIDs, assigneeIDs))
+                    newTaskDetail.assigneeIDs = assigneeIDs;
+                if (description !== task.description)
+                    newTaskDetail.description = description;
+
+                const response = await taskAPI.updateTask({
+                    id: task._id,
+                    taskDetails: newTaskDetail,
                 });
-                hideModal();
-            } else {
-                toast.error(response.message);
+
+                if (response.success) {
+                    toast.success(response.message);
+                    resetForm();
+                    refreshData({
+                        tasks: true,
+                        tasksAssignedByMe: true,
+                        tasksAssignedToMe: true,
+                    });
+                    hideModal();
+                } else {
+                    toast.error(response.message);
+                }
+                setIsLoading(false);
             }
-            setIsLoading(false);
         },
     };
 
