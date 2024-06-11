@@ -57,6 +57,29 @@ const userAPI = {
             return error.response.data as IAPIResponse<Partial<unknown>>;
         }
     },
+
+    async sendPasswordResetRequest(usernameOrEmail: string) {
+        try {
+            const response = await axiosInstance.post(
+                `/auth/forgot-password/${usernameOrEmail}`,
+            );
+            return response.data as IAPIResponse<unknown>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<Partial<unknown>>;
+        }
+    },
+
+    async resetPassword(data: { resetToken: string; newPassword: string }) {
+        try {
+            const response = await axiosInstance.patch(
+                `/auth/reset-password`,
+                data,
+            );
+            return response.data as IAPIResponse<unknown>;
+        } catch (error: any) {
+            return error.response.data as IAPIResponse<Partial<unknown>>;
+        }
+    },
 };
 
 export default userAPI;
