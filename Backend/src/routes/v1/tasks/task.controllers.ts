@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import ITask from "./types";
+import ITask, { ITaskWithDetails } from "./types";
 import { IAccessToken } from "../../../types";
 import taskServices from "./task.services";
 import CustomError from "../../../utils/CustomError";
@@ -8,6 +8,8 @@ import { successResponse } from "../../../utils/ApiResponse";
 import { WorkflowStage } from "../workflowStage/types";
 import { IComment } from "../comments/types";
 import mongoose from "mongoose";
+import { sendTaskCreatedMail } from "../../../utils/mail";
+import userServices from "../users/user.services";
 
 const taskControllers = {
     async createTask(req: Request<unknown, unknown, ITask, unknown>, res: Response, next: NextFunction) {
@@ -27,7 +29,11 @@ const taskControllers = {
                 },
                 token.username,
             );
-            if (result) return successResponse(res, 200, messages.success("created"), result);
+            if (result) {
+                const userEmails = await userServices.getUserEmailsByIDs(result.assigneeIDs as unknown as string[]);
+                sendTaskCreatedMail(result as ITaskWithDetails, userEmails);
+                return successResponse(res, 200, messages.success("created"), result);
+            }
             throw new CustomError(500, messages.failure("creating"));
         } catch (error) {
             next(error);

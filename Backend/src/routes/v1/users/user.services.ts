@@ -79,6 +79,10 @@ const userServices = {
         const user = await userRepository.verifyUser(_id, email);
         if (!user) throw new CustomError(404, messages.user[404]);
     },
+
+    getUserEmailsByIDs(IDs: string[]) {
+        return userRepository.getUserEmailsByIDs(IDs);
+    },
 };
 
 export default userServices;

@@ -58,6 +58,12 @@ const userRepository = {
             password: false,
         });
     },
+
+    async getUserEmailsByIDs(IDs: string[]): Promise<string[]> {
+        const users = await UserModel.find({ _id: { $in: IDs } });
+        const emails = users.map((user) => user.email);
+        return emails;
+    },
 };
 
 export default userRepository;
