@@ -33,10 +33,13 @@ export default function BulkSelectActions({
     const { refreshData } = useDataContext();
     async function handleDelete() {
         setIsLoading(true);
-        console.log(selectedIDs);
         const response = await taskAPI.bulkDelete(selectedIDs);
         if (response.success) {
-            refreshData({ tasks: true });
+            refreshData({
+                tasks: true,
+                tasksAssignedByMe: true,
+                tasksAssignedToMe: true,
+            });
             clearSelections && clearSelections();
             toast.success(response.message);
         } else {
