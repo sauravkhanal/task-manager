@@ -1,4 +1,4 @@
-import { IComment } from "@/types";
+import { IComment, ITaskWithDetails } from "@/types";
 import { format, formatDistanceToNow } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -25,12 +25,13 @@ import { Edit } from "lucide-react";
 import LoadingIcon from "@/components/LoadingIcon";
 import DeleteAlertDialog from "@/components/DeleteAlertDialog";
 import { AuthContext } from "@/context/authContext";
+import useDataContext from "@/context/dataContext";
 
 export default function Comments({
-    taskID,
+    task,
     setLengths,
 }: {
-    taskID: string;
+    task: ITaskWithDetails;
     setLengths: React.Dispatch<
         React.SetStateAction<{
             activity: number;
@@ -50,17 +51,20 @@ export default function Comments({
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     const authContext = useContext(AuthContext);
+    const dataContext = useDataContext();
 
     async function fetchDetails() {
         try {
             setIsLoading(true);
-            const response = await taskAPI.getAllComments(taskID);
+            const response = await taskAPI.getAllComments(task._id);
             if (response.success) {
                 const comments = response.data as IComment[];
                 setComments(comments);
                 setLengths((prev) => {
                     return { ...prev, comments: comments.length };
                 });
+                const commentIDs = comments.map((comment) => comment._id!);
+                dataContext.updateTasksLocally({ ...task, commentIDs });
             } else {
                 console.error("Failed to fetch comments", response.message);
             }
@@ -78,7 +82,7 @@ export default function Comments({
         if (!newComment.trim()) return;
         try {
             setIsCreating(true);
-            const response = await taskAPI.createComment(taskID, description);
+            const response = await taskAPI.createComment(task._id, description);
             if (response.success) {
                 toast.success(response.message);
                 fetchDetails();
@@ -95,7 +99,7 @@ export default function Comments({
     async function handleDeleteComment(commentID: string) {
         try {
             setIsLoading(true);
-            const response = await taskAPI.deleteComment(taskID, commentID);
+            const response = await taskAPI.deleteComment(task._id, commentID);
             if (response.success) {
                 toast.success(response.message);
                 // fetchDetails();

@@ -225,6 +225,7 @@ export default function TaskView({
                             <AccordionContent>
                                 <TaskActivities
                                     taskID={task._id}
+                                    task={task}
                                     setLengths={setLengths}
                                 />
                             </AccordionContent>
@@ -240,10 +241,7 @@ export default function TaskView({
                                 </span>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <Comments
-                                    taskID={task._id}
-                                    setLengths={setLengths}
-                                />
+                                <Comments task={task} setLengths={setLengths} />
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

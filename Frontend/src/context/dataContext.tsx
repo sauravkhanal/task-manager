@@ -153,7 +153,7 @@ function useDataFetching() {
         }
     }
 
-    function updateTasksLocally(newTaskDetail: ITaskWithDetails) {
+    function updateTasksLocally(newTaskDetail: Partial<ITaskWithDetails>) {
         localStorage.setItem(
             "previousState",
             JSON.stringify({
@@ -173,13 +173,14 @@ function useDataFetching() {
 
         function updateGroupedTask(
             groupedTask: ITasksGroupedByWorkFlowStage,
-            newTaskDetail: ITaskWithDetails,
+            newTaskDetail: Partial<ITaskWithDetails>,
         ): ITasksGroupedByWorkFlowStage {
             const updatedTaskGroup: ITasksGroupedByWorkFlowStage = {
                 ...emptyGroupedData,
             };
 
             let taskPresent = false;
+            let foundTask: ITaskWithDetails;
             Object.keys(emptyGroupedData).forEach((stage) => {
                 // Filter the current stage to remove the task
                 updatedTaskGroup[stage as WorkflowStage] = (
@@ -188,6 +189,7 @@ function useDataFetching() {
                     if (task._id !== newTaskDetail._id) return true;
                     else {
                         taskPresent = true;
+                        foundTask = { ...task };
                         return false;
                     }
                 });
@@ -195,9 +197,10 @@ function useDataFetching() {
 
             // Add the new task to it's corresponding stage
             if (taskPresent) {
-                updatedTaskGroup[newTaskDetail.workflowStage].push(
-                    newTaskDetail,
-                );
+                updatedTaskGroup[newTaskDetail.workflowStage!].push({
+                    ...foundTask!,
+                    ...newTaskDetail,
+                });
             }
 
             return updatedTaskGroup;
