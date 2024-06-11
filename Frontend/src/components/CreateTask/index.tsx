@@ -67,7 +67,7 @@ export default function TaskForm({
             const arraysEqual = (arr1: any[], arr2: any[]): boolean => {
                 if (arr1.length !== arr2.length) return false;
                 for (let i = 0; i < arr1.length; i++) {
-                    if (arr1[i] !== arr2[i]) return false;
+                    if (!arr2.includes(arr1[i])) return false;
                 }
                 return true;
             };
@@ -76,17 +76,21 @@ export default function TaskForm({
                 const { title, dueDate, priority, assigneeIDs, description } =
                     data;
                 const newTaskDetail: Partial<ITask> = {};
-                console.log(assigneeIDs);
-                console.log(task.assigneeIDs);
-                if (title !== task.title) newTaskDetail.title = title;
-                if (dueDate !== task.dueDate) newTaskDetail.dueDate = dueDate;
-                if (priority !== task.priority)
+                if (title !== task.title) {
+                    newTaskDetail.title = title;
+                }
+                if (dueDate !== task.dueDate) {
+                    newTaskDetail.dueDate = dueDate;
+                }
+                if (priority !== task.priority) {
                     newTaskDetail.priority = priority;
-                if (!arraysEqual(task.assigneeIDs, assigneeIDs))
+                }
+                if (!arraysEqual(task.assigneeIDs, assigneeIDs)) {
                     newTaskDetail.assigneeIDs = assigneeIDs;
-                if (description !== task.description)
+                }
+                if (description !== task.description) {
                     newTaskDetail.description = description;
-
+                }
                 const response = await taskAPI.updateTask({
                     id: task._id,
                     taskDetails: newTaskDetail,
