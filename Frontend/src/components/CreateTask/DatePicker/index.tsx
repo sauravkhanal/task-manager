@@ -9,17 +9,17 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue } from "react-hook-form";
 import { ITaskWithDetails } from "@/types";
 
 interface DatePickerProps {
-    getValues: UseFormGetValues<ITaskWithDetails>;
     setValue: UseFormSetValue<ITaskWithDetails>;
+    prevValue?: Date;
 }
 
-export function DatePicker({ getValues, setValue }: DatePickerProps) {
+export function DatePicker({ prevValue, setValue }: DatePickerProps) {
     const initialDate =
-        getValues("dueDate") ||
+        prevValue ||
         (() => {
             const date = new Date();
             date.setDate(date.getDate() + 1); // Set to tomorrow

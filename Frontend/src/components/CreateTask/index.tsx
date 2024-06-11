@@ -160,14 +160,14 @@ export default function TaskForm({
                                 placeholder="Priority"
                                 items={priority}
                                 setValue={setValue}
-                                getValues={getValues}
+                                prevValue={task?.priority}
                             />
                         </div>
                         <div className="grid gap-1">
                             <Label htmlFor="">Deadline</Label>
                             <DatePicker
                                 setValue={setValue}
-                                getValues={getValues}
+                                prevValue={task?.dueDate}
                             />
                         </div>
                         <div className="flex-1">

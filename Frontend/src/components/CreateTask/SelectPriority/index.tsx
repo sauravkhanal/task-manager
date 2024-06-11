@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/select";
 import { ITaskWithDetails, TaskPriority } from "@/types";
 import { useEffect } from "react";
-import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue } from "react-hook-form";
 
 export function SelectPriority({
     placeholder,
     label,
     items,
     setValue,
-    getValues,
+    prevValue,
 }: {
     placeholder: string;
     initialValue?: TaskPriority;
@@ -27,17 +27,17 @@ export function SelectPriority({
         color: string;
     }[];
     setValue: UseFormSetValue<ITaskWithDetails>;
-    getValues: UseFormGetValues<ITaskWithDetails>;
+    prevValue?: TaskPriority;
 }) {
     useEffect(() => {
-        setValue("priority", getValues("priority") || TaskPriority.LOW);
+        setValue("priority", prevValue || TaskPriority.LOW);
     }, []);
     return (
         <Select
             onValueChange={(value) => {
                 setValue("priority", value as TaskPriority);
             }}
-            defaultValue={getValues("priority") || TaskPriority.LOW}
+            defaultValue={prevValue || TaskPriority.LOW}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue
