@@ -81,3 +81,32 @@ export async function sendTaskCreatedMail(task: ITaskWithDetails, userEmails: st
         }
     });
 }
+
+export async function sendPasswordResetMail(userEmail: string, resetToken: string) {
+    const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+    const mailOptions = {
+        from: env.email,
+        to: userEmail,
+        subject: "TASK MANAGER - Password Reset Request",
+        text: `
+      Hi,
+
+      We received a request to reset your password. Please click on the link below to reset your password:
+
+      ${resetURL}
+
+      If you did not request a password reset, please ignore this email or contact support if you have questions.
+
+      Best regards,
+      The TASK-MANAGER Team
+`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("❌ Error, couldn't send password reset mail:", error.message);
+        } else {
+            console.log("✅ Password reset email sent:", info.response);
+        }
+    });
+}

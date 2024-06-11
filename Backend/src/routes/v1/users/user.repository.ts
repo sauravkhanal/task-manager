@@ -64,6 +64,10 @@ const userRepository = {
         const emails = users.map((user) => user.email);
         return emails;
     },
+
+    resetPassword(_id: string, newPassword: string): Promise<IUser | null> {
+        return UserModel.findByIdAndUpdate({ _id }, { password: newPassword }).select({ password: false });
+    },
 };
 
 export default userRepository;

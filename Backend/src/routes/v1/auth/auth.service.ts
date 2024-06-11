@@ -1,8 +1,9 @@
 import { IUserDocument } from "../../../models/userModel";
 import CustomError from "../../../utils/CustomError";
 import { messages } from "../../../utils/Messages";
-import comparePassword from "../../../utils/bcrypt";
+import comparePassword, { hashPassword } from "../../../utils/bcrypt";
 import { checkToken, signJWT } from "../../../utils/jwt";
+import { sendPasswordResetMail } from "../../../utils/mail";
 import userRepository from "../users/user.repository";
 
 const authService = {
@@ -61,6 +62,28 @@ const authService = {
             "accessToken",
         );
         return { accessToken };
+    },
+
+    async generateResetPasswordToken(emailOrUsername: string) {
+        const userDetails = await userRepository.findUserByUsernameOrEmail(emailOrUsername);
+        if (userDetails) {
+            const { _id, email, username } = userDetails;
+            const resetToken = signJWT({ _id, email, username }, "accessToken", { expiresIn: "5m" });
+            await sendPasswordResetMail(email, resetToken);
+        }
+        return;
+    },
+
+    async resetPassword(resetToken: string, newPassword: string) {
+        try {
+            const userDetails = checkToken(resetToken) as { _id: string; email: string; username: string };
+            const hashedPassword = await hashPassword(newPassword);
+            const result = await userRepository.resetPassword(userDetails._id, (newPassword = hashedPassword));
+            if (result) return true;
+            return false;
+        } catch (error) {
+            throw error;
+        }
     },
 };
 

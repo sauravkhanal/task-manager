@@ -1,5 +1,6 @@
 import env from "../../config/env";
 import { WorkflowStage } from "../../routes/v1/workflowStage/types";
+import { sendPasswordResetMail } from "../mail";
 
 export const messages = {
     user: {
@@ -26,6 +27,7 @@ export const messages = {
         token_expired: "The token has expired.",
         token_not_found: "Unauthorized user. Token not found. Please login.",
         unauthorized: "The user is not authorized.",
+        passwordResetMailSent: "Password reset request received. If the mail is valid you'll receive email shortly.",
     },
     token: {
         renew_success: "Access token renewed successfully.",
