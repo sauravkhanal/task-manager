@@ -1,6 +1,6 @@
 import { IComment } from "@/types";
 import { format, formatDistanceToNow } from "date-fns";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     HoverCard,
     HoverCardContent,
@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit } from "lucide-react";
 import LoadingIcon from "@/components/LoadingIcon";
 import DeleteAlertDialog from "@/components/DeleteAlertDialog";
+import { AuthContext } from "@/context/authContext";
 
 export default function Comments({
     taskID,
@@ -47,6 +48,8 @@ export default function Comments({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
+    const authContext = useContext(AuthContext);
 
     async function fetchDetails() {
         try {
@@ -203,68 +206,84 @@ export default function Comments({
                                         {comment.description}
                                     </div>
                                     <div className="flex mt-2 space-x-2">
-                                        <DeleteAlertDialog
-                                            onContinueAction={() =>
-                                                handleDeleteComment(
-                                                    comment._id!,
-                                                )
-                                            }
-                                            item="comment"
-                                        />
-
-                                        <Dialog
-                                            open={dialogOpen[comment._id!]}
-                                            onOpenChange={(isOpen) =>
-                                                setDialogOpen({
-                                                    ...dialogOpen,
-                                                    [comment._id!]: isOpen,
-                                                })
-                                            }
-                                        >
-                                            <DialogTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="absolute top-2 right-2"
-                                                    size="sm"
-                                                >
-                                                    <Edit className="size-4" />
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogHeader>
-                                                    <DialogTitle>
-                                                        Update comment
-                                                    </DialogTitle>
-                                                    <DialogDescription>
-                                                        Make changes to the
-                                                        comment here.
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <Textarea
-                                                    placeholder="Updated comment content"
-                                                    onChange={(e) =>
-                                                        setUpdatedComment(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    value={updatedComment}
-                                                ></Textarea>
-                                                <Button
-                                                    onClick={() =>
-                                                        handleUpdateComment(
+                                        {authContext.getUserDetails()
+                                            ?.username ===
+                                        comment.creatorUsername ? (
+                                            <>
+                                                <DeleteAlertDialog
+                                                    onContinueAction={() =>
+                                                        handleDeleteComment(
                                                             comment._id!,
-                                                            updatedComment,
                                                         )
                                                     }
+                                                    item="comment"
+                                                />
+                                                <Dialog
+                                                    open={
+                                                        dialogOpen[comment._id!]
+                                                    }
+                                                    onOpenChange={(isOpen) =>
+                                                        setDialogOpen({
+                                                            ...dialogOpen,
+                                                            [comment._id!]:
+                                                                isOpen,
+                                                        })
+                                                    }
                                                 >
-                                                    <LoadingIcon
-                                                        isLoading={isUpdating}
-                                                    >
-                                                        Update comment
-                                                    </LoadingIcon>
-                                                </Button>
-                                            </DialogContent>
-                                        </Dialog>
+                                                    <DialogTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            className="absolute top-2 right-2"
+                                                            size="sm"
+                                                        >
+                                                            <Edit className="size-4" />
+                                                        </Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent>
+                                                        <DialogHeader>
+                                                            <DialogTitle>
+                                                                Update comment
+                                                            </DialogTitle>
+                                                            <DialogDescription>
+                                                                Make changes to
+                                                                the comment
+                                                                here.
+                                                            </DialogDescription>
+                                                        </DialogHeader>
+                                                        <Textarea
+                                                            placeholder="Updated comment content"
+                                                            onChange={(e) =>
+                                                                setUpdatedComment(
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            value={
+                                                                updatedComment
+                                                            }
+                                                        ></Textarea>
+                                                        <Button
+                                                            onClick={() =>
+                                                                handleUpdateComment(
+                                                                    comment._id!,
+                                                                    updatedComment,
+                                                                )
+                                                            }
+                                                        >
+                                                            <LoadingIcon
+                                                                isLoading={
+                                                                    isUpdating
+                                                                }
+                                                            >
+                                                                Update comment
+                                                            </LoadingIcon>
+                                                        </Button>
+                                                    </DialogContent>
+                                                </Dialog>{" "}
+                                            </>
+                                        ) : (
+                                            ""
+                                        )}
                                     </div>
                                 </CardContent>
                             </Card>
