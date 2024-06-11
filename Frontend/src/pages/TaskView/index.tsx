@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import taskAPI from "@/api/taskAPI";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import UserCard from "@/components/CreateTask/SelectUser/UserCard";
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/accordion";
 import useDataContext from "@/context/dataContext";
 import Comments from "./Comments";
+import fullName from "@/utils/fullName";
+import { AuthContext } from "@/context/authContext";
 
 export default function TaskView({
     taskDetails,
@@ -57,6 +59,8 @@ export default function TaskView({
             }
         }
     };
+
+    const authContext = useContext(AuthContext);
     useEffect(() => {
         if (taskDetails) {
             setLengths({
@@ -76,7 +80,7 @@ export default function TaskView({
     } else
         return (
             <div className="w-full relative font-poppins flex flex-col gap-5 items-center max-w-3xl min-w-2xl bg-background rounded-md shadow-2xl ">
-                <div className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start ml-5">
+                <div className="w-full capitalize text-xl gap-2 font-semibold px-5 mt-4 flex items-start ml-5 pr-20">
                     <Badge variant={task.priority} className="self-center">
                         {task.priority}
                     </Badge>
@@ -92,12 +96,14 @@ export default function TaskView({
                         <RefreshCcw size={16} />
                     </Button> */}
                 </div>
-                <UpdateTaskButton
-                    taskDetails={task}
-                    variant="ghost"
-                    buttonSize={"icon"}
-                    className="absolute right-2 top-2"
-                />
+                {authContext.userDetails?._id === task.creatorID && (
+                    <UpdateTaskButton
+                        taskDetails={task}
+                        variant="ghost"
+                        buttonSize={"icon"}
+                        className="absolute right-2 top-2"
+                    />
+                )}
                 <ScrollArea className="h-[80svh] w-11/12 border p-4 rounded-sm  shadow-sm mb-6">
                     <div className="flex items-center">
                         <div className=" flex flex-wrap gap-1 grow">
@@ -116,7 +122,13 @@ export default function TaskView({
                     </div>
 
                     <div className="flex flex-col gap-5 items-start mt-5">
-                        <div className="flex items-center gap-1 font-semibold">
+                        <div>
+                            <span className="font-semibold text-sm">
+                                Created By:{" "}
+                            </span>
+                            {fullName(task.creator[0])}
+                        </div>
+                        <div className="flex items-center gap-1 font-semibold text-sm">
                             Workflow Stage&nbsp;
                             <Badge variant={task.workflowStage}>
                                 {task.workflowStage}
