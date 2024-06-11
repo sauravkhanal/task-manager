@@ -3,7 +3,6 @@ import { ILoginResponse, IUserLoginData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import userAPI from "@/api/userAPI";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
@@ -52,10 +51,11 @@ export default function Login() {
             console.log(response);
 
             if (response.success) {
-                toast(response.message.replace(/\n/g, "<br>"));
+                toast.success(response.message.replace(/\n/g, "<br>"));
                 login(response.data as ILoginResponse);
-                setTimeout(() => navigate("/"), 1500);
+                navigate("/");
             } else {
+                toast.error(response.message.replace(/\n/g, "<br>"));
                 for (let key in response.data) {
                     setError(
                         key as keyof IUserLoginData,
@@ -155,8 +155,16 @@ export default function Login() {
                 >
                     <LoadingIcon isLoading={isLoading}>Login</LoadingIcon>
                 </Button>
+                <Link
+                    to={"/forgot-password"}
+                    className="text-sm absolute top-20 right-8"
+                >
+                    <p>
+                        Forgot password?&nbsp;
+                        <span className="underline">Reset here</span>
+                    </p>
+                </Link>
             </form>
-            <Toaster />
         </div>
     );
 }

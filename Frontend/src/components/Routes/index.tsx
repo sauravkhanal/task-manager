@@ -9,6 +9,8 @@ import TasksAssignedToMe from "@/pages/TasksAssignedToMe";
 import TasksAssignedByMe from "@/pages/TasksAssignedByMe";
 import TaskView from "@/pages/TaskView";
 import AllTasks from "@/pages/AllTasks";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
 
 type TRouteProps = {
     isLoggedIn: boolean;
@@ -43,6 +45,11 @@ export default function MyRoutes() {
             <Route element={<PreventedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                    path="/reset-password/:resetToken"
+                    element={<ResetPassword />}
+                />
             </Route>
             <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/all-tasks" element={<AllTasks />} />

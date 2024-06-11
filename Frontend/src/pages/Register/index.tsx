@@ -3,7 +3,6 @@ import { IUserRegisterData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import userAPI from "@/api/userAPI";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -226,8 +225,16 @@ export default function Register() {
                 >
                     <LoadingIcon isLoading={isLoading}>Register</LoadingIcon>
                 </Button>
+                <Link
+                    to={"/forgot-password"}
+                    className="text-sm absolute top-20 right-8"
+                >
+                    <p>
+                        Forgot password?&nbsp;
+                        <span className="underline">Reset here</span>
+                    </p>
+                </Link>
             </form>
-            <Toaster />
         </div>
     );
 }
