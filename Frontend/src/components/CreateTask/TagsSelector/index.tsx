@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { ITag, ITaskWithDetails } from "@/types";
-import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import {
+    UseFormGetValues,
+    UseFormSetValue,
+    useFormContext,
+} from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { TagCreator } from "../TagCreator";
 import { Badge } from "@/components/ui/badge";
@@ -26,15 +30,14 @@ interface ComboBoxProps {
     setValue: UseFormSetValue<ITaskWithDetails>;
 }
 
-export default function TagsSelector({
-    availableTags,
-    prevTags,
-    setValue,
-}: ComboBoxProps) {
+export default function TagsSelector({ availableTags }: ComboBoxProps) {
     const [open, setOpen] = useState(false);
-    const [selectedTags, setSelectedTags] = useState<ITag[] | undefined>(
-        prevTags,
-    );
+    useEffect(() => {
+        setSelectedTags(fromMethods.getValues("tags"));
+    }, []);
+    const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
+
+    const fromMethods = useFormContext<ITaskWithDetails>();
 
     const toggleStatus = (tag: ITag) => {
         setSelectedTags((prevSelected) => {
@@ -47,7 +50,10 @@ export default function TagsSelector({
     };
 
     useEffect(() => {
-        setValue("tagIDs", selectedTags?.map((tag) => tag._id) || []);
+        fromMethods.setValue(
+            "tagIDs",
+            selectedTags?.map((tag) => tag._id) || [],
+        );
     }, [selectedTags]);
 
     return (

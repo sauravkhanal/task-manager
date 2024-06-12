@@ -8,47 +8,45 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ITaskWithDetails, TaskPriority } from "@/types";
-import { useEffect } from "react";
-import { UseFormSetValue } from "react-hook-form";
+import { ITask, TaskPriority } from "@/types";
+import { useFormContext } from "react-hook-form";
 
-export function SelectPriority({
-    placeholder,
-    label,
-    items,
-    setValue,
-    prevValue,
-}: {
-    placeholder: string;
-    initialValue?: TaskPriority;
-    label: string;
-    items: {
-        title: TaskPriority;
-        color: string;
-    }[];
-    setValue: UseFormSetValue<ITaskWithDetails>;
-    prevValue?: TaskPriority;
-}) {
-    useEffect(() => {
-        setValue("priority", prevValue || TaskPriority.LOW);
-    }, []);
+export const priority: { title: TaskPriority; _id: string; color: string }[] = [
+    {
+        title: TaskPriority.LOW,
+        _id: "LOW_ID",
+        color: "#016e2d",
+    },
+    {
+        title: TaskPriority.MED,
+        color: "#FFD700",
+        _id: "MED_ID",
+    },
+    {
+        title: TaskPriority.HIGH,
+        color: "#fa1302",
+        _id: "HIGH_ID",
+    },
+];
+export function SelectPriority() {
+    const formMethods = useFormContext<ITask>();
     return (
         <Select
             onValueChange={(value) => {
-                setValue("priority", value as TaskPriority);
+                formMethods.setValue("priority", value as TaskPriority);
             }}
-            defaultValue={prevValue || TaskPriority.LOW}
+            defaultValue={formMethods.getValues("priority") || TaskPriority.LOW}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue
-                    placeholder={placeholder}
+                    placeholder={"Select Priority"}
                     className="font-semibold"
                 />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectLabel>{label}</SelectLabel>
-                    {items.map((item) => (
+                    <SelectLabel>Priority</SelectLabel>
+                    {priority.map((item) => (
                         <SelectItem value={item.title} key={item.title}>
                             <Badge variant={item.title}>{item.title}</Badge>
                         </SelectItem>

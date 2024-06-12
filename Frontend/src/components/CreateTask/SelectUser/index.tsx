@@ -1,4 +1,4 @@
-import { CheckCircle, Circle, Plus, SquarePlus } from "lucide-react";
+import { CheckCircle, Circle, Plus } from "lucide-react";
 import {
     Command,
     CommandEmpty,
@@ -15,30 +15,21 @@ import {
 import { useEffect, useState } from "react";
 import { ITaskWithDetails, IUserDetails } from "@/types";
 import UserCard from "./UserCard";
-import { UseFormSetValue } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import fullName from "@/utils/fullName";
 
-interface SelectUserProps {
-    prevUsers: IUserDetails[];
-    setValue: UseFormSetValue<ITaskWithDetails>;
-}
-
-export function SelectUser({ prevUsers, setValue }: SelectUserProps) {
+export function SelectUser() {
+    const { setValue, getValues } = useFormContext<ITaskWithDetails>();
     const [open, setOpen] = useState(false);
-    const [selectedUsers, setSelectedUsers] =
-        useState<IUserDetails[]>(prevUsers);
-    const context = useDataContext();
-    const availableUsers = context.allUserDetails;
-
+    const [selectedUsers, setSelectedUsers] = useState<IUserDetails[]>([]);
+    const dataContext = useDataContext();
+    const availableUsers = dataContext.allUserDetails;
     useEffect(() => {
-        setValue(
-            "assigneeIDs",
-            prevUsers.map((user) => user._id),
-        );
-    }, [prevUsers, setValue]);
+        if (getValues("assignees")) setSelectedUsers(getValues("assignees"));
+    }, []);
 
     const toggleStatus = (user: IUserDetails) => {
         const updatedSelectedUsers = selectedUsers.some(

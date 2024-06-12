@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { priority } from "@/utils/constants";
 import { Button } from "../ui/button";
 import { ITask, ITaskWithDetails, TaskPriority } from "@/types";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import useDataContext from "@/context/dataContext";
 import taskAPI from "@/api/taskAPI";
 import { toast } from "sonner";
@@ -24,15 +24,20 @@ export default function TaskForm({
     task?: ITaskWithDetails;
     mode: "create" | "update";
 }) {
+    const methods = useForm<ITaskWithDetails>({
+        defaultValues: {
+            ...task,
+        },
+    });
     const {
         register,
-        handleSubmit,
+        setError,
         setValue,
         getValues,
-        formState: { errors },
-        setError,
+        handleSubmit,
         reset,
-    } = useForm<ITaskWithDetails>();
+        formState: { errors },
+    } = methods;
 
     const onSubmit = async (data: ITaskWithDetails) => {
         if (mode === "update") {
@@ -160,79 +165,69 @@ export default function TaskForm({
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col gap-5 w-full justify-center"
-                >
-                    <div>
-                        <Label htmlFor="title">Title</Label>
-                        <Input
-                            id="title"
-                            type="text"
-                            placeholder="Title for the task"
-                            defaultValue={task?.title}
-                            {...register("title", {
-                                required: "Title is required",
-                            })}
-                        />
-                        {errors.title && (
-                            <p className="text-red-600 text-sm">
-                                {errors.title.message}
-                            </p>
-                        )}
-                    </div>
-                    <div>
-                        <Label htmlFor="">Add users</Label>
-                        <SelectUser
-                            prevUsers={task?.assignees || []}
-                            setValue={setValue}
-                        />
-                    </div>
+                <FormProvider {...methods}>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="flex flex-col gap-5 w-full justify-center"
+                    >
+                        <div>
+                            <Label htmlFor="title">Title</Label>
+                            <Input
+                                id="title"
+                                type="text"
+                                placeholder="Title for the task"
+                                {...register("title", {
+                                    required: "Title is required",
+                                })}
+                            />
+                            {errors.title && (
+                                <p className="text-red-600 text-sm">
+                                    {errors.title.message}
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <Label htmlFor="">Add users</Label>
+                            <SelectUser />
+                        </div>
 
-                    <div className="flex gap-2 items-end">
-                        <div className="">
-                            <Label htmlFor="priority">Task Priority</Label>
-                            <SelectPriority
-                                label="Select Priority"
-                                placeholder="Priority"
-                                items={priority}
-                                setValue={setValue}
-                                prevValue={task?.priority}
+                        <div className="flex gap-2 items-end">
+                            <div className="">
+                                <Label htmlFor="priority">Task Priority</Label>
+                                <SelectPriority />
+                            </div>
+                            <div className="grid gap-1">
+                                <Label htmlFor="">Deadline</Label>
+                                <DatePicker />
+                            </div>
+                            <div className="flex-1">
+                                <Label htmlFor="">Tags</Label>
+                                <TagsSelector
+                                    availableTags={tags}
+                                    prevTags={task?.tags || []}
+                                    getValues={getValues}
+                                    setValue={setValue}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea
+                                id="description"
+                                placeholder="Description of the task goes here."
+                                {...register("description")}
                             />
                         </div>
-                        <div className="grid gap-1">
-                            <Label htmlFor="">Deadline</Label>
-                            <DatePicker
-                                setValue={setValue}
-                                prevValue={task?.dueDate}
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <Label htmlFor="">Tags</Label>
-                            <TagsSelector
-                                availableTags={tags}
-                                prevTags={task?.tags || []}
-                                getValues={getValues}
-                                setValue={setValue}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                            id="description"
-                            placeholder="Description of the task goes here."
-                            defaultValue={task?.description}
-                            {...register("description")}
-                        />
-                    </div>
 
-                    <Button type="submit" disabled={isLoading}>
-                        <LoadingIcon isLoading={isLoading}>
-                            {mode === "update" ? "Update Task" : "Create Task"}
-                        </LoadingIcon>
-                    </Button>
-                </form>
+                        <Button type="submit" disabled={isLoading}>
+                            <LoadingIcon isLoading={isLoading}>
+                                {mode === "update"
+                                    ? "Update Task"
+                                    : "Create Task"}
+                            </LoadingIcon>
+                        </Button>
+                    </form>
+                </FormProvider>
             </CardContent>
         </Card>
     );

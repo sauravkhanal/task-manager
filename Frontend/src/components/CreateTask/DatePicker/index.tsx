@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { format } from "date-fns";
 import { LuCalendarPlus as CalendarIcon } from "react-icons/lu";
 import { cn } from "@/lib/utils";
@@ -9,31 +9,23 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { UseFormSetValue } from "react-hook-form";
-import { ITaskWithDetails } from "@/types";
+import { useFormContext } from "react-hook-form";
+import { ITask } from "@/types";
 
-interface DatePickerProps {
-    setValue: UseFormSetValue<ITaskWithDetails>;
-    prevValue?: Date;
-}
-
-export function DatePicker({ prevValue, setValue }: DatePickerProps) {
-    const initialDate =
-        prevValue ||
-        (() => {
-            const date = new Date();
-            date.setDate(date.getDate() + 1); // Set to tomorrow
-            date.setHours(17, 0, 0, 0); // Set time to 5 PM
-            return date;
-        })();
-    const [date, setDate] = useState<Date | null>(initialDate);
+export function DatePicker() {
+    const { setValue, getValues, watch } = useFormContext<ITask>();
+    const date = watch("dueDate");
     useEffect(() => {
-        setValue("dueDate", initialDate);
-    });
+        if (!getValues("dueDate")) {
+            const date = new Date();
+            date.setDate(date.getDate() + 1);
+            date.setHours(17, 0, 0, 0);
+            setValue("dueDate", date);
+        }
+    }, []);
 
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {
-            setDate(selectedDate);
             setValue("dueDate", selectedDate);
         }
     };
