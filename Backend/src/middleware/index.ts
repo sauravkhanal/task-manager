@@ -5,9 +5,12 @@ import cors from "cors";
 
 const middleware = express();
 
+// Split the CORS origins string into an array
+const origins = process.env.CORS_ORIGINS?.split(",");
+
 middleware.use(
     cors({
-        origin: ["http://localhost:5173", "https://crispy-space-pancake-gwqxvg557p72v675-5173.app.github.dev"],
+        origin: origins,
         credentials: true,
     }),
 );

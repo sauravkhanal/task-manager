@@ -4,14 +4,7 @@ import { Button } from "../ui/button";
 import { List, Menu, UserCheck, UserRoundSearch } from "lucide-react";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 function NavLink({
     to,
