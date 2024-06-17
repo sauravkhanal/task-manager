@@ -20,11 +20,11 @@ jobs:
 
             - name: Copy backend files to VM
               run: |
-                  scp -o StrictHostKeyChecking=no -r ./backend/* ubuntu@141.148.202.130:/var/www/taskmanager-backend/
+                  scp -o StrictHostKeyChecking=no -r ./Backend/* ubuntu@141.148.202.130:/var/www/taskmanager-backend/
 
             - name: Copy frontend build files to VM
               run: |
-                  scp -o StrictHostKeyChecking=no -r ./frontend/build/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
+                  scp -o StrictHostKeyChecking=no -r ./Frontend/build/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
 
             - name: Build and run Docker containers
               env:
