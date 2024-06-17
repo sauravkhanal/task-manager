@@ -24,7 +24,7 @@ jobs:
 
             - name: Copy frontend build files to VM
               run: |
-                  scp -o StrictHostKeyChecking=no -r ./Frontend/build/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
+                  scp -o StrictHostKeyChecking=no -r ./Frontend/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
 
             - name: Build and run Docker containers
               env:
