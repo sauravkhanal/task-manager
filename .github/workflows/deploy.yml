@@ -12,69 +12,24 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - name: Echo secret variables
-              run: |
-                  echo "PORT=${{ secrets.PORT }}" >> port.txt
-                  echo "CORS=${{ secrets.CORS }}" >> cors.txt
-                  echo "ENDPOINT=${{ secrets.ENDPOINT }}" >> endpoint.txt
-                  echo "PUBLIC_STORAGE=${{ secrets.PUBLIC_STORAGE }}" >> public_storage.txt
-                  echo "MONGO_DB_URI=${{ secrets.MONGO_DB_URI }}" >> mongo_db_uri.txt
-                  echo "DB_NAME=${{ secrets.DB_NAME }}" >> db_name.txt
-                  echo "EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }}" >> email_username.txt
-                  echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> email_password.txt
-                  echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> cors_origins.txt
-
-            - name: Copy secret variable files to server
-              run: |
-                  scp -o StrictHostKeyChecking=no \
-                    port.txt cors.txt endpoint.txt public_storage.txt \
-                    mongo_db_uri.txt db_name.txt email_username.txt \
-                    email_password.txt cors_origins.txt \
-                    ubuntu@141.148.202.130:/var/www/taskmanager-backend/
-
             - name: Set up SSH
               uses: webfactory/ssh-agent@v0.5.3
               with:
                   ssh-private-key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
 
-            - name: Copy files and save environment variables
-              run: |
-                  echo "Copying backend files to VM..."
-                  scp -o StrictHostKeyChecking=no -r ./Backend/* ubuntu@141.148.202.130:/var/www/taskmanager-backend/
-
-                  echo "Copying frontend build files to VM..."
-                  scp -o StrictHostKeyChecking=no -r ./Frontend/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
-
-                  echo "Saving environment variables to file..."
-                  echo "Environment variables:" > githubvariables.txt
-                  env >> githubvariables.txt
-
-                  echo "Copying environment variables file to VM..."
-                  scp -o StrictHostKeyChecking=no githubvariables.txt ubuntu@141.148.202.130:/var/www/taskmanager-backend/githubvariables.txt
-
-            - name: Build and run frontend Docker container
-              run: |
-                  echo "Building and running frontend Docker container..."
-                  ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
-                    cd /var/www/taskmanager-frontend
-                    docker build -t frontend:latest .
-                    docker stop frontend || true
-                    docker rm frontend || true
-                    docker run --restart unless-stopped -d --name frontend -p 3000:80 frontend:latest
-                    sudo systemctl restart nginx
-                  EOF
+            # - name: Build and run frontend Docker container
+            #   run: |
+            #       echo "Building and running frontend Docker container..."
+            #       ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
+            #         cd /var/www/taskmanager-frontend
+            #         docker build -t frontend:latest .
+            #         docker stop frontend || true
+            #         docker rm frontend || true
+            #         docker run --restart unless-stopped -d --name frontend -p 3000:80 frontend:latest
+            #         sudo systemctl restart nginx
+            #       EOF
 
             - name: Build and run backend Docker container
-              env:
-                  PORT: ${{ secrets.PORT }}
-                  CORS: ${{ secrets.CORS }}
-                  ENDPOINT: ${{ secrets.ENDPOINT }}
-                  PUBLIC_STORAGE: ${{ secrets.PUBLIC_STORAGE }}
-                  MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
-                  DB_NAME: ${{ secrets.DB_NAME }}
-                  EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-                  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-                  CORS_ORIGINS: ${{ secrets.CORS_ORIGINS }}
               run: |
                   echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
@@ -82,15 +37,18 @@ jobs:
                     docker build -t backend:latest .
                     docker stop backend || true
                     docker rm backend || true
+                    echo uluulu
+                    echo ${{secrets.PORT}}
+                    echo uluulu
                     docker run -d --restart unless-stopped --name backend -p 8000:8000 \
-                      -e PORT=${PORT} \
-                      -e CORS=${CORS} \
-                      -e ENDPOINT=${ENDPOINT} \
-                      -e PUBLIC_STORAGE=${PUBLIC_STORAGE} \
-                      -e MONGO_DB_URI=${MONGO_DB_URI} \
-                      -e DB_NAME=${DB_NAME} \
-                      -e EMAIL_USERNAME=${EMAIL_USERNAME} \
-                      -e EMAIL_PASSWORD=${EMAIL_PASSWORD} \
-                      -e CORS_ORIGINS=${CORS_ORIGINS} \
+                      -e PORT=${{ secrets.PORT }} \
+                      -e CORS=${{secrets.CORS}} \
+                      -e ENDPOINT=${{secrets.ENDPOINT}} \
+                      -e PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}} \
+                      -e MONGO_DB_URI=${{secrets.MONGO_DB_URI}} \
+                      -e DB_NAME=${{secrets.DB_NAME}} \
+                      -e EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}} \
+                      -e EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}} \
+                      -e CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
                       backend:latest
                   EOF
