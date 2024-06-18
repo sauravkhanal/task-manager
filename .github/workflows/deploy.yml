@@ -29,6 +29,16 @@ jobs:
               run: |
                   scp -o StrictHostKeyChecking=no -r ./Frontend/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
 
+            - name: Echo all environment variables
+              run: |
+                  echo "Environment variables:"
+                  env > env.txt
+                  echo "GitHub Secrets:"
+                  echo "PORT=${{ secrets.PORT }}" >> env.txt
+                  echo "CORS=${{ secrets.CORS }}" >> env.txt
+                  echo "ENDPOINT=${{ secrets.ENDPOINT }}" >> env.txt
+                  echo "mongo ENDPOINT=${{ secrets.MONGO_DB_URI }}" >> env.txt
+
             - name: Build and run backend Docker container
               env:
                   PORT: ${{ secrets.PORT }}
@@ -41,6 +51,8 @@ jobs:
                   EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
                   CORS_ORIGINS: ${{ secrets.CORS_ORIGINS }}
               run: |
+                  echo "ENDPOINT=${ENDPOINT}" >> env-variables.txt
+                  # Repeat for other variables
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-backend
                   docker build -t backend:latest .
@@ -50,13 +62,25 @@ jobs:
                     -e PORT=${PORT} \
                     -e CORS=${CORS} \
                     -e ENDPOINT=${ENDPOINT} \
-                    -e PUBLIC_STORAGE=${PUBLIC_STORAGE} \
-                    -e MONGO_DB_URI=${MONGO_DB_URI} \
-                    -e DB_NAME=${DB_NAME} \
-                    -e EMAIL_USERNAME=${EMAIL_USERNAME} \
-                    -e EMAIL_PASSWORD=${EMAIL_PASSWORD} \
-                    -e CORS_ORIGINS=${CORS_ORIGINS} \
+                    # Repeat for other variables
                     backend:latest
+
+                    ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
+                    cd /var/www/taskmanager-backend
+                    docker build -t backend:latest .
+                    docker stop backend || true
+                    docker rm backend || true
+                    docker run -d --restart unless-stopped --name backend -p 8000:8000 \
+                      -e PORT=${PORT} \
+                      -e CORS=${CORS} \
+                      -e ENDPOINT=${ENDPOINT} \
+                      -e PUBLIC_STORAGE=${PUBLIC_STORAGE} \
+                      -e MONGO_DB_URI=${MONGO_DB_URI} \
+                      -e DB_NAME=${DB_NAME} \
+                      -e EMAIL_USERNAME=${EMAIL_USERNAME} \
+                      -e EMAIL_PASSWORD=${EMAIL_PASSWORD} \
+                      -e CORS_ORIGINS=${CORS_ORIGINS} \
+                      backend:latest
 
             - name: Build and run frontend Docker container
               run: |
