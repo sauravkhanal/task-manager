@@ -35,8 +35,8 @@ jobs:
                   docker stop backend || true
                   docker rm backend || true
                   export PORT=${{secrets.PORT}}
-                  export CORS=${{secrets.CORS}}
-                  export ENDPOINT=${{secrets.ENDPOINT}}
+                  export FRONTEND_ENDPOINT=${{secrets.FRONTEND_ENDPOINT}}
+                  export BACKEND_ENDPOINT=${{secrets.BACKEND_ENDPOINT}}
                   export PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}}
                   export MONGO_DB_URI=${{secrets.MONGO_DB_URI}}
                   export DB_NAME=${{secrets.DB_NAME}}
@@ -45,8 +45,8 @@ jobs:
                   export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
                   docker run -d --restart unless-stopped --name backend -p 8000:8000 \
                       -e PORT=$PORT \
-                      -e CORS=$CORS \
-                      -e ENDPOINT=$ENDPOINT \
+                      -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
+                      -e BACKEND_ENDPOINT=$BACKNEND_ENDPOINT \
                       -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
                       -e MONGO_DB_URI=$MONGO_DB_URI \
                       -e DB_NAME=$DB_NAME \

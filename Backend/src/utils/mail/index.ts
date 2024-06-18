@@ -27,9 +27,9 @@ export default async function sendMail(recipient: string, OTP: number) {
 
         You can enter this OTP in the app or use the following links to verify your account:
 
-        http://localhost:5173/verify/${OTP}
+        ${env.frontendEndpoint}/verify/${OTP}
         or
-        ${env.endpoint}/v1/auth/verify/${OTP}
+        ${env.backendEndpoint}/v1/auth/verify/${OTP}
 
         If you did not create an account with TASK-MANAGER, please disregard this email.
 
