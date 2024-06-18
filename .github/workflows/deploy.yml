@@ -8,61 +8,50 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
         steps:
             - name: Checkout code
               uses: actions/checkout@v3
-
-            - name: Set up Docker
-              uses: docker/setup-buildx-action@v1
 
             - name: Set up SSH
               uses: webfactory/ssh-agent@v0.5.3
               with:
                   ssh-private-key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
 
-            - name: Copy backend files to VM
+            - name: Copy deployment scripts
               run: |
-                  scp -o StrictHostKeyChecking=no -r ./Backend/* ubuntu@141.148.202.130:/var/www/taskmanager-backend/
+                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-frontend.sh ubuntu@141.148.202.130:/tmp/
+                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-backend.sh ubuntu@141.148.202.130:/tmp/
 
-            - name: Copy frontend build files to VM
+            - name: Run frontend deployment script
               run: |
-                  scp -o StrictHostKeyChecking=no -r ./Frontend/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
+                  ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 "chmod +x /tmp/dockerize-frontend.sh && /tmp/dockerize-frontend.sh"
 
-            - name: Build and run Docker containers
-              env:
-                  PORT: ${{ secrets.PORT }}
-                  CORS: ${{ secrets.CORS }}
-                  ENDPOINT: ${{ secrets.ENDPOINT }}
-                  PUBLIC_STORAGE: ${{ secrets.PUBLIC_STORAGE }}
-                  MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
-                  DB_NAME: ${{ secrets.DB_NAME }}
-                  EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-                  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-                  CORS_ORIGINS: ${{ secrets.CORS_ORIGINS }}
+            - name: Build and run backend Docker container
               run: |
+                  echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-backend
                   docker build -t backend:latest .
                   docker stop backend || true
                   docker rm backend || true
-                  docker run -d --name backend -p 8000:8000 \
-                    -e PORT=${PORT} \
-                    -e CORS=${CORS} \
-                    -e ENDPOINT=${ENDPOINT} \
-                    -e PUBLIC_STORAGE=${PUBLIC_STORAGE} \
-                    -e MONGO_DB_URI=${MONGO_DB_URI} \
-                    -e DB_NAME=${DB_NAME} \
-                    -e EMAIL_USERNAME=${EMAIL_USERNAME} \
-                    -e EMAIL_PASSWORD=${EMAIL_PASSWORD} \
-                    -e CORS_ORIGINS=${CORS_ORIGINS} \
-                    backend:latest
-
-                  cd /var/www/taskmanager-frontend
-                  docker build -t frontend:latest .
-                  docker stop frontend || true
-                  docker rm frontend || true
-                  docker run -d --name frontend -p 3000:80 frontend:latest
-
-                  sudo systemctl restart nginx
+                  export PORT=${{secrets.PORT}}
+                  export FRONTEND_ENDPOINT=${{secrets.FRONTEND_ENDPOINT}}
+                  export BACKEND_ENDPOINT=${{secrets.BACKEND_ENDPOINT}}
+                  export PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}}
+                  export MONGO_DB_URI=${{secrets.MONGO_DB_URI}}
+                  export DB_NAME=${{secrets.DB_NAME}}
+                  export EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}}
+                  export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
+                  export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
+                  docker run -d --restart unless-stopped --name backend -p 8000:8000 \
+                      -e PORT=$PORT \
+                      -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
+                      -e BACKEND_ENDPOINT=$BACKNEND_ENDPOINT \
+                      -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
+                      -e MONGO_DB_URI=$MONGO_DB_URI \
+                      -e DB_NAME=$DB_NAME \
+                      -e EMAIL_USERNAME=$EMAIL_USERNAME \
+                      -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
+                      -e CORS_ORIGINS=$CORS_ORIGINS \
+                      backend:latest
                   EOF
