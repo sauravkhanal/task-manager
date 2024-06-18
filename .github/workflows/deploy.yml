@@ -17,38 +17,41 @@ jobs:
               with:
                   ssh-private-key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
 
-            # - name: Build and run frontend Docker container
-            #   run: |
-            #       echo "Building and running frontend Docker container..."
-            #       ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
-            #         cd /var/www/taskmanager-frontend
-            #         docker build -t frontend:latest .
-            #         docker stop frontend || true
-            #         docker rm frontend || true
-            #         docker run --restart unless-stopped -d --name frontend -p 3000:80 frontend:latest
-            #         sudo systemctl restart nginx
-            #       EOF
+            - name: Copy deployment scripts
+              run: |
+                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-frontend.sh ubuntu@141.148.202.130:/tmp/
+                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-backend.sh ubuntu@141.148.202.130:/tmp/
+
+            - name: Run frontend deployment script
+              run: |
+                  ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 "chmod +x /tmp/dockerize-frontend.sh && /tmp/dockerize-frontend.sh"
 
             - name: Build and run backend Docker container
               run: |
                   echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
-                    cd /var/www/taskmanager-backend
-                    docker build -t backend:latest .
-                    docker stop backend || true
-                    docker rm backend || true
-                    echo uluulu
-                    echo ${{secrets.PORT}}
-                    echo uluulu
-                    docker run -d --restart unless-stopped --name backend -p 8000:8000 \
-                      -e PORT=${{ secrets.PORT }} \
-                      -e CORS=${{secrets.CORS}} \
-                      -e ENDPOINT=${{secrets.ENDPOINT}} \
-                      -e PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}} \
-                      -e MONGO_DB_URI=${{secrets.MONGO_DB_URI}} \
-                      -e DB_NAME=${{secrets.DB_NAME}} \
-                      -e EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}} \
-                      -e EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}} \
-                      -e CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
+                  cd /var/www/taskmanager-backend
+                  docker build -t backend:latest .
+                  docker stop backend || true
+                  docker rm backend || true
+                  export PORT=${{secrets.PORT}}
+                  export CORS=${{secrets.CORS}}
+                  export ENDPOINT=${{secrets.ENDPOINT}}
+                  export PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}}
+                  export MONGO_DB_URI=${{secrets.MONGO_DB_URI}}
+                  export DB_NAME=${{secrets.DB_NAME}}
+                  export EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}}
+                  export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
+                  export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
+                  docker run -d --restart unless-stopped --name backend -p 8000:8000 \
+                      -e PORT=$PORT \
+                      -e CORS=$CORS \
+                      -e ENDPOINT=$ENDPOINT \
+                      -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
+                      -e MONGO_DB_URI=$MONGO_DB_URI \
+                      -e DB_NAME=$DB_NAME \
+                      -e EMAIL_USERNAME=$EMAIL_USERNAME \
+                      -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
+                      -e CORS_ORIGINS=$CORS_ORIGINS \
                       backend:latest
                   EOF
