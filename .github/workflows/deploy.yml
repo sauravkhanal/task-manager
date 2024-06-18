@@ -65,6 +65,6 @@ jobs:
                   docker build -t frontend:latest .
                   docker stop frontend || true
                   docker rm frontend || true
-                  docker run --restart unless stopped -d --name frontend -p 3000:80 frontend:latest
+                  docker run --restart unless-stopped -d --name frontend -p 3000:80 frontend:latest
                   sudo systemctl restart nginx
                   EOF
