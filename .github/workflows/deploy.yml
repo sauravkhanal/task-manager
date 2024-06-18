@@ -12,6 +12,26 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Echo secret variables
+              run: |
+                  echo "PORT=${{ secrets.PORT }}" >> port.txt
+                  echo "CORS=${{ secrets.CORS }}" >> cors.txt
+                  echo "ENDPOINT=${{ secrets.ENDPOINT }}" >> endpoint.txt
+                  echo "PUBLIC_STORAGE=${{ secrets.PUBLIC_STORAGE }}" >> public_storage.txt
+                  echo "MONGO_DB_URI=${{ secrets.MONGO_DB_URI }}" >> mongo_db_uri.txt
+                  echo "DB_NAME=${{ secrets.DB_NAME }}" >> db_name.txt
+                  echo "EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }}" >> email_username.txt
+                  echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> email_password.txt
+                  echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> cors_origins.txt
+
+            - name: Copy secret variable files to server
+              run: |
+                  scp -o StrictHostKeyChecking=no \
+                    port.txt cors.txt endpoint.txt public_storage.txt \
+                    mongo_db_uri.txt db_name.txt email_username.txt \
+                    email_password.txt cors_origins.txt \
+                    ubuntu@141.148.202.130:/var/www/taskmanager-backend/
+
             - name: Set up SSH
               uses: webfactory/ssh-agent@v0.5.3
               with:
