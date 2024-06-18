@@ -29,7 +29,7 @@ jobs:
               run: |
                   scp -o StrictHostKeyChecking=no -r ./Frontend/* ubuntu@141.148.202.130:/var/www/taskmanager-frontend/
 
-            - name: Build and run Docker containers
+            - name: Build and run backend Docker container
               env:
                   PORT: ${{ secrets.PORT }}
                   CORS: ${{ secrets.CORS }}
@@ -46,7 +46,7 @@ jobs:
                   docker build -t backend:latest .
                   docker stop backend || true
                   docker rm backend || true
-                  docker run -d --name backend -p 8000:8000 \
+                  docker run -d --restart unless-stopped --name backend -p 8000:8000 \
                     -e PORT=${PORT} \
                     -e CORS=${CORS} \
                     -e ENDPOINT=${ENDPOINT} \
@@ -58,11 +58,13 @@ jobs:
                     -e CORS_ORIGINS=${CORS_ORIGINS} \
                     backend:latest
 
+            - name: Build and run frontend Docker container
+              run: |
+                  ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-frontend
                   docker build -t frontend:latest .
                   docker stop frontend || true
                   docker rm frontend || true
-                  docker run -d --name frontend -p 3000:80 frontend:latest
-
+                  docker run --restart unless stopped -d --name frontend -p 3000:80 frontend:latest
                   sudo systemctl restart nginx
                   EOF
