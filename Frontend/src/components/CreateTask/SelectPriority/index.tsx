@@ -30,12 +30,15 @@ export const priority: { title: TaskPriority; _id: string; color: string }[] = [
 ];
 export function SelectPriority() {
     const formMethods = useFormContext<ITask>();
+    const defaultPriority =
+        formMethods.getValues("priority") || TaskPriority.LOW;
+    formMethods.setValue("priority", defaultPriority);
     return (
         <Select
             onValueChange={(value) => {
                 formMethods.setValue("priority", value as TaskPriority);
             }}
-            defaultValue={formMethods.getValues("priority") || TaskPriority.LOW}
+            defaultValue={defaultPriority}
         >
             <SelectTrigger className="w-[180px]">
                 <SelectValue
