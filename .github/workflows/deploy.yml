@@ -17,14 +17,14 @@ jobs:
               with:
                   ssh-private-key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
 
-            - name: Copy deployment scripts
-              run: |
-                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-frontend.sh ubuntu@141.148.202.130:/tmp/
-                  scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-backend.sh ubuntu@141.148.202.130:/tmp/
+            # - name: Copy deployment scripts
+            #   run: |
+            #       scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-frontend.sh ubuntu@141.148.202.130:/tmp/
+            #       scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-backend.sh ubuntu@141.148.202.130:/tmp/
 
-            - name: Run frontend deployment script
-              run: |
-                  ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 "chmod +x /tmp/dockerize-frontend.sh && /tmp/dockerize-frontend.sh"
+            # - name: Run frontend deployment script
+            #   run: |
+            #       ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 "chmod +x /tmp/dockerize-frontend.sh && /tmp/dockerize-frontend.sh"
 
             - name: Build and run backend Docker container
               run: |
