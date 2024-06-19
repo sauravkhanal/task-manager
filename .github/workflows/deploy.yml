@@ -31,7 +31,7 @@ jobs:
                   echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-backend
-                  docker build --no-cache -t backend:latest .
+                  docker build -t backend:latest .
                   docker stop backend || true
                   docker rm backend || true
                   export PORT=${{secrets.PORT}}
