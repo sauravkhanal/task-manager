@@ -31,7 +31,7 @@ jobs:
                   echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-backend
-                  docker build -t backend:latest .
+                  docker build --no-cache -t backend:latest .
                   docker stop backend || true
                   docker rm backend || true
                   export PORT=${{secrets.PORT}}
@@ -43,6 +43,7 @@ jobs:
                   export EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}}
                   export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
                   export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
+
                   docker run -d --restart unless-stopped --name backend -p 8000:8000 \
                       -e PORT=$PORT \
                       -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
@@ -54,4 +55,7 @@ jobs:
                       -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
                       -e CORS_ORIGINS=$CORS_ORIGINS \
                       backend:latest
+                      
                   EOF
+
+# TODO => can we use .env file or something similar instead of passing all variables manually?
