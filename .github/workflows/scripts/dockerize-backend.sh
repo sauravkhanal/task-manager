@@ -4,6 +4,7 @@ cd /var/www/taskmanager-backend
 docker build -t backend:latest .
 docker stop backend || true
 docker rm backend || true
+
 docker run -d --restart unless-stopped --no-cahce --name backend -p 8000:8000 \
   -e PORT="${PORT}" \
   -e CORS="${CORS}" \

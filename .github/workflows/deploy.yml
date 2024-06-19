@@ -31,11 +31,9 @@ jobs:
                   echo "Building and running backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
                   cd /var/www/taskmanager-backend
+                  docker build -t backend:latest .
                   docker stop backend || true
                   docker rm backend || true
-                  echo  before-build
-                  docker build -t backend:latest .
-                  echo  after-build
                   export PORT=${{secrets.PORT}}
                   export FRONTEND_ENDPOINT=${{secrets.FRONTEND_ENDPOINT}}
                   export BACKEND_ENDPOINT=${{secrets.BACKEND_ENDPOINT}}
@@ -45,19 +43,19 @@ jobs:
                   export EMAIL_USERNAME=${{secrets.EMAIL_USERNAME}}
                   export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
                   export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
-                  echo  before-run
-                  sudo docker run -d --name backend -p 8000:8000 \
-                  -e PORT=$PORT \
-                  -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
-                  -e BACKEND_ENDPOINT=$BACKEND_ENDPOINT \
-                  -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
-                  -e MONGO_DB_URI=$MONGO_DB_URI \
-                  -e DB_NAME=$DB_NAME \
-                  -e EMAIL_USERNAME=$EMAIL_USERNAME \
-                  -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
-                  -e CORS_ORIGINS=$CORS_ORIGINS \
-                  backend:latest
-                  echo  after-run
+
+                  docker run -d --no-cache --restart unless-stopped --name backend -p 8000:8000 \
+                      -e PORT=$PORT \
+                      -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
+                      -e BACKEND_ENDPOINT=$BACKNEND_ENDPOINT \
+                      -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
+                      -e MONGO_DB_URI=$MONGO_DB_URI \
+                      -e DB_NAME=$DB_NAME \
+                      -e EMAIL_USERNAME=$EMAIL_USERNAME \
+                      -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
+                      -e CORS_ORIGINS=$CORS_ORIGINS \
+                      backend:latest
+                      
                   EOF
 
 # TODO => can we use .env file or something similar instead of passing all variables manually?
