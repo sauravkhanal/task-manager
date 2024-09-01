@@ -22,21 +22,21 @@ jobs:
                   scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-frontend.sh ubuntu@141.148.202.130:/tmp/
                   scp -o StrictHostKeyChecking=no .github/workflows/scripts/dockerize-backend.sh ubuntu@141.148.202.130:/tmp/
 
-            - name: Run frontend deployment script
+            - name: Run taskmanager-frontend deployment script
               run: |
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 "chmod +x /tmp/dockerize-frontend.sh && /tmp/dockerize-frontend.sh"
 
             - name: Build and run backend Docker container
               run: |
-                  echo "Building and running taskManagerBackend Docker container..."
+                  echo "Building and running taskmanager-backend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
-                  cd /var/www/taskmanager-taskManagerBackend
-                  docker build --no-cache -t taskManagerBackend:latest .
-                  docker stop taskManagerBackend || true
-                  docker rm taskManagerBackend || true
+                  cd /var/www/taskmanager-backend
+                  docker build --no-cache -t backend:latest .
+                  docker stop taskmanager-backend || true
+                  docker rm taskmanager-backend || true
                   export PORT=${{secrets.PORT}}
                   export FRONTEND_ENDPOINT=${{secrets.FRONTEND_ENDPOINT}}
-                  export taskManagerBackend_ENDPOINT=${{secrets.taskManagerBackend_ENDPOINT}}
+                  export BACKEND_ENDPOINT=${{secrets.BACKEND_ENDPOINT}}
                   export PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}}
                   export MONGO_DB_URI=${{secrets.MONGO_DB_URI}}
                   export DB_NAME=${{secrets.DB_NAME}}
@@ -44,17 +44,17 @@ jobs:
                   export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
                   export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
 
-                  docker run -d --restart unless-stopped --name taskManagerBackend -p 8000:8000 \
+                  docker run -d --restart unless-stopped --name taskmanager-backend -p 8000:8000 \
                       -e PORT=$PORT \
                       -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
-                      -e taskManagerBackend_ENDPOINT=$BACKEND_ENDPOINT \
+                      -e BACKEND_ENDPOINT=$BACKNEND_ENDPOINT \
                       -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
                       -e MONGO_DB_URI=$MONGO_DB_URI \
                       -e DB_NAME=$DB_NAME \
                       -e EMAIL_USERNAME=$EMAIL_USERNAME \
                       -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
                       -e CORS_ORIGINS=$CORS_ORIGINS \
-                      taskManagerBackend:latest
+                      taskmanager-backend:latest
                       
                   EOF
 
