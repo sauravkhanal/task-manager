@@ -1,11 +1,11 @@
 #!/bin/bash
-echo "Building and running backend Docker container..."
-cd /var/www/taskmanager-backend
-docker build -t backend:latest .
-docker stop backend || true
-docker rm backend || true
+echo "Building and running taskManagerBackend Docker container..."
+cd /var/www/taskmanager-taskManagerBackend
+docker build -t taskManagerBackend:latest .
+docker stop taskManagerBackend || true
+docker rm taskManagerBackend || true
 
-docker run -d --restart unless-stopped --no-cahce --name backend -p 8000:8000 \
+docker run -d --restart unless-stopped --no-cahce --name taskManagerBackend -p 8000:8000 \
   -e PORT="${PORT}" \
   -e CORS="${CORS}" \
   -e ENDPOINT="${ENDPOINT}" \
@@ -15,4 +15,4 @@ docker run -d --restart unless-stopped --no-cahce --name backend -p 8000:8000 \
   -e EMAIL_USERNAME="${EMAIL_USERNAME}" \
   -e EMAIL_PASSWORD="${EMAIL_PASSWORD}" \
   -e CORS_ORIGINS="${CORS_ORIGINS}" \
-  backend:latest
+  taskManagerBackend:latest

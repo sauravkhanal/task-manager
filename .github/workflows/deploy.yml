@@ -28,15 +28,15 @@ jobs:
 
             - name: Build and run backend Docker container
               run: |
-                  echo "Building and running backend Docker container..."
+                  echo "Building and running taskManagerBackend Docker container..."
                   ssh -o StrictHostKeyChecking=no ubuntu@141.148.202.130 << 'EOF'
-                  cd /var/www/taskmanager-backend
-                  docker build --no-cache -t backend:latest .
-                  docker stop backend || true
-                  docker rm backend || true
+                  cd /var/www/taskmanager-taskManagerBackend
+                  docker build --no-cache -t taskManagerBackend:latest .
+                  docker stop taskManagerBackend || true
+                  docker rm taskManagerBackend || true
                   export PORT=${{secrets.PORT}}
                   export FRONTEND_ENDPOINT=${{secrets.FRONTEND_ENDPOINT}}
-                  export BACKEND_ENDPOINT=${{secrets.BACKEND_ENDPOINT}}
+                  export taskManagerBackend_ENDPOINT=${{secrets.taskManagerBackend_ENDPOINT}}
                   export PUBLIC_STORAGE=${{secrets.PUBLIC_STORAGE}}
                   export MONGO_DB_URI=${{secrets.MONGO_DB_URI}}
                   export DB_NAME=${{secrets.DB_NAME}}
@@ -44,17 +44,17 @@ jobs:
                   export EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}
                   export CORS_ORIGINS=${{secrets.CORS_ORIGINS}}
 
-                  docker run -d --restart unless-stopped --name backend -p 8000:8000 \
+                  docker run -d --restart unless-stopped --name taskManagerBackend -p 8000:8000 \
                       -e PORT=$PORT \
                       -e FRONTEND_ENDPOINT=$FRONTEND_ENDPOINT \
-                      -e BACKEND_ENDPOINT=$BACKNEND_ENDPOINT \
+                      -e taskManagerBackend_ENDPOINT=$BACKEND_ENDPOINT \
                       -e PUBLIC_STORAGE=$PUBLIC_STORAGE \
                       -e MONGO_DB_URI=$MONGO_DB_URI \
                       -e DB_NAME=$DB_NAME \
                       -e EMAIL_USERNAME=$EMAIL_USERNAME \
                       -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
                       -e CORS_ORIGINS=$CORS_ORIGINS \
-                      backend:latest
+                      taskManagerBackend:latest
                       
                   EOF
 
